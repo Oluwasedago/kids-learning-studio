@@ -1,0 +1,23 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Secrets and tokens: never committed
+.env
+.env.*
+*.token
+.kls-token
+kls-token.txt
+
+# PRIVATE: your own family's data. Never committed.
+#  - private/            your local config, backups, photos, notes
+#  - .private-words.txt  the forbidden-words list used by the pre-commit check
+private/
+.private-words.txt
+*.backup.json
+
+# Editors and OS
+.vscode/settings.json
+.DS_Store
+Thumbs.db
