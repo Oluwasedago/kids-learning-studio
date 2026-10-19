@@ -1,0 +1,31 @@
+/* Item tiles: big pastel buttons with a picture and a name; locked ones are greyed with a padlock. */
+.play-tile {
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 9rem;
+  padding: 0.9rem 0.6rem;
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.play-tile b {
+  font-size: 1.1rem;
+}
+.play-tile small {
+  font-family: 'Andika', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.play-tile.muted {
+  background: var(--locked);
+  box-shadow: none;
+}
+.play-tile .tile-earned {
+  color: var(--accent-deep);
+}

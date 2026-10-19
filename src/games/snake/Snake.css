@@ -1,0 +1,156 @@
+/* Snake: the board on the left, score, word card and arrow pad on the right. Full screen (inside .game-frame). */
+.snake {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 17rem;
+  gap: 1rem;
+  min-height: 0;
+  padding: 0 0 1.2rem;
+  background: var(--bg);
+}
+.snake-board {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+}
+.snake-stage {
+  position: relative;
+  line-height: 0;
+}
+.snake-board canvas {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.snake-overlay {
+  line-height: 1.3;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background: rgb(30 14 36 / 35%);
+  border-radius: var(--radius);
+  color: #fff;
+  text-align: center;
+}
+.snake-overlay p {
+  font-family: var(--display);
+  font-size: 1.6rem;
+}
+.snake-overlay p b {
+  font-size: 2.6rem;
+}
+.snake-overlay small {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+.snake-go {
+  min-height: 5rem;
+  padding: 0 2.6rem;
+  font-size: 1.7rem;
+}
+.snake-go svg {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.snake-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+.snake-score {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+.snake-score span {
+  display: flex;
+  flex-direction: column;
+}
+.snake-score small {
+  color: var(--muted);
+}
+.snake-score b {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  color: var(--ink);
+}
+.snake-word {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  text-align: center;
+  background: var(--mint-soft);
+}
+.snake-word b {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+.snake-word span {
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+.snake-word .snake-word-hint {
+  color: var(--text);
+}
+
+/* Arrow pad: a cross of big buttons. */
+.snake-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 5rem);
+  grid-template-rows: repeat(3, 5rem);
+  gap: 0.35rem;
+  justify-content: center;
+}
+.snake-pad button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: 1.2rem;
+}
+.snake-pad svg {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+.pad-up {
+  grid-area: 1 / 2;
+}
+.pad-left {
+  grid-area: 2 / 1;
+}
+.pad-right {
+  grid-area: 2 / 3;
+}
+.pad-down {
+  grid-area: 3 / 2;
+}
+/* Speed and word language, chosen before each round. */
+.snake-options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgb(30 14 36 / 45%);
+  padding: 0.35rem 0.6rem 0.35rem 1rem;
+  border-radius: 999px;
+}
+.snake-options span {
+  font-family: var(--display);
+  font-weight: 600;
+  min-width: 4.5rem;
+}
+.snake-options button {
+  min-height: 3.6rem;
+  padding: 0 1.1rem;
+  font-size: 1.05rem;
+}

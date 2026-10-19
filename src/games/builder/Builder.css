@@ -1,0 +1,98 @@
+/* Wort-Baumeister: picture, gaps for the word, letter tiles. */
+.builder {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17rem;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+.builder-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+.builder-picture {
+  position: relative;
+}
+.builder-hear {
+  position: absolute;
+  right: -4.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 50%;
+}
+.builder-word {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.builder-article {
+  font-family: var(--display);
+  font-size: 2rem;
+  color: var(--muted);
+  margin-right: 0.4rem;
+}
+.builder-slot {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 4.2rem;
+  border-bottom: 5px solid var(--accent);
+  font-family: var(--display);
+  font-size: 2.6rem;
+  color: var(--ink);
+}
+.builder-slot.filled {
+  border-bottom-color: var(--mint, #22a06b);
+}
+.builder-tiles {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.builder-tile {
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0;
+  border-radius: 1rem;
+  background: var(--amber-soft);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 2.2rem;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.builder-tile.used {
+  opacity: 0.25;
+}
+.builder-tile.shake {
+  animation: builder-shake 0.4s;
+  background: color-mix(in srgb, var(--red, #e0344c) 25%, var(--amber-soft));
+}
+@keyframes builder-shake {
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+.builder-next {
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  padding: 0 1.6rem;
+  min-height: 72px;
+}
+.builder-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
