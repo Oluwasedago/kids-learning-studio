@@ -96,7 +96,6 @@ export const en = {
     hear: 'Hear the question',
     doneTitle: 'Well done!',
     score: (right: number, total: number) => `${right} of ${total} right.`,
-    wrongAnswer: (answer: string) => `Not quite. The right answer is: ${answer}`,
     notYetTitle: 'Not yet!',
     notYetText: (need: number) => `You need ${need} right to earn the star. Every try helps you learn.`,
     tryAgain: 'Try again',

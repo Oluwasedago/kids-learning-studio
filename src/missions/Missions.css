@@ -33,10 +33,8 @@
   box-shadow: inset 0 0 0 3px var(--accent);
 }
 .quiz-dots i.done {
-  background: var(--mint);
-}
-.quiz-dots i.missed {
-  background: var(--red);
+  /* Answered (not "right": the child gets no hint until the score at the end). */
+  background: var(--accent);
 }
 .quiz-ask {
   display: flex;
@@ -113,39 +111,14 @@
   font-size: 2.4rem;
   font-weight: 700;
 }
-.quiz-choice.wrong {
-  background: var(--red-soft);
-  border-color: var(--red);
-  animation: quiz-shake 0.4s;
+.quiz-choice.picked {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  transform: scale(1.03);
 }
 .quiz-choice.faded {
   opacity: 0.4;
 }
-/* After a wrong answer: the right answer in words, and Next (the child moves on when ready). */
-.quiz-feedback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  font-family: var(--display);
-  font-size: 1.2rem;
-  color: var(--ink);
-}
-.quiz-choice.right {
-  background: var(--mint-soft);
-  border-color: var(--mint);
-  transform: scale(1.05);
-}
-@keyframes quiz-shake {
-  25% {
-    transform: translateX(-8px);
-  }
-  75% {
-    transform: translateX(8px);
-  }
-}
-
 .mission-done {
   display: flex;
   flex-direction: column;

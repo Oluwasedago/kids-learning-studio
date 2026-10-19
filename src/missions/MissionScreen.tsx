@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Volume2 } from 'lucide-react'
+import { ArrowLeft, Volume2 } from 'lucide-react'
 import { useState } from 'react'
 import { ITEMS, type Subject } from '@/access/catalogue'
 import { StatusBar } from '@/app/Shell'
@@ -16,10 +16,11 @@ import { CountryFlag } from './Flag'
 import './Missions.css'
 
 /**
- * A mission, full screen: 8 questions at the child's level, one try each. A wrong answer is shown as wrong
- * together with the right one, so the child can learn from it. Passed (5 of 8 or more) and one of today's
- * missions: ticked off with a star. Otherwise "not yet", and a new try with new questions. Either way the
- * answers move the adaptive level and go into the parents' report.
+ * A mission, full screen: 8 questions at the child's level, one try each and no hint whether an answer was
+ * right, so the child has to think rather than tap until something turns green. The score comes at the end.
+ * Passed (5 of 8 or more) and one of today's missions: ticked off with a star. Otherwise "not yet", and a new
+ * try later with new questions in a new order. Either way the answers move the adaptive level and go into the
+ * parents' report (which shows the right answers to the parents, never to the child).
  */
 export function MissionScreen({ subject, onClose }: { subject: Subject; onClose: () => void }) {
   const t = useT()
@@ -115,18 +116,16 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
     const right = i === q.answer
     const all = [...answers, { step: q.step ?? '', prompt: q.prompt, given: describe(q.choices[i]), answer: describe(q.choices[q.answer]), right }]
     setAnswers(all)
-    // Right: on to the next question after a moment. Wrong: the right answer stays on screen until "Next".
-    if (right) setTimeout(() => advance(all), 900)
+    // No right/wrong shown: the chosen answer lights up briefly, then the next question.
+    setTimeout(() => advance(all), 600)
   }
-  const wrongNow = picked !== null && picked !== q.answer
 
   return (
     <section className="card quiz">
       <div className="quiz-dots" aria-label={`${index + 1} / ${round.length}`}>
-        {round.map((_, i) => {
-          const a = answers[i]
-          return <i key={i} className={a ? (a.right ? 'done' : 'missed') : i === index ? 'now' : ''} />
-        })}
+        {round.map((_, i) => (
+          <i key={i} className={i < answers.length ? 'done' : i === index ? 'now' : ''} />
+        ))}
       </div>
       <div className="quiz-ask">
         <p>{q.prompt}</p>
@@ -143,24 +142,11 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
       )}
       <div className="quiz-choices">
         {q.choices.map((c, i) => (
-          <button
-            key={i}
-            className={`quiz-choice ${picked !== null && i === q.answer ? 'right' : ''} ${picked === i && i !== q.answer ? 'wrong' : ''} ${picked !== null && i !== picked && i !== q.answer ? 'faded' : ''}`}
-            onClick={() => choose(i)}
-            disabled={picked !== null && i !== picked && i !== q.answer}
-          >
+          <button key={i} className={`quiz-choice ${picked === i ? 'picked' : ''} ${picked !== null && picked !== i ? 'faded' : ''}`} onClick={() => choose(i)}>
             <ChoiceView choice={c} />
           </button>
         ))}
       </div>
-      {wrongNow && (
-        <div className="quiz-feedback" role="status">
-          <span>{t.mission.wrongAnswer(describe(q.choices[q.answer]))}</span>
-          <button onClick={() => advance(answers)}>
-            {t.common.next} <ArrowRight />
-          </button>
-        </div>
-      )}
     </section>
   )
 }
