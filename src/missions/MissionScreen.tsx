@@ -16,8 +16,9 @@ import { CountryFlag } from './Flag'
 import './Missions.css'
 
 /**
- * A mission, full screen: 8 questions at the child's level, one try each and no hint whether an answer was
- * right, so the child has to think rather than tap until something turns green. The score comes at the end.
+ * A mission, full screen: 8 questions at the child's level, one try each. The tapped answer turns green when
+ * right and red when wrong, but the right answer is never shown, so the child has to think rather than tap
+ * until something turns green. The score comes at the end.
  * Passed (5 of 8 or more) and one of today's missions: ticked off with a star. Otherwise "not yet", and a new
  * try later with new questions in a new order. Either way the answers move the adaptive level and go into the
  * parents' report (which shows the right answers to the parents, never to the child).
@@ -116,16 +117,18 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
     const right = i === q.answer
     const all = [...answers, { step: q.step ?? '', prompt: q.prompt, given: describe(q.choices[i]), answer: describe(q.choices[q.answer]), right }]
     setAnswers(all)
-    // No right/wrong shown: the chosen answer lights up briefly, then the next question.
-    setTimeout(() => advance(all), 600)
+    // The chosen answer turns green (right) or red (wrong) for a moment, then the next question.
+    // The right answer is not revealed.
+    setTimeout(() => advance(all), 900)
   }
 
   return (
     <section className="card quiz">
       <div className="quiz-dots" aria-label={`${index + 1} / ${round.length}`}>
-        {round.map((_, i) => (
-          <i key={i} className={i < answers.length ? 'done' : i === index ? 'now' : ''} />
-        ))}
+        {round.map((_, i) => {
+          const a = answers[i]
+          return <i key={i} className={a ? (a.right ? 'done' : 'missed') : i === index ? 'now' : ''} />
+        })}
       </div>
       <div className="quiz-ask">
         <p>{q.prompt}</p>
@@ -142,7 +145,11 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
       )}
       <div className="quiz-choices">
         {q.choices.map((c, i) => (
-          <button key={i} className={`quiz-choice ${picked === i ? 'picked' : ''} ${picked !== null && picked !== i ? 'faded' : ''}`} onClick={() => choose(i)}>
+          <button
+            key={i}
+            className={`quiz-choice ${picked === i ? (i === q.answer ? 'right' : 'wrong') : ''} ${picked !== null && picked !== i ? 'faded' : ''}`}
+            onClick={() => choose(i)}
+          >
             <ChoiceView choice={c} />
           </button>
         ))}

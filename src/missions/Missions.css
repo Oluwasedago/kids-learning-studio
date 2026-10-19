@@ -33,8 +33,10 @@
   box-shadow: inset 0 0 0 3px var(--accent);
 }
 .quiz-dots i.done {
-  /* Answered (not "right": the child gets no hint until the score at the end). */
-  background: var(--accent);
+  background: var(--mint);
+}
+.quiz-dots i.missed {
+  background: var(--red);
 }
 .quiz-ask {
   display: flex;
@@ -111,10 +113,9 @@
   font-size: 2.4rem;
   font-weight: 700;
 }
-.quiz-choice.picked {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  transform: scale(1.03);
+.quiz-choice.wrong {
+  background: var(--red-soft);
+  border-color: var(--red);
 }
 .quiz-choice.faded {
   opacity: 0.4;
