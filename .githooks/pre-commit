@@ -1,0 +1,3 @@
+#!/bin/sh
+# Runs before every commit: blocks private words and secrets (see scripts/check-private.mjs).
+exec node scripts/check-private.mjs

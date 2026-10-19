@@ -1,0 +1,6 @@
+# Copy this file to .private-words.txt (gitignored) and list what must never be committed.
+# One word or regular expression per line, not case-sensitive. Examples:
+\bMia\b
+Example Primary School
+\bClass 1a\b
+12345

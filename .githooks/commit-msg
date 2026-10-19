@@ -1,0 +1,3 @@
+#!/bin/sh
+# Checks the commit message too, so a name never lands in the public history.
+exec node scripts/check-private.mjs --message "$1"
