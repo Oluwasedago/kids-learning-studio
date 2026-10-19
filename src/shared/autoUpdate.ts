@@ -6,9 +6,9 @@ import { useEffect, useRef } from 'react'
 
 const CHECK_MS = 15 * 60_000
 
-/** The app file a page names, e.g. "assets/index-B8eSRqwV.js" (with or without "./" or "/"). Pure (tested). */
+/** The app file a page names, e.g. "assets/app-B8eSRqwV.js" (with or without "./" or "/"). Pure (tested). */
 export function appScript(html: string): string | null {
-  return html.match(/assets\/index-[\w-]+\.js/)?.[0] ?? null
+  return html.match(/assets\/(?:app|index)-[\w-]+\.js/)?.[0] ?? null
 }
 
 const running = () => appScript(document.documentElement.outerHTML)

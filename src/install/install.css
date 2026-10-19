@@ -1,0 +1,167 @@
+/* Install page: one calm column; the app's colours, light and dark. Phone width: 16px side gutter. */
+:root {
+  --bg: #fff8f0;
+  --card: #ffffff;
+  --ink: #3d1e47;
+  --text: #4b3654;
+  --muted: #8e7b95;
+  --line: #f3e6ee;
+  --accent: #1b2540;
+  --accent-soft: #e8ebf6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0f0e0d;
+    --card: #1a1917;
+    --ink: #f0ece6;
+    --text: #ddd6ce;
+    --muted: #9a948b;
+    --line: #2b2926;
+    --accent: #8fa2e8;
+    --accent-soft: #23283a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #0f0e0d;
+  --card: #1a1917;
+  --ink: #f0ece6;
+  --text: #ddd6ce;
+  --muted: #9a948b;
+  --line: #2b2926;
+  --accent: #8fa2e8;
+  --accent-soft: #23283a;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Andika', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+main {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 16px 3rem;
+  display: grid;
+  gap: 1.2rem;
+}
+h1,
+h2 {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+h1 {
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+}
+h2 {
+  font-size: 1.25rem;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+header img {
+  border-radius: 24px;
+  flex: none;
+}
+header p {
+  margin: 0;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 1.3rem clamp(1rem, 3vw, 1.6rem);
+}
+.steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.note {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.4rem;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--card);
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+}
+.button.secondary {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+.two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.2rem;
+}
+.qr {
+  text-align: center;
+}
+.qr-code {
+  width: min(14rem, 100%);
+  margin: 0 auto;
+  background: #fff;
+  padding: 0.4rem;
+  border-radius: 12px;
+}
+.qr-code svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.url {
+  font-size: 0.8rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+details {
+  border-top: 1px solid var(--line);
+  padding: 0.6rem 0;
+}
+summary {
+  cursor: pointer;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  min-height: 2.6rem;
+  display: flex;
+  align-items: center;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+footer a {
+  color: inherit;
+}

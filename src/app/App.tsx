@@ -4,8 +4,8 @@ import { backupDue } from '@/data/backup'
 import { GamesScreen } from '@/games/GamesScreen'
 import { LearnScreen } from '@/games/LearnScreen'
 import { useT } from '@/i18n'
-import { ListenScreen } from '@/listen/ListenScreen'
-import { PlayerProvider } from '@/listen/PlayerProvider'
+import { MediaScreen } from '@/media/MediaScreen'
+import { PlayerProvider } from '@/media/PlayerProvider'
 import { ParentGate } from '@/parent/ParentGate'
 import { ParentScreen } from '@/parent/ParentScreen'
 import { addUsage, currentArea, TICK_SECONDS } from '@/progress/usage'
@@ -58,7 +58,7 @@ function Root() {
 function Screens() {
   const t = useT()
   const { settings, now } = useStudio()
-  // Preview aid: ?screen=learn|games|parents opens that screen.
+  // Preview aid: ?screen=learn|games|media opens that screen.
   const asked = new URLSearchParams(location.search).get('screen')
   const [screen, setScreen] = useState<Screen>(() => SCREENS.find((s) => s === asked && s !== 'parents') ?? 'home')
   const [askPin, setAskPin] = useState(false)
@@ -90,14 +90,14 @@ function Screens() {
                 setScreen('games')
               } else {
                 setStartListen(id)
-                setScreen('radio')
+                setScreen('media')
               }
             }}
           />
         )}
         {screen === 'learn' && <LearnScreen />}
         {screen === 'games' && <GamesScreen start={startGame} onStarted={() => setStartGame(null)} />}
-        {screen === 'radio' && <ListenScreen key={startListen ?? ''} start={startListen} />}
+        {screen === 'media' && <MediaScreen key={startListen ?? ''} start={startListen} />}
         {screen === 'parents' && <ParentScreen />}
       </Shell>
       {askPin && (

@@ -12,7 +12,7 @@ import { Emoji } from '@/shared/Emoji'
 import { usePlayer } from './player'
 import { COLLECTIONS, type Collection, embedUrl, STATIONS, thumbnail } from './sources'
 import '@/games/Games.css'
-import './Listen.css'
+import './Media.css'
 
 type Tab = 'radio' | 'stories' | 'videos'
 const TABS: { id: Tab; emoji: string }[] = [
@@ -21,8 +21,8 @@ const TABS: { id: Tab; emoji: string }[] = [
   { id: 'videos', emoji: 'tv' },
 ]
 
-/** Listen & watch: radio, stories and the parents' videos, each only when switched on (and open or earned). */
-export function ListenScreen({ start }: { start?: ItemId | null }) {
+/** Media: radio, stories and the parents' videos, each only when switched on (and open or earned). */
+export function MediaScreen({ start }: { start?: ItemId | null }) {
   const t = useT()
   const { accessOf } = useStudio()
   const tabs = TABS.filter((x) => accessOf(x.id) !== 'hidden')

@@ -6,7 +6,7 @@ import { BackupError, backupDue, deleteAll, makeBackup, parseBackup, restoreBack
 import { usePersistence } from '@/data/persist'
 import type { FamilyBirthday } from '@/data/types'
 import { LOCALES, useLang, useT } from '@/i18n'
-import { callLinkOk, parseYouTube } from '@/listen/sources'
+import { callLinkOk, parseYouTube } from '@/media/sources'
 import { buildReport, mailtoUrl, reportText } from '@/reports/report'
 import { Emoji } from '@/shared/Emoji'
 import { AccessEditor, ChildEditor } from './editors'

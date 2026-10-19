@@ -13,7 +13,7 @@ const NAV: { id: Exclude<Screen, 'parents'>; emoji: string; group?: ItemGroup }[
   { id: 'home', emoji: 'house' },
   { id: 'learn', emoji: 'gradcap', group: 'learning' },
   { id: 'games', emoji: 'joystick', group: 'games' },
-  { id: 'radio', emoji: 'radio', group: 'media' },
+  { id: 'media', emoji: 'media', group: 'media' },
 ]
 
 interface Props {

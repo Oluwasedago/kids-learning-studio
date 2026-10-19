@@ -8,6 +8,15 @@ export default defineConfig({
   // https://<user>.github.io/kids-learning-studio/, on a fork with another name, or at a domain's root.
   base: './',
   plugins: [react()],
+  // Two pages: the app (index.html) and the install page (install.html).
+  build: {
+    rollupOptions: {
+      input: {
+        app: fileURLToPath(new URL('./index.html', import.meta.url)),
+        install: fileURLToPath(new URL('./install.html', import.meta.url)),
+      },
+    },
+  },
   resolve: {
     // "@/..." means "src/...". Keep in sync with "paths" in tsconfig.app.json.
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },

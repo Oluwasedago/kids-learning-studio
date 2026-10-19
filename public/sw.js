@@ -6,7 +6,7 @@
 // - App files (assets, emoji, fonts): cache first (built file names change with every version, so never stale).
 // Paths are relative to where this file lives, so it works under /kids-learning-studio/ on GitHub Pages.
 
-const CACHE = 'kls-v2' // bump to make installed apps fetch changed files with fixed names (icons)
+const CACHE = 'kls-v3' // bump to make installed apps fetch changed files with fixed names (icons, pages)
 const INDEX = new URL('./', self.registration.scope).href
 
 self.addEventListener('install', () => self.skipWaiting())
@@ -26,13 +26,20 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET' || url.origin !== location.origin || !url.href.startsWith(self.registration.scope)) return
 
   if (req.mode === 'navigate') {
+    // Each page (the app, the install page) is kept under its own address, without "?…" (e.g. ?demo).
+    const page = url.origin + url.pathname
     event.respondWith(
       fetch(req)
         .then((res) => {
-          if (res.ok) caches.open(CACHE).then((c) => c.put(INDEX, res.clone()))
+          if (res.ok && !res.redirected) caches.open(CACHE).then((c) => c.put(page, res.clone()))
           return res
         })
-        .catch(() => caches.match(INDEX).then((hit) => hit ?? Response.error())),
+        .catch(() =>
+          caches
+            .match(page)
+            .then((hit) => hit ?? caches.match(INDEX))
+            .then((hit) => hit ?? Response.error()),
+        ),
     )
     return
   }
