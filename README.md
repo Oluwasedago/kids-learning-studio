@@ -23,7 +23,8 @@ Developed by Oluwasedago.
 ## What it does
 
 - **Missions every day.** Short rounds of 8 questions in maths, English, the world and patterns. One try per
-  question, no hints; 5 of 8 right earns a star. Lessons follow the child's age on a skills ladder aligned to
+  question: a right answer turns green, a wrong one red, and the right answer is never given away; 5 of 8 right
+  earns a star. Lessons follow the child's age on a skills ladder aligned to
   Cambridge Primary stages (with approximate US grade and Berlin Klasse equivalents) and adapt: two strong
   rounds move a step up, a weak round a step down.
 - **Stars earn time.** Each star unlocks minutes for games and videos, up to a daily limit the parent sets.
