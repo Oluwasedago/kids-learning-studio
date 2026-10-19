@@ -19,6 +19,8 @@ export interface Question {
   visual?: Visual
   choices: Choice[]
   answer: number
+  /** The ladder step it came from (set by makeRound). */
+  step?: string
 }
 
 /** Returns 0 ≤ n < 1, like Math.random (replaceable in tests). */

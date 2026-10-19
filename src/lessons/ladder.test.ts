@@ -64,4 +64,20 @@ describe('skills ladder', () => {
       expect(new Set(m).size).toBe(2)
     }
   })
+
+  it('puts the right answer in every position, so children cannot learn where it is', () => {
+    for (const s of SUBJECTS) {
+      for (const [level, step] of LADDERS[s].entries()) {
+        const r = seeded(100 + level)
+        const seen = new Set<number>()
+        let choices = 0
+        for (let i = 0; i < 200; i++) {
+          const q = step.make(r)
+          seen.add(q.answer)
+          choices = q.choices.length
+        }
+        expect(seen.size, `${s}/${step.id}`).toBe(choices)
+      }
+    }
+  })
 })

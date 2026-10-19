@@ -276,3 +276,43 @@ button.danger {
     font-size: 0.85rem;
   }
 }
+
+/* Report: skills that need help, and recent wrong answers. */
+.report-help {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-s);
+  background: var(--mint-soft);
+}
+.report-help.has-help {
+  background: var(--amber-soft);
+}
+.report-help h4 {
+  margin: 0 0 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--display);
+  color: var(--ink);
+}
+.report-help ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.3rem;
+}
+.pill.red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.report-mistakes summary {
+  cursor: pointer;
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--ink);
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+.wrong-cell {
+  color: var(--red);
+}

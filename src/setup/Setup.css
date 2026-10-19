@@ -105,6 +105,10 @@
   margin-top: 0.4rem;
 }
 select {
+  /* Long option texts (voice names) must not make the select wider than its card. */
+  width: 100%;
+  min-width: 0;
+  text-overflow: ellipsis;
   font: inherit;
   min-height: var(--tap);
   padding: 0 0.8rem;

@@ -1,6 +1,6 @@
 import { type ItemId, SUBJECTS, type Subject } from '@/access/catalogue'
-import type { AccessRule, Progress, Score } from '@/data/types'
-import { adapt, LADDERS, startLevel } from '@/lessons/ladder'
+import { type AccessRule, MAX_MISTAKES, type Mistake, type Progress, type Score } from '@/data/types'
+import { adapt, LADDERS, passMark, startLevel } from '@/lessons/ladder'
 import { addDays, dayNumber, isoDate, mondayOf } from '@/shared/date'
 
 // Missions, stars and levels. Pure functions (tested in progress.test.ts).
@@ -39,27 +39,51 @@ export function streak(p: Progress, today: Date): number {
 /** The child's current step on a subject's ladder (the start step for their age when not set yet). */
 export const levelOf = (p: Progress, subject: Subject, age: number) => p.levels[subject] ?? startLevel(subject, age)
 
+/** One answered question of a round. */
+export interface Answer {
+  step: string
+  prompt: string
+  given: string
+  answer: string
+  right: boolean
+}
+
 /**
- * A finished mission round. Counts for the adaptive level every time (practice too). When it is one of the
- * day's missions and not yet done today: ticked off and one star. The day's best score is kept.
+ * A finished mission round (one try per question). Every answer is counted per skill step, and wrong ones are
+ * kept for the parents. The result moves the adaptive level every time (practice too). The mission is ticked
+ * off with one star only when it is passed (passMark) and is one of the day's missions not yet done.
  */
-export function completeMission(p: Progress, subject: Subject, score: Score, opts: { day: Date; age: number; counts: boolean; now?: number }): Progress {
+export function completeMission(p: Progress, subject: Subject, answers: Answer[], opts: { day: Date; age: number; counts: boolean; now?: number }): Progress {
   const now = opts.now ?? Date.now()
   const date = isoDate(opts.day)
+  const score: Score = { right: answers.filter((a) => a.right).length, total: answers.length }
   const share = score.total > 0 ? score.right / score.total : 0
   const level = levelOf(p, subject, opts.age)
   const next = adapt(level, p.recent[subject] ?? [], share, LADDERS[subject].length - 1)
   const old = p.scores[date]?.[subject]
   const better = !old || share > old.right / old.total
+
+  const dayAttempts = { ...p.attempts[date] }
+  for (const a of answers) {
+    const s = dayAttempts[a.step] ?? { right: 0, total: 0 }
+    dayAttempts[a.step] = { right: s.right + (a.right ? 1 : 0), total: s.total + 1 }
+  }
+  const mistakes: Mistake[] = [
+    ...p.mistakes,
+    ...answers.filter((a) => !a.right).map((a) => ({ day: date, subject, step: a.step, prompt: a.prompt, given: a.given, answer: a.answer })),
+  ].slice(-MAX_MISTAKES)
+
   const out: Progress = {
     ...p,
     levels: { ...p.levels, [subject]: next.level },
     recent: { ...p.recent, [subject]: next.recent },
     scores: better ? { ...p.scores, [date]: { ...p.scores[date], [subject]: score } } : p.scores,
+    attempts: { ...p.attempts, [date]: dayAttempts },
+    mistakes,
     updatedAt: now,
   }
   const done = p.missions[date] ?? []
-  if (!opts.counts || done.includes(subject)) return out
+  if (!opts.counts || done.includes(subject) || score.right < passMark(score.total)) return out
   return { ...out, missions: { ...p.missions, [date]: [...done, subject] }, stars: { ...p.stars, [date]: (p.stars[date] ?? 0) + 1 } }
 }
 

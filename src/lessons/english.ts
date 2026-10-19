@@ -78,13 +78,11 @@ function spelling(r: Random, maxLetters: number): Question {
 function aOrAn(r: Random): Question {
   const w = pick(r, A_AN)
   const right = /^[aeiou]/.test(w.word) ? 'an' : 'a'
-  const choices = [{ label: 'a' }, { label: 'an' }]
   return {
     prompt: `Which is right? ___ ${w.word}`,
     spoken: `A ${w.word}, or an ${w.word}?`,
     visual: w.emoji ? { kind: 'emoji', name: w.emoji } : undefined,
-    choices,
-    answer: right === 'a' ? 0 : 1,
+    ...shuffleIn(r, { label: right }, [{ label: right === 'a' ? 'an' : 'a' }]),
   }
 }
 

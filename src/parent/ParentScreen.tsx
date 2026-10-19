@@ -1,6 +1,7 @@
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { type ChangeEvent, type ReactNode, useRef, useState } from 'react'
 import { useStudio } from '@/app/studio'
+import { sayText, setVoicePreference, useVoices } from '@/audio/say'
 import { BackupError, backupDue, deleteAll, makeBackup, parseBackup, restoreBackup, saveBackup } from '@/data/backup'
 import { usePersistence } from '@/data/persist'
 import type { FamilyBirthday } from '@/data/types'
@@ -32,6 +33,9 @@ export function ParentScreen() {
       </Card>
       <Card emoji="memo" title={t.parent.backup}>
         <BackupCard />
+      </Card>
+      <Card emoji="speech" title={t.voice.title}>
+        <VoiceCard />
       </Card>
       <Card emoji="cake" title={t.parent.birthdays}>
         <BirthdaysEditor />
@@ -147,6 +151,55 @@ function ReportCard() {
             ))}
         </tbody>
       </table>
+      <div className={`report-help ${report.needsHelp.length ? 'has-help' : ''}`}>
+        <h4>
+          <Emoji name={report.needsHelp.length ? 'warning' : 'sparkles'} size={28} /> {t.reports.helpTitle}
+        </h4>
+        {report.needsHelp.length === 0 ? (
+          <p className="muted">{t.reports.noHelpNeeded}</p>
+        ) : (
+          <>
+            <small className="muted">{t.reports.helpNote}</small>
+            <ul>
+              {report.needsHelp.map((h) => (
+                <li key={h.step}>
+                  <b>
+                    {t.items[h.subject]}: {h.skill}
+                  </b>{' '}
+                  <span className="pill red">{t.reports.rightOf(h.right, h.total)}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
+      {report.mistakes.length > 0 && (
+        <details className="report-mistakes">
+          <summary>
+            {t.reports.recentMistakes} ({report.mistakes.length})
+          </summary>
+          <table className="report-table">
+            <thead>
+              <tr>
+                <th>{t.reports.subject}</th>
+                <th>{t.reports.question}</th>
+                <th>{t.reports.answered}</th>
+                <th>{t.reports.rightAnswer}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {report.mistakes.map((m, i) => (
+                <tr key={i}>
+                  <td>{t.items[m.subject]}</td>
+                  <td>{m.prompt}</td>
+                  <td className="wrong-cell">{m.given}</td>
+                  <td>{m.answer}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
+      )}
       <div className="report-mail">
         <label className="field">
           <span>{t.reports.emailTo}</span>
@@ -229,6 +282,44 @@ function BackupCard() {
         {usedMb && ` ${t.storage.used(usedMb)}`}
       </small>
       <small className="muted">{t.backup.private}</small>
+    </div>
+  )
+}
+
+/** Reading aloud: which of the device's voices, how fast, and a test. */
+function VoiceCard() {
+  const t = useT()
+  const { settings, updateSettings } = useStudio()
+  const voices = useVoices()
+  const v = settings.voice
+  const set = (change: Partial<typeof v>) => updateSettings((s) => ({ ...s, voice: { ...s.voice, ...change } }))
+  const test = () => {
+    setVoicePreference({ ...settings.voice })
+    sayText(t.voice.sample)
+  }
+  if (voices.length === 0) return <p className="muted">{t.voice.none}</p>
+  const chosen = voices.find((x) => x.name === v.name)
+  return (
+    <div className="editor">
+      <label className="field">
+        <span>{t.voice.label}</span>
+        <select value={v.name ?? ''} onChange={(e) => set({ name: e.target.value || null })}>
+          <option value="">{t.voice.best(voices[0].name)}</option>
+          {voices.map((x) => (
+            <option key={x.name} value={x.name}>
+              {x.name} ({x.lang}){x.localService ? '' : ` · ${t.voice.online}`}
+            </option>
+          ))}
+        </select>
+      </label>
+      {chosen && !chosen.localService && <small className="backup-due">{t.voice.onlineNote}</small>}
+      <Stepper label={t.voice.speed} value={Math.round(v.rate * 10)} min={6} max={12} onChange={(n) => set({ rate: n / 10 })} />
+      <div className="settings-buttons">
+        <button className="secondary" onClick={test}>
+          <Emoji name="speech" size={24} /> {t.voice.test}
+        </button>
+      </div>
+      <small className="muted">{t.voice.howTo}</small>
     </div>
   )
 }

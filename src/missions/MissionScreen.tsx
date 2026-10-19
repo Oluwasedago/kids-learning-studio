@@ -1,4 +1,4 @@
-import { ArrowLeft, Volume2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Volume2 } from 'lucide-react'
 import { useState } from 'react'
 import { ITEMS, type Subject } from '@/access/catalogue'
 import { StatusBar } from '@/app/Shell'
@@ -6,36 +6,47 @@ import { useStudio } from '@/app/studio'
 import { sayText, useCanSpeak } from '@/audio/say'
 import type { Score } from '@/data/types'
 import { useT } from '@/i18n'
-import { LADDERS, makeRound } from '@/lessons/ladder'
+import { COUNTRIES } from '@/lessons/data'
+import { LADDERS, makeRound, passMark } from '@/lessons/ladder'
 import type { Choice, Visual } from '@/lessons/question'
-import { completeMission, levelOf, missionsFor } from '@/progress/progress'
+import { type Answer, completeMission, levelOf, missionsFor } from '@/progress/progress'
 import { useArea } from '@/progress/usage'
 import { Emoji } from '@/shared/Emoji'
 import { CountryFlag } from './Flag'
 import './Missions.css'
 
 /**
- * A mission, full screen: 8 questions at the child's level, then a star. It counts as one of the day's missions
- * (a star) only when the subject is on today's list and not done yet; otherwise it is practice. Either way the
- * result moves the adaptive level.
+ * A mission, full screen: 8 questions at the child's level, one try each. A wrong answer is shown as wrong
+ * together with the right one, so the child can learn from it. Passed (5 of 8 or more) and one of today's
+ * missions: ticked off with a star. Otherwise "not yet", and a new try with new questions. Either way the
+ * answers move the adaptive level and go into the parents' report.
  */
 export function MissionScreen({ subject, onClose }: { subject: Subject; onClose: () => void }) {
   const t = useT()
   const { now, today, age, progress, settings, updateProgress } = useStudio()
-  const [counts] = useState(() => missionsFor(now, settings.access, settings.rewards.missionsPerDay).includes(subject) && !(progress.missions[today] ?? []).includes(subject))
-  const [level] = useState(() => levelOf(progress, subject, age))
+  const isTodays = () => missionsFor(now, settings.access, settings.rewards.missionsPerDay).includes(subject) && !(progress.missions[today] ?? []).includes(subject)
+  const [counts, setCounts] = useState(isTodays)
+  const [level, setLevel] = useState(() => levelOf(progress, subject, age))
+  const [round, setRound] = useState(0)
   const [result, setResult] = useState<{ score: Score; levelAfter: number } | null>(null)
   useArea(`mission:${subject}`)
 
-  const finish = (score: Score) => {
+  const finish = (answers: Answer[]) => {
     let levelAfter = level
     updateProgress((p) => {
-      const next = completeMission(p, subject, score, { day: now, age, counts })
+      const next = completeMission(p, subject, answers, { day: now, age, counts })
       levelAfter = next.levels[subject] ?? level
       return next
     })
-    setResult({ score, levelAfter })
+    setResult({ score: { right: answers.filter((a) => a.right).length, total: answers.length }, levelAfter })
   }
+  const again = () => {
+    setCounts(isTodays())
+    setLevel(result?.levelAfter ?? level)
+    setResult(null)
+    setRound((n) => n + 1)
+  }
+  const passed = result !== null && result.score.right >= passMark(result.score.total)
 
   return (
     <div className="mission-screen">
@@ -53,54 +64,69 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
       />
       {result ? (
         <section className="card mission-done">
-          <Emoji name={counts ? 'glowstar' : 'sparkles'} size={150} className="mission-star" />
-          <h2>{t.mission.doneTitle}</h2>
+          <Emoji name={passed ? (counts ? 'glowstar' : 'sparkles') : 'seedling'} size={150} className={passed ? 'mission-star' : ''} />
+          <h2>{passed ? t.mission.doneTitle : t.mission.notYetTitle}</h2>
           <p>{t.mission.score(result.score.right, result.score.total)}</p>
-          <p>{counts ? t.mission.doneText : t.mission.practiceText}</p>
+          <p>{passed ? (counts ? t.mission.doneText : t.mission.practiceText) : t.mission.notYetText(passMark(result.score.total))}</p>
           {result.levelAfter > level && <p className="pill">{t.mission.levelUp(LADDERS[subject][result.levelAfter].skill)}</p>}
-          <button onClick={onClose}>{counts ? t.mission.backHome : t.common.back}</button>
+          {result.levelAfter < level && <p className="pill">{t.mission.levelDown(LADDERS[subject][result.levelAfter].skill)}</p>}
+          <div className="settings-buttons">
+            {!passed && <button onClick={again}>{t.mission.tryAgain}</button>}
+            <button className={passed ? '' : 'secondary'} onClick={onClose}>
+              {passed && counts ? t.mission.backHome : t.common.back}
+            </button>
+          </div>
         </section>
       ) : (
-        <Quiz subject={subject} level={level} onDone={finish} />
+        <Quiz key={round} subject={subject} level={level} onDone={finish} />
       )}
     </div>
   )
 }
 
-function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onDone: (score: Score) => void }) {
+/** A choice as words, for the parents' report ("fox", "France", "12"). */
+function describe(c: Choice): string {
+  if (c.label !== undefined) return c.label
+  const v = c.visual
+  if (!v) return '?'
+  if (v.kind === 'text') return v.text
+  if (v.kind === 'flag') return `flag of ${COUNTRIES.find((x) => x.id === v.id)?.name ?? v.id}`
+  if (v.kind === 'emoji') return `picture: ${v.name.replace(/^(animal|fruit)-/, '').replace(/-/g, ' ')}`
+  return '?'
+}
+
+function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onDone: (answers: Answer[]) => void }) {
   const t = useT()
   const [round] = useState(() => makeRound(subject, level))
   const [index, setIndex] = useState(0)
-  const [wrong, setWrong] = useState<number[]>([])
-  const [right, setRight] = useState(false)
-  /** Questions answered right at the first try. */
-  const [firstTry, setFirstTry] = useState(0)
+  const [picked, setPicked] = useState<number | null>(null)
+  const [answers, setAnswers] = useState<Answer[]>([])
   const q = round[index]
   const speaks = useCanSpeak()
 
-  const choose = (i: number) => {
-    if (right || wrong.includes(i)) return
-    if (i !== q.answer) {
-      setWrong([...wrong, i])
-      return
-    }
-    setRight(true)
-    const total = firstTry + (wrong.length === 0 ? 1 : 0)
-    setFirstTry(total)
-    setTimeout(() => {
-      if (index + 1 >= round.length) return onDone({ right: total, total: round.length })
-      setIndex(index + 1)
-      setWrong([])
-      setRight(false)
-    }, 1000)
+  const advance = (all: Answer[]) => {
+    if (index + 1 >= round.length) return onDone(all)
+    setIndex(index + 1)
+    setPicked(null)
   }
+  const choose = (i: number) => {
+    if (picked !== null) return
+    setPicked(i)
+    const right = i === q.answer
+    const all = [...answers, { step: q.step ?? '', prompt: q.prompt, given: describe(q.choices[i]), answer: describe(q.choices[q.answer]), right }]
+    setAnswers(all)
+    // Right: on to the next question after a moment. Wrong: the right answer stays on screen until "Next".
+    if (right) setTimeout(() => advance(all), 900)
+  }
+  const wrongNow = picked !== null && picked !== q.answer
 
   return (
     <section className="card quiz">
       <div className="quiz-dots" aria-label={`${index + 1} / ${round.length}`}>
-        {round.map((_, i) => (
-          <i key={i} className={i < index || (i === index && right) ? 'done' : i === index ? 'now' : ''} />
-        ))}
+        {round.map((_, i) => {
+          const a = answers[i]
+          return <i key={i} className={a ? (a.right ? 'done' : 'missed') : i === index ? 'now' : ''} />
+        })}
       </div>
       <div className="quiz-ask">
         <p>{q.prompt}</p>
@@ -117,11 +143,24 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
       )}
       <div className="quiz-choices">
         {q.choices.map((c, i) => (
-          <button key={i} className={`quiz-choice ${wrong.includes(i) ? 'wrong' : ''} ${right && i === q.answer ? 'right' : ''}`} onClick={() => choose(i)}>
+          <button
+            key={i}
+            className={`quiz-choice ${picked !== null && i === q.answer ? 'right' : ''} ${picked === i && i !== q.answer ? 'wrong' : ''} ${picked !== null && i !== picked && i !== q.answer ? 'faded' : ''}`}
+            onClick={() => choose(i)}
+            disabled={picked !== null && i !== picked && i !== q.answer}
+          >
             <ChoiceView choice={c} />
           </button>
         ))}
       </div>
+      {wrongNow && (
+        <div className="quiz-feedback" role="status">
+          <span>{t.mission.wrongAnswer(describe(q.choices[q.answer]))}</span>
+          <button onClick={() => advance(answers)}>
+            {t.common.next} <ArrowRight />
+          </button>
+        </div>
+      )}
     </section>
   )
 }

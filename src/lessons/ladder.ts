@@ -56,7 +56,10 @@ export function startLevel(subject: Subject, age: number): number {
   return i === -1 ? steps.length - 1 : i
 }
 
-/** A round counts as strong at 7 of 8 right at the first try, weak at half or less. */
+/** A mission is passed (ticked off, a star) with at least 60 % right: 5 of 8. Pure (tested). */
+export const passMark = (total: number) => Math.ceil(total * 0.6)
+
+/** A round counts as strong at 7 of 8 right, weak at half or less. */
 export const STRONG = 0.85
 export const WEAK = 0.5
 
@@ -85,7 +88,7 @@ export function makeRound(subject: Subject, level: number, r: Random = Math.rand
   const key = (q: Question) => JSON.stringify([q.prompt, q.visual])
   for (let guard = 0; out.length < count && guard < count * 30; guard++) {
     const step = before && out.length < 2 ? before : now
-    const q = step.make(r)
+    const q = { ...step.make(r), step: step.id }
     if (!out.some((o) => key(o) === key(q))) out.push(q)
   }
   return out

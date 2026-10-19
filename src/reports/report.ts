@@ -1,5 +1,5 @@
 import { SUBJECTS, type Subject } from '@/access/catalogue'
-import type { Progress, Settings, Usage } from '@/data/types'
+import type { Mistake, Progress, Score, Settings, Usage } from '@/data/types'
 import type { Strings } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
 import { levelOf } from '@/progress/progress'
@@ -22,6 +22,30 @@ export interface SubjectReport {
   stage: string
 }
 
+/** A skill the child got wrong often in the period, with examples of their wrong answers. */
+export interface HelpItem {
+  subject: Subject
+  step: string
+  skill: string
+  stage: string
+  right: number
+  total: number
+  examples: Mistake[]
+}
+
+/** Skills answered right less often than this, with at least HELP_MIN_TRIES tries, show as "needs help". */
+export const HELP_BELOW = 0.7
+export const HELP_MIN_TRIES = 4
+
+/** The subject and ladder step of a step id, or null for an unknown id. */
+function findStep(id: string): { subject: Subject; skill: string; stage: number } | null {
+  for (const subject of SUBJECTS) {
+    const s = LADDERS[subject].find((x) => x.id === id)
+    if (s) return { subject, skill: s.skill, stage: s.stage }
+  }
+  return null
+}
+
 export interface Report {
   period: Period
   from: string
@@ -31,6 +55,10 @@ export interface Report {
   missions: number
   minutes: { learning: number; games: number; other: number; earnedUsed: number }
   subjects: SubjectReport[]
+  /** Weakest skills first. */
+  needsHelp: HelpItem[]
+  /** Wrong answers in the period, newest first (at most 10). */
+  mistakes: Mistake[]
 }
 
 /** First and last day of the period containing `now` (week: Monday–Sunday). */
@@ -80,6 +108,24 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
     return { subject, missions, accuracy: total > 0 ? right / total : null, skill: step.skill, stage: stageTags(step.stage).cambridge }
   })
 
+  // Skills that need help: answers per step over the period.
+  const perStep = new Map<string, Score>()
+  for (const [day, steps] of Object.entries(progress.attempts)) {
+    if (!inRange(day)) continue
+    for (const [step, s] of Object.entries(steps)) {
+      const sum = perStep.get(step) ?? { right: 0, total: 0 }
+      perStep.set(step, { right: sum.right + s.right, total: sum.total + s.total })
+    }
+  }
+  const mistakes = progress.mistakes.filter((m) => inRange(m.day)).reverse()
+  const needsHelp: HelpItem[] = []
+  for (const [step, s] of perStep) {
+    const info = findStep(step)
+    if (!info || s.total < HELP_MIN_TRIES || s.right / s.total >= HELP_BELOW) continue
+    needsHelp.push({ subject: info.subject, step, skill: info.skill, stage: stageTags(info.stage).cambridge, ...s, examples: mistakes.filter((m) => m.step === step).slice(0, 3) })
+  }
+  needsHelp.sort((a, b) => a.right / a.total - b.right / b.total)
+
   const minutes = (s: number) => Math.round(s / 60)
   return {
     period,
@@ -90,6 +136,8 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
     missions: Object.entries(progress.missions).reduce((n, [day, done]) => (inRange(day) ? n + done.length : n), 0),
     minutes: { learning: minutes(seconds.learning), games: minutes(seconds.games), other: minutes(seconds.other), earnedUsed: minutes(sum(usage.earnedUsed)) },
     subjects,
+    needsHelp,
+    mistakes: mistakes.slice(0, 10),
   }
 }
 
@@ -104,6 +152,12 @@ export function reportText(r: Report, t: Strings, childName: string): string {
     '',
     t.reports.bySubject,
     ...r.subjects.map((s) => `- ${t.items[s.subject]}: ${t.reports.subjectLine(s.missions, s.accuracy === null ? null : Math.round(s.accuracy * 100), s.skill, s.stage)}`),
+    '',
+    r.needsHelp.length === 0 ? t.reports.noHelpNeeded : t.reports.needsHelp,
+    ...r.needsHelp.flatMap((h) => [
+      `- ${t.items[h.subject]}: ${h.skill} (${t.reports.rightOf(h.right, h.total)})`,
+      ...h.examples.map((m) => `    ${t.reports.mistakeLine(m.prompt, m.given, m.answer)}`),
+    ]),
     '',
     t.reports.footer,
   ]

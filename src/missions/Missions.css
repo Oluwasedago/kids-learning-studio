@@ -35,6 +35,9 @@
 .quiz-dots i.done {
   background: var(--mint);
 }
+.quiz-dots i.missed {
+  background: var(--red);
+}
 .quiz-ask {
   display: flex;
   align-items: center;
@@ -111,8 +114,23 @@
   font-weight: 700;
 }
 .quiz-choice.wrong {
-  opacity: 0.45;
+  background: var(--red-soft);
+  border-color: var(--red);
   animation: quiz-shake 0.4s;
+}
+.quiz-choice.faded {
+  opacity: 0.4;
+}
+/* After a wrong answer: the right answer in words, and Next (the child moves on when ready). */
+.quiz-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  color: var(--ink);
 }
 .quiz-choice.right {
   background: var(--mint-soft);

@@ -44,4 +44,23 @@ describe('reports', () => {
     const url = mailtoUrl('parent@example.com', 'Report', 'Line 1\nLine 2 & more')
     expect(url).toBe('mailto:parent@example.com?subject=Report&body=Line%201%0ALine%202%20%26%20more')
   })
+
+  it('lists skills that need help (under 70 %, at least 4 tries), weakest first, with examples', () => {
+    const p = {
+      ...progress,
+      attempts: { '2026-10-19': { 'add-10': { right: 2, total: 8 }, 'sub-10': { right: 5, total: 8 }, 'first-letter': { right: 7, total: 8 } }, '2026-10-20': { 'add-10': { right: 1, total: 4 } } },
+      mistakes: [
+        { day: '2026-10-19', subject: 'maths' as const, step: 'add-10', prompt: 'What is 3 + 4?', given: '6', answer: '7' },
+        { day: '2026-10-12', subject: 'maths' as const, step: 'add-10', prompt: 'old week', given: '1', answer: '2' },
+      ],
+    }
+    const r = buildReport(p, usage, 'week', now, 7)
+    expect(r.needsHelp.map((h) => [h.step, h.right, h.total])).toEqual([
+      ['add-10', 3, 12],
+      ['sub-10', 5, 8],
+    ])
+    expect(r.needsHelp[0].examples.map((m) => m.prompt)).toEqual(['What is 3 + 4?'])
+    expect(r.mistakes).toHaveLength(1)
+    expect(reportText(r, en, '')).toContain('What is 3 + 4?')
+  })
 })

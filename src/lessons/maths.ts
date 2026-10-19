@@ -65,7 +65,9 @@ export const MATHS: Step[] = [
     make: (r) => {
       const t = int(r, 1, 9)
       const o = int(r, 0, 9)
-      return numberQuestion(r, `${t} tens and ${o} ones make which number?`, t * 10 + o, { kind: 'text', text: `${t} tens + ${o} ones` }, [10, -10, 1, -1])
+      const tens = `${t} ${t === 1 ? 'ten' : 'tens'}`
+      const ones = `${o} ${o === 1 ? 'one' : 'ones'}`
+      return numberQuestion(r, `${tens} and ${ones} make which number?`, t * 10 + o, { kind: 'text', text: `${tens} + ${ones}` }, [10, -10, 1, -1])
     },
   },
   {

@@ -41,7 +41,15 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
     progress.scores[day] = Object.fromEntries(missions.map((m, k) => [m, { right: 5 + ((i + k) % 4), total: 8 }]))
     usage.days[day] = { home: 180, ...Object.fromEntries(missions.map((m) => [`mission:${m}`, 240 + 30 * (i % 3)])), 'game:memory': 600, 'game:snake': 300 }
     usage.earnedUsed[day] = 900
+    // Every answer per skill: subtraction is hard for the demo child, so the report shows it under "Needs help".
+    progress.attempts[day] = { 'add-sub-20': { right: 3, total: 8 }, 'missing-letter': { right: 7, total: 8 }, 'easy-flags': { right: 6, total: 8 } }
   }
+  progress.mistakes = [
+    { day: isoDate(addDays(now, -2)), subject: 'maths', step: 'add-sub-20', prompt: 'What is 15 − 7?', given: '9', answer: '8' },
+    { day: isoDate(addDays(now, -2)), subject: 'maths', step: 'add-sub-20', prompt: 'What is 12 − 5?', given: '8', answer: '7' },
+    { day: isoDate(addDays(now, -1)), subject: 'maths', step: 'add-sub-20', prompt: 'What is 13 − 6?', given: '8', answer: '7' },
+    { day: isoDate(addDays(now, -1)), subject: 'world', step: 'easy-flags', prompt: 'Which country has this flag?', given: 'Italy', answer: 'Ireland' },
+  ]
   for (const s of SUBJECTS) progress.levels[s] = startLevel(s, DEMO_AGE) + 1
   return { settings, progress, usage }
 }

@@ -38,6 +38,8 @@ export interface Settings {
     accent: string
   }
   theme: ThemeMode
+  /** Reading aloud: the chosen voice (null = best available on the device) and speed. */
+  voice: { name: string | null; rate: number }
   /** The parent PIN, stored only as a salted PBKDF2 hash (see parent/pin.ts). null until the wizard sets it. */
   pin: { salt: string; hash: string; iterations: number } | null
   access: Record<ItemId, AccessRule>
@@ -67,10 +69,22 @@ export interface Settings {
   updatedAt: number
 }
 
-/** A mission result: answers right at the first try out of all questions. */
+/** A mission result: answers right out of all questions (one try per question). */
 export interface Score {
   right: number
   total: number
+}
+
+/** A wrong answer, kept so parents can see what their child finds hard. */
+export interface Mistake {
+  /** "YYYY-MM-DD" */
+  day: string
+  subject: Subject
+  /** The ladder step (skill) the question came from. */
+  step: string
+  prompt: string
+  given: string
+  answer: string
 }
 
 export interface Progress {
@@ -80,6 +94,10 @@ export interface Progress {
   missions: Record<string, string[]>
   /** Best score per subject per day. */
   scores: Record<string, Record<string, Score>>
+  /** Every answer counted per day and skill step ("YYYY-MM-DD" → step id → right/total): for reports. */
+  attempts: Record<string, Record<string, Score>>
+  /** The most recent wrong answers (newest last, at most MAX_MISTAKES). */
+  mistakes: Mistake[]
   /** Current step on each subject's skills ladder (index into lessons/ladder.ts). */
   levels: Partial<Record<Subject, number>>
   /** Recent results per subject (share right at first try, 0-1, newest last): drives the adaptive level. */
@@ -102,6 +120,7 @@ export const DEFAULT_SETTINGS: Settings = {
   demo: false,
   child: { name: '', birthMonth: 1, birthYear: new Date().getFullYear() - 6, accent: ACCENTS[0] },
   theme: 'system',
+  voice: { name: null, rate: 0.9 },
   pin: null,
   // Filled by the setup wizard (access/starter.ts); this default only matters before the wizard has run.
   access: {} as Record<ItemId, AccessRule>,
@@ -112,5 +131,7 @@ export const DEFAULT_SETTINGS: Settings = {
   updatedAt: 0,
 }
 
-export const EMPTY_PROGRESS: Progress = { stars: {}, missions: {}, scores: {}, levels: {}, recent: {}, updatedAt: 0 }
+export const EMPTY_PROGRESS: Progress = { stars: {}, missions: {}, scores: {}, attempts: {}, mistakes: [], levels: {}, recent: {}, updatedAt: 0 }
+
+export const MAX_MISTAKES = 200
 export const EMPTY_USAGE: Usage = { days: {}, earnedUsed: {}, updatedAt: 0 }
