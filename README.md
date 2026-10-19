@@ -4,13 +4,27 @@ A free learning home screen for children (about 4–10 years) that parents insta
 Amazon Fire, Android tablet or iPad. Missions earn stars, stars earn screen time, and everything stays on the
 family's own device: no accounts, no tracking, no server.
 
+Developed by Oluwasedago.
+
 > **Status: in development (v1).** Not ready for families yet. Install steps, screenshots and the full privacy
 > statement come with the first release.
 
+- App (preview): https://oluwasedago.github.io/kids-learning-studio/
 - How it works: [product map](docs/product-map.html) (open the file in a browser)
-- Licence: [MIT](LICENSE)
+- Licence: [MIT](LICENSE). Pictures: [Microsoft Fluent Emoji](public/emoji/CREDITS.md) (MIT). Fonts: Andika and Fredoka (SIL OFL).
 
 ## For contributors
+
+You need [Node.js](https://nodejs.org) 24 or newer.
+
+```sh
+npm install        # once
+npm run dev        # the app at http://localhost:5173 (changes show at once)
+npm test           # unit tests
+npm run build      # the finished site in dist/
+```
+
+Every push to `main` is checked, built and published to GitHub Pages by `.github/workflows/deploy.yml`.
 
 Before your first commit, turn on the privacy check (it blocks private words and secrets):
 
