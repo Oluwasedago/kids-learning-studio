@@ -1,48 +1,238 @@
+/* Home: greeting and missions on top, earned time and play tiles below. Scrolls when it does not fit. */
 .home {
   height: 100%;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: 1.6fr 1fr;
+  grid-template-areas:
+    'hero missions'
+    'play earned'
+    'play birthdays';
+  grid-template-rows: auto auto 1fr;
   align-content: start;
-  gap: 1rem;
-  padding-bottom: 1rem;
-}
-.home .card {
-  display: grid;
-  gap: 0.6rem;
-  align-content: start;
+  gap: 0.8rem;
+  padding-bottom: 0.6rem;
 }
 .hero {
-  grid-column: 1 / -1;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 1.2rem;
-  background: linear-gradient(120deg, var(--hero-a), var(--hero-b));
+  grid-area: hero;
 }
-.hero h2 {
-  font-size: 2rem;
+.missions {
+  grid-area: missions;
+}
+.play-row {
+  grid-area: play;
+}
+.earned-card {
+  grid-area: earned;
+}
+.birthdays-card {
+  grid-area: birthdays;
 }
 .muted {
   color: var(--muted);
 }
-.about {
+
+/* Greeting card: warm gradient, greeting, badges, animal of the day, star track. */
+.hero {
+  background: linear-gradient(120deg, var(--hero-a) 0%, var(--hero-b) 55%, color-mix(in srgb, var(--accent) 30%, var(--card)) 100%);
+  padding: 0.9rem 1.3rem 0.3rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+  column-gap: 1.2rem;
+}
+.hero-track {
   grid-column: 1 / -1;
+}
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.hero-text h2 {
+  font-size: 1.9rem;
+  line-height: 1.05;
+}
+.hero-sub {
+  font-size: 1rem;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem 0.25rem 0.4rem;
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  box-shadow: 0 6px 14px -8px rgb(61 30 71 / 35%);
+}
+.badge b {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.hero-animal {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
   text-align: center;
 }
-.soon-card {
+.hero-animal small {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.hero-animal b {
+  font-family: var(--display);
+  color: var(--ink);
+}
+
+/* Missions: progress bar and rings. */
+.missions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.missions-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.missions-bar {
+  height: 0.85rem;
+  border-radius: 999px;
+  background: var(--sunken);
+  overflow: hidden;
+}
+.missions-bar span {
+  display: block;
   height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--peach), var(--accent));
+}
+.missions-rings {
+  flex: 1;
   display: grid;
-  place-content: center;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+  align-items: center;
+}
+.mission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.3rem 0.6rem;
+  font-family: var(--display);
+  color: var(--ink);
+  background: transparent;
+  box-shadow: none;
+  border-radius: var(--radius-s);
+}
+.mission:not(.done) small {
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+.mission small {
+  color: var(--muted);
+  font-family: 'Andika', sans-serif;
+  font-size: 0.85rem;
+}
+.ring {
+  position: relative;
+  width: 5.2rem;
+  height: 5.2rem;
+  display: grid;
+  place-items: center;
+}
+.ring svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+.ring-track,
+.ring-fill {
+  fill: none;
+  stroke-width: 8;
+}
+.ring-track {
+  stroke: var(--sunken);
+}
+.ring-fill {
+  transition: stroke-dasharray 0.8s ease;
+}
+.ring-green {
+  stroke: var(--mint);
+}
+.ring-red {
+  stroke: var(--red);
+}
+.ring-star {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
+}
+/* The missions card lights up when a locked tile is tapped: "do these first". */
+.missions.nudge {
+  animation: missions-nudge 0.6s ease-in-out 3;
+}
+@keyframes missions-nudge {
+  0%,
+  100% {
+    box-shadow: var(--shadow);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px var(--accent), var(--shadow);
+    transform: scale(1.02);
+  }
+}
+
+/* Play tiles: games (and later radio, stories, videos). */
+.play-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  align-content: start;
   gap: 0.8rem;
-  text-align: center;
+}
+
+/* Earned time and birthdays. */
+.earned-big {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 2.6rem;
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
+.birthday-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.pill.today {
+  background: var(--accent);
+  color: #fff;
 }
 
 @media (max-width: 760px) {
   .home {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'hero' 'missions' 'earned' 'play' 'birthdays';
+    grid-template-rows: none;
   }
   .hero h2 {
     font-size: 1.5rem;
+  }
+  .hero-animal {
+    display: none;
   }
 }

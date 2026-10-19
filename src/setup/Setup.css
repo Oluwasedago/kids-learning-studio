@@ -1,0 +1,141 @@
+/* Setup wizard: one card in the middle of the screen, scrolling when long. */
+.setup {
+  height: 100%;
+  overflow-y: auto;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding: 1.5rem max(16px, 2vw);
+}
+.setup-card {
+  width: min(48rem, 100%);
+  display: grid;
+  gap: 0.9rem;
+  justify-items: stretch;
+  padding: 1.6rem clamp(1rem, 3vw, 2.2rem);
+}
+.setup-card > h2 {
+  font-size: 1.7rem;
+}
+.setup-progress {
+  display: flex;
+  gap: 0.4rem;
+}
+.setup-progress i {
+  flex: 1;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--sunken);
+}
+.setup-progress i.done {
+  background: var(--accent);
+}
+.setup-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  /* Stays in reach at the bottom of the screen on long pages (the access list). */
+  position: sticky;
+  bottom: 0;
+  padding: 0.7rem 0;
+  background: linear-gradient(transparent, var(--card) 30%);
+}
+.setup-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--display);
+  color: var(--ink);
+}
+.setup-tips {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.welcome {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.9rem;
+}
+.welcome img {
+  border-radius: 28px;
+}
+.welcome h1 {
+  font-size: 2.2rem;
+}
+.welcome > p {
+  max-width: 36rem;
+}
+.welcome-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  text-align: left;
+}
+.welcome-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.welcome-actions {
+  display: grid;
+  gap: 0.7rem;
+  width: min(24rem, 100%);
+}
+
+/* Shared editors (wizard and parent screen). */
+.editor {
+  display: grid;
+  gap: 0.4rem;
+}
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+}
+select {
+  font: inherit;
+  min-height: var(--tap);
+  padding: 0 0.8rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--card);
+  color: var(--ink);
+}
+input {
+  background: var(--card);
+}
+.editor-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  color: var(--ink);
+}
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.swatch {
+  width: var(--tap);
+  height: var(--tap);
+  padding: 0;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  box-shadow: none;
+}
+.swatch.on {
+  border-color: var(--ink);
+}

@@ -1,33 +1,39 @@
 import type { ReactNode } from 'react'
+import { type ItemGroup, ITEMS, itemsIn } from '@/access/catalogue'
 import { LOCALES, useLang, useT } from '@/i18n'
 import { Emoji } from '@/shared/Emoji'
 import { useBattery } from '@/shared/useBattery'
+import { clock } from '@/shared/clock'
 import { useOnline } from '@/shared/useOnline'
 import { type Screen, useStudio } from './studio'
 import './Shell.css'
 
-/** The menu. Parents sits apart at the bottom (Step 2 puts it behind the parent password). */
-const NAV: { id: Exclude<Screen, 'parents'>; emoji: string }[] = [
+/** The menu. An entry shows when at least one of its items is switched on and ready (access layer 1). */
+const NAV: { id: Exclude<Screen, 'parents'>; emoji: string; group?: ItemGroup }[] = [
   { id: 'home', emoji: 'house' },
-  { id: 'learn', emoji: 'gradcap' },
-  { id: 'games', emoji: 'joystick' },
-  { id: 'radio', emoji: 'radio' },
+  { id: 'learn', emoji: 'gradcap', group: 'learning' },
+  { id: 'games', emoji: 'joystick', group: 'games' },
+  { id: 'radio', emoji: 'radio', group: 'media' },
 ]
 
 interface Props {
   screen: Screen
   title?: string
   onNavigate: (s: Screen) => void
+  /** Show a dot on Parents (e.g. a backup is due). */
+  parentsDot?: boolean
   children: ReactNode
 }
 
-/** Every screen: the menu on the left, the status bar (date or title, online, time, battery) on top. */
-export function Shell({ screen, title, onNavigate, children }: Props) {
+/** Every screen: the menu on the left (bottom on phones), the status bar on top. */
+export function Shell({ screen, title, onNavigate, parentsDot, children }: Props) {
   const t = useT()
+  const { accessOf, settings } = useStudio()
+  const shown = NAV.filter((n) => !n.group || itemsIn(n.group).some((id) => ITEMS[id].ready && accessOf(id) !== 'hidden'))
   return (
-    <div className="shell">
+    <div className={`shell ${settings.demo ? 'with-banner' : ''}`}>
       <nav className="sidebar">
-        {NAV.map((item) => (
+        {shown.map((item) => (
           <button key={item.id} className={`nav-item ${screen === item.id ? 'active' : ''}`} onClick={() => onNavigate(item.id)}>
             <Emoji name={item.emoji} size={46} />
             <span>{t.nav[item.id]}</span>
@@ -36,6 +42,7 @@ export function Shell({ screen, title, onNavigate, children }: Props) {
         <button className={`nav-item nav-parent ${screen === 'parents' ? 'active' : ''}`} onClick={() => onNavigate('parents')}>
           <Emoji name="gear" size={34} />
           <span>{t.nav.parents}</span>
+          {parentsDot && <i className="nav-dot" aria-label={t.backup.due} />}
         </button>
       </nav>
       <div className="shell-main">
@@ -46,19 +53,32 @@ export function Shell({ screen, title, onNavigate, children }: Props) {
   )
 }
 
-/** Online state, time and battery on the right; on the left the screen's title, or today's date. */
-export function StatusBar({ title }: { title?: string }) {
+/**
+ * Online state, earned time, clock and battery on the right; on the left the screen's title (or today's date),
+ * or `left` (e.g. a back button and a mission's name in full-screen views).
+ */
+export function StatusBar({ title, left }: { title?: string; left?: ReactNode }) {
   const t = useT()
   const locale = LOCALES[useLang()]
-  const { now } = useStudio()
+  const { now, earnedLeft } = useStudio()
   const battery = useBattery()
   const online = useOnline()
   return (
     <header className="statusbar">
-      <h1 className="statusbar-title">{title ?? now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}</h1>
+      {left ? (
+        <div className="statusbar-left">{left}</div>
+      ) : (
+        <h1 className="statusbar-title">{title ?? now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}</h1>
+      )}
       <div className="statusbar-right">
         {!online && <span className="status-chip offline">{t.status.offline}</span>}
-        <span className="status-chip status-clock">{now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
+        {earnedLeft > 0 && (
+          <span className="status-chip earned" aria-label={t.status.earnedLeft(Math.ceil(earnedLeft / 60))}>
+            <Emoji name="clock" size={26} />
+            {clock(earnedLeft)}
+          </span>
+        )}
+        <span className="status-chip status-clock">{now.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' })}</span>
         {battery && (
           <span className={`status-chip battery ${battery.level <= 20 && !battery.charging ? 'low' : ''}`} aria-label={t.status.battery(battery.level)}>
             <span className="battery-shape" aria-hidden>

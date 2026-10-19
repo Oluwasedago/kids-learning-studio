@@ -1,5 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ItemId } from '@/access/catalogue'
+import { backupDue } from '@/data/backup'
+import { GamesScreen } from '@/games/GamesScreen'
+import { LearnScreen } from '@/games/LearnScreen'
 import { useT } from '@/i18n'
+import { ParentGate } from '@/parent/ParentGate'
+import { ParentScreen } from '@/parent/ParentScreen'
+import { addUsage, currentArea, TICK_SECONDS } from '@/progress/usage'
+import { DEMO_PIN, startDemo } from '@/setup/demo'
+import { SetupWizard } from '@/setup/SetupWizard'
 import { useAutoUpdate } from '@/shared/autoUpdate'
 import { Emoji } from '@/shared/Emoji'
 import { isDark, useSystemDark } from '@/shared/theme'
@@ -10,42 +19,106 @@ import { Shell } from './Shell'
 import { type Screen, SCREENS, useStudio } from './studio'
 import { StudioData } from './StudioData'
 
-/** A minute without a touch counts as a quiet moment (a new version may load then). */
-const QUIET_MS = 60_000
+/** Two minutes without a touch: idle (time stops counting; a new version may load). */
+const IDLE_MS = 2 * 60_000
 
 export default function App() {
   return (
     <StudioData>
-      <Screens />
+      <Root />
     </StudioData>
   )
 }
 
-function Screens() {
-  const t = useT()
-  const { settings } = useStudio()
-  // Preview aid: ?screen=learn|games|radio|parents opens that screen.
-  const asked = new URLSearchParams(location.search).get('screen')
-  const [screen, setScreen] = useState<Screen>(() => SCREENS.find((s) => s === asked) ?? 'home')
-  const idle = useIdle(QUIET_MS)
-  useAutoUpdate(idle)
-  useWakeLock(true)
+function Root() {
+  const { ready, settings } = useStudio()
   const dark = isDark(settings.theme, useSystemDark())
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light'
   }, [dark])
+  // A "Try the demo" link (…/?demo) on a device that is not set up yet opens the demo straight away.
+  const wantsDemo = ready && !settings.setupDone && new URLSearchParams(location.search).has('demo')
+  useEffect(() => {
+    if (wantsDemo) void startDemo()
+  }, [wantsDemo])
+  if (!ready || wantsDemo) return null
+  return settings.setupDone ? <Screens /> : <SetupWizard />
+}
+
+function Screens() {
+  const t = useT()
+  const { settings, now } = useStudio()
+  // Preview aid: ?screen=learn|games|parents opens that screen.
+  const asked = new URLSearchParams(location.search).get('screen')
+  const [screen, setScreen] = useState<Screen>(() => SCREENS.find((s) => s === asked && s !== 'parents') ?? 'home')
+  const [askPin, setAskPin] = useState(false)
+  const [startGame, setStartGame] = useState<ItemId | null>(null)
+  const idle = useIdle(IDLE_MS)
+  useAutoUpdate(idle)
+  useWakeLock(true)
+  useUsageClock(screen, idle)
+
+  const navigate = (s: Screen) => {
+    if (s === 'parents' && screen !== 'parents') setAskPin(true)
+    else setScreen(s)
+  }
 
   return (
-    <Shell screen={screen} title={screen === 'home' ? undefined : t.nav[screen]} onNavigate={setScreen}>
-      {screen === 'home' ? (
-        <Home />
-      ) : (
-        <div className="card soon-card">
-          <Emoji name="seedling" size={96} />
-          <h2>{t.nav[screen]}</h2>
-          <p>{t.screens.soon}</p>
+    <>
+      {settings.demo && (
+        <div className="demo-banner" role="note">
+          <Emoji name="sparkles" size={24} /> {t.demo.banner(DEMO_PIN)}
         </div>
       )}
-    </Shell>
+      <Shell screen={screen} title={screen === 'home' ? undefined : t.nav[screen]} onNavigate={navigate} parentsDot={backupDue(settings, now)}>
+        {screen === 'home' && (
+          <Home
+            onPlay={(id) => {
+              setStartGame(id)
+              setScreen('games')
+            }}
+          />
+        )}
+        {screen === 'learn' && <LearnScreen />}
+        {screen === 'games' && <GamesScreen start={startGame} onStarted={() => setStartGame(null)} />}
+        {screen === 'radio' && (
+          <div className="card time-up">
+            <Emoji name="radio" size={96} />
+            <p>{t.screens.soon}</p>
+          </div>
+        )}
+        {screen === 'parents' && <ParentScreen />}
+      </Shell>
+      {askPin && (
+        <ParentGate
+          onOpen={() => {
+            setAskPin(false)
+            setScreen('parents')
+          }}
+          onClose={() => setAskPin(false)}
+        />
+      )}
+    </>
   )
+}
+
+/**
+ * Every 15 seconds while the app is visible and in use, 15 seconds go to the area that is open (a mission, a
+ * game, or the screen). Earned games also count against today's earned time.
+ */
+function useUsageClock(screen: Screen, idle: boolean) {
+  const { updateUsage } = useStudio()
+  const live = useRef({ screen, idle })
+  useEffect(() => {
+    live.current = { screen, idle }
+  }, [screen, idle])
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const { screen: s, idle: i } = live.current
+      if (document.hidden || i || s === 'parents') return
+      const { area, earned } = currentArea(s)
+      updateUsage((u) => addUsage(u, new Date(), area, TICK_SECONDS, earned))
+    }, TICK_SECONDS * 1000)
+    return () => clearInterval(timer)
+  }, [updateUsage])
 }

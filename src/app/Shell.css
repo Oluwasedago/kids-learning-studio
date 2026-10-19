@@ -202,3 +202,19 @@
     font-size: 1.1rem;
   }
 }
+
+/* A small dot on Parents when something needs a parent (a backup is due). */
+.nav-dot {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--amber) 25%, transparent);
+}
+.status-chip.earned {
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
