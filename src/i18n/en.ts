@@ -278,7 +278,7 @@ export const en = {
     addedByParent: 'Added by a parent',
     stories: (n: number) => (n === 1 ? '1 story' : `${n} stories`),
     credit: (author: string) => `${author}. Read by LibriVox volunteers; public domain. Source:`,
-    radioNote: 'Radio is streamed live from the station. Fun Kids plays short adverts.',
+    radioNote: 'Radio is streamed live from each station. Die Maus has no adverts; Fun Kids plays short adverts.',
     storiesNote: 'Classic children’s books read aloud by LibriVox volunteers (public domain), streamed from the Internet Archive.',
     noVideos: 'No videos yet. A parent can add YouTube videos on the parent screen.',
   },

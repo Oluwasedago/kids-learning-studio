@@ -1,8 +1,12 @@
 // What the child can listen to. Everything is streamed when played and never stored in the app.
 //
-// Radio — Fun Kids (UK children's radio station, funkidslive.com). Public HTTPS streams, MP3 128 kbit/s, checked
-//   19 Oct 2026; the stream carries short adverts. Status: Fun Kids publishes no terms about other players;
-//   TO VERIFY with the station before v1 (ROADMAP.md). Parents can add other stations themselves.
+// Radio — public HTTPS streams, MP3 128 kbit/s, checked 19 Oct 2026. Neither station publishes terms about
+//   other players: TO VERIFY with each station before v1 (ROADMAP.md). Parents can add other stations themselves.
+//   - Die Maus (WDR, German public broadcaster): in German, no adverts. The address forwards to a fresh signed
+//     stream link each time (allowed for web players: Access-Control-Allow-Origin *).
+//   - Fun Kids and Fun Kids Junior (UK, funkidslive.com): in English, with short adverts.
+//   A US station (Kids Public Radio, ad-free) was checked but only streams over http://, which browsers block
+//   inside an https:// app.
 // Stories — LibriVox recordings of public-domain children's books, hosted by the Internet Archive.
 //   LibriVox: "all our recordings are public domain (definitely in the USA, and maybe in your country as well)"
 //   and "you may do whatever you like with our recordings – you don't need permission" (librivox.org,
@@ -21,6 +25,7 @@ export interface Station {
 }
 
 export const STATIONS: Station[] = [
+  { id: 'maus', name: 'Die Maus', url: 'https://wdr-diemaus-live.icecastssl.wdr.de/wdr/diemaus/live/mp3/128/stream.mp3', about: 'German children’s radio from WDR (in German, no adverts)', emoji: 'mouse', builtIn: true },
   { id: 'funkids', name: 'Fun Kids', url: 'https://listen-funkids.sharp-stream.com/funkids.mp3', about: 'UK children’s radio, ages 6–12 (with short adverts)', emoji: 'radio', builtIn: true },
   { id: 'funkids-junior', name: 'Fun Kids Junior', url: 'https://listen-funkids.sharp-stream.com/funkidsjunior.mp3', about: 'Songs and stories for younger children (with short adverts)', emoji: 'teddy', builtIn: true },
 ]
