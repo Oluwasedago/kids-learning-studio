@@ -54,3 +54,13 @@ export async function kvKeys(): Promise<string[]> {
     return [...memory.keys()]
   }
 }
+
+/** Deletes every stored value (Restore replaces everything; "Delete all data" and leaving the demo start afresh). */
+export async function kvClear(): Promise<void> {
+  memory.clear()
+  try {
+    await request('readwrite', (s) => s.clear())
+  } catch {
+    // Nothing stored on the device.
+  }
+}

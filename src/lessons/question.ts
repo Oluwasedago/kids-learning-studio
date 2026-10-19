@@ -53,8 +53,11 @@ export function shuffleIn(r: Random, right: Choice, wrong: Choice[]): { choices:
   return { choices, answer }
 }
 
-/** A question whose answer is a number, with wrong numbers close to it (never negative, all different). */
-export function numberQuestion(r: Random, prompt: string, right: number, visual?: Visual, spread = [1, -1, 2, -2, 10, -10]): Question {
+/**
+ * A question whose answer is a number, with wrong numbers close to it (never negative, all different).
+ * Small answers get small differences (one more than 1 is never offered as 12).
+ */
+export function numberQuestion(r: Random, prompt: string, right: number, visual?: Visual, spread = right < 20 ? [1, -1, 2, -2, 3] : [1, -1, 2, -2, 10, -10]): Question {
   const wrong: number[] = []
   for (let guard = 0; wrong.length < 2 && guard < 100; guard++) {
     const n = right + pick(r, spread)

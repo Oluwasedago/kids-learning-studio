@@ -33,3 +33,12 @@ export function ageFrom(birthMonth: number, birthYear: number, now: Date): numbe
 
 /** Whole days from `from` to `to` (local dates; negative when `to` is earlier). */
 export const daysBetween = (from: Date, to: Date) => dayNumber(to) - dayNumber(from)
+
+/** Days until the next time a month and day come round (0 = today; 29 Feb waits for a leap year). */
+export function daysUntilDate(month: number, day: number, now: Date): number {
+  for (let i = 0; i < 1462; i++) {
+    const d = addDays(now, i)
+    if (d.getMonth() + 1 === month && d.getDate() === day) return i
+  }
+  return Infinity
+}

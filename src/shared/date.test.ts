@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, ageFrom, daysBetween, isoDate, mondayOf } from './date'
+import { addDays, ageFrom, daysBetween, daysUntilDate, isoDate, mondayOf } from './date'
 
 describe('dates', () => {
   it('writes local dates as YYYY-MM-DD and moves by days', () => {
@@ -20,5 +20,11 @@ describe('dates', () => {
   })
   it('counts days between dates', () => {
     expect(daysBetween(new Date(2026, 9, 1), new Date(2026, 9, 19))).toBe(18)
+  })
+  it('counts days to the next birthday, across the new year', () => {
+    const now = new Date(2026, 9, 19)
+    expect(daysUntilDate(10, 19, now)).toBe(0)
+    expect(daysUntilDate(10, 20, now)).toBe(1)
+    expect(daysUntilDate(1, 1, now)).toBe(74)
   })
 })
