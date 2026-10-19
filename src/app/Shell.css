@@ -1,0 +1,158 @@
+.shell {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 6.6rem 1fr;
+  /* One row exactly as tall as the screen, so a long page scrolls instead of being cut off. */
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* Menu on the left: a soft column in the child's colour, the open screen on a light tile. */
+.sidebar {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 16%, var(--card)), color-mix(in srgb, var(--accent) 24%, var(--card)));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  padding: 1.8rem 0 1.6rem 0.55rem;
+  /* The open tile's rounded corner pieces must not poke out below the screen. */
+  min-height: 0;
+  overflow: hidden;
+}
+.nav-item {
+  position: relative;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 5.6rem;
+  padding: 0.4rem 0.2rem;
+  border-radius: 1.4rem 0 0 1.4rem;
+  background: transparent;
+  color: var(--ink);
+  box-shadow: none;
+  font-size: 0.92rem;
+}
+.nav-item.active {
+  background: var(--bg);
+  color: var(--accent-deep);
+}
+.nav-item.active::before,
+.nav-item.active::after {
+  /* The tile flows into the page, like a tab. */
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: transparent;
+  pointer-events: none;
+}
+.nav-item.active::before {
+  top: -1.4rem;
+  border-bottom-right-radius: 1.4rem;
+  box-shadow: 0.7rem 0.7rem 0 0.7rem var(--bg);
+}
+.nav-item.active::after {
+  bottom: -1.4rem;
+  border-top-right-radius: 1.4rem;
+  box-shadow: 0.7rem -0.7rem 0 0.7rem var(--bg);
+}
+.nav-parent {
+  margin-top: auto;
+  min-height: 4.4rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.shell-main {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 1.2rem 1rem 1.1rem;
+  gap: 0.8rem;
+}
+.shell-content {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Status bar: title or date on the left; online state, time and battery on every screen. */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.statusbar-title {
+  font-size: 1.45rem;
+  flex: 1;
+  min-width: 0;
+}
+.statusbar-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.statusbar-left h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+}
+.statusbar-right {
+  display: flex;
+  gap: 0.6rem;
+}
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 0.25rem 0.95rem;
+  min-height: 3rem;
+  box-shadow: var(--shadow);
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--ink);
+}
+.status-chip strong {
+  font-size: 1.25rem;
+}
+.status-clock {
+  font-size: 1.45rem;
+  padding: 0.25rem 1.1rem;
+}
+.battery-shape {
+  position: relative;
+  width: 2rem;
+  height: 1rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 0.3rem;
+  padding: 1.5px;
+}
+.battery-shape::after {
+  content: '';
+  position: absolute;
+  right: -0.32rem;
+  top: 0.22rem;
+  width: 0.2rem;
+  height: 0.4rem;
+  border-radius: 0 0.15rem 0.15rem 0;
+  background: var(--ink);
+}
+.battery-shape span {
+  display: block;
+  height: 100%;
+  border-radius: 0.15rem;
+  background: var(--mint);
+}
+.battery.low .battery-shape span {
+  background: var(--red);
+}
+.battery.low {
+  color: var(--red);
+}
+.status-chip.offline {
+  color: var(--red);
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Placeholder icon: a star on a rounded tile. PNG icons for older devices come with the install page. -->
+  <rect width="512" height="512" rx="112" fill="#5B6CF0"/>
+  <path fill="#FFF8F0" d="M256 92l46 112 120 9-92 78 29 117-103-63-103 63 29-117-92-78 120-9z"/>
+</svg>

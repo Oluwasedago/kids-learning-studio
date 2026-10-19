@@ -1,0 +1,198 @@
+/* Design system: warm, illustrated, soft cards. --accent is the child's colour (chosen in the setup wizard). */
+:root {
+  --accent: #5b6cf0;
+  --accent-soft: color-mix(in srgb, var(--accent) 13%, var(--card));
+  --accent-deep: color-mix(in srgb, var(--accent) 75%, var(--ink));
+
+  --bg: #fff8f0;
+  --ink: #3d1e47; /* headings: deep plum */
+  --text: #4b3654;
+  --muted: #8e7b95;
+  --card: #ffffff;
+  --line: #f3e6ee;
+  --sunken: #f4ecf1; /* hollows: empty stops, inactive tiles */
+  --sunken-soft: #fbf5f8;
+  --locked: #f2eef3;
+  --hero-a: #ffe2c4;
+  --hero-b: #ffd3df;
+  --advent-board: linear-gradient(160deg, #fff1e6, #ffe0e6);
+  --advent-card: linear-gradient(135deg, #fff 0%, #ffe3e3 100%);
+  --shadow: 0 14px 34px -16px rgb(61 30 71 / 28%), 0 2px 6px rgb(61 30 71 / 5%);
+
+  --peach: #ffb27d;
+  --peach-soft: #ffeadb;
+  --sky: #5aa9e6;
+  --sky-soft: #e4f2fd;
+  --mint: #22a06b;
+  --mint-soft: #dcf5ea;
+  --lilac: #8b5cf6;
+  --lilac-soft: #efe8fe;
+  --sun: #ffc23d;
+  --red: #e0344c;
+  --red-soft: #fde4e7;
+  --amber: #c96a06;
+  --amber-soft: #fff0d9;
+
+  --radius: 26px;
+  --radius-s: 18px;
+  /* Big targets for small fingers and the wide rubber stylus (at least 64 px). */
+  --tap: 64px;
+  --display: 'Fredoka', 'Andika', system-ui, sans-serif;
+
+  color-scheme: only light;
+  /* Andika (reading) and Fredoka (headings): both SIL OFL, bundled (main.tsx). */
+  font-family: 'Andika', system-ui, -apple-system, Roboto, sans-serif;
+  /* 18 px at 1280 px wide (a 10-inch tablet in landscape). */
+  font-size: clamp(14px, 1.4vw, 24px);
+  line-height: 1.3;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dark mode: warm near-black surfaces and light text; pastel tints become deep tints of the same colours.
+   Chosen on the parent screen (System, Light, Dark); App.tsx sets data-theme. */
+:root[data-theme='dark'] {
+  --bg: #0f0e0d;
+  --card: #1a1917;
+  --sunken: #24221f;
+  --sunken-soft: #1f1d1b;
+  --locked: #24221f;
+  --line: #2b2926;
+  --ink: #f0ece6;
+  --text: #ddd6ce;
+  --muted: #9a948b;
+  --shadow: 0 14px 34px -16px rgb(0 0 0 / 70%), 0 2px 6px rgb(0 0 0 / 30%);
+
+  --accent-soft: color-mix(in srgb, var(--accent) 24%, var(--card));
+  --accent-deep: color-mix(in srgb, var(--accent) 60%, white);
+  --peach-soft: color-mix(in srgb, var(--peach) 20%, var(--card));
+  --sky-soft: color-mix(in srgb, var(--sky) 22%, var(--card));
+  --mint-soft: color-mix(in srgb, var(--mint) 24%, var(--card));
+  --lilac-soft: color-mix(in srgb, var(--lilac) 24%, var(--card));
+  --red: #ff5a6e;
+  --red-soft: color-mix(in srgb, #e0344c 26%, var(--card));
+  --amber: #f0a64a;
+  --amber-soft: color-mix(in srgb, #ffc23d 18%, var(--card));
+  --hero-a: color-mix(in srgb, var(--peach) 22%, var(--card));
+  --hero-b: color-mix(in srgb, var(--accent) 26%, var(--card));
+  --advent-board: linear-gradient(160deg, #2a1a17, #2a1419);
+  --advent-card: linear-gradient(135deg, var(--card) 0%, #3a1a1f 100%);
+
+  color-scheme: only dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  /* No text selection or grey tap flashes when kids press and hold. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  overflow: hidden;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.005em;
+}
+svg,
+.emoji {
+  flex: none;
+}
+.emoji {
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+button,
+a.button {
+  font: inherit;
+  font-family: var(--display);
+  font-weight: 600;
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0 1.3rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+button.secondary,
+a.button.secondary {
+  background: var(--accent-soft);
+  color: var(--ink);
+  box-shadow: none;
+}
+button:disabled {
+  opacity: 0.45;
+}
+button:active,
+a.button:active {
+  transform: scale(0.97);
+}
+input {
+  font: inherit;
+  min-height: var(--tap);
+  padding: 0 1rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-s);
+  min-width: 0;
+  color: var(--ink);
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.3rem;
+}
+.card-title {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.6rem 0 1rem;
+}

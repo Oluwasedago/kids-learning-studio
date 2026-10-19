@@ -1,0 +1,12 @@
+{
+  "name": "Kids' Learning Studio",
+  "short_name": "Studio",
+  "description": "A free learning home screen for children. Everything stays on this device.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#fff8f0",
+  "theme_color": "#5b6cf0",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

@@ -1,0 +1,39 @@
+.home {
+  height: 100%;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  align-content: start;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+.home .card {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.hero {
+  grid-column: 1 / -1;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1.2rem;
+  background: linear-gradient(120deg, var(--hero-a), var(--hero-b));
+}
+.hero h2 {
+  font-size: 2rem;
+}
+.muted {
+  color: var(--muted);
+}
+.about {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+.soon-card {
+  height: 100%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.8rem;
+  text-align: center;
+}
