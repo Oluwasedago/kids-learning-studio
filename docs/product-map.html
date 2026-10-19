@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kids' Learning Studio Map</title>
+<style>
+/* Layout: one calm column of "plates", each a single figure with a one-line claim; reads top to bottom like a pitch. */
+:root{
+  --bg:#F5F8FC; --surface:#FFFFFF; --ink:#1B2540; --muted:#5B6683; --line:#C9D3E6;
+  --child:#E2557E; --child-soft:#FCE6EE;
+  --parent:#178C84; --parent-soft:#DDF3F0;
+  --star:#E9A21B; --star-soft:#FDF1D6;
+  --web:#3B6FD8; --web-soft:#E3ECFB;
+  --display:"Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111729; --surface:#1A2238; --ink:#EAF0FB; --muted:#A3AECB; --line:#34405F;
+  --child:#F27C9D; --child-soft:#3A2333; --parent:#43C2B8; --parent-soft:#17342F;
+  --star:#F4BD4E; --star-soft:#3A3020; --web:#7FA4F0; --web-soft:#1E2B4A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111729; --surface:#1A2238; --ink:#EAF0FB; --muted:#A3AECB; --line:#34405F;
+  --child:#F27C9D; --child-soft:#3A2333; --parent:#43C2B8; --parent-soft:#17342F;
+  --star:#F4BD4E; --star-soft:#3A3020; --web:#7FA4F0; --web-soft:#1E2B4A; color-scheme:dark}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+main{max-width:1040px;margin:0 auto;display:grid;gap:40px}
+h1,h2{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,3.1rem)}
+h2{font-size:1.5rem}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+header{display:grid;gap:12px}
+header p{margin:0;max-width:62ch;color:var(--muted);font-size:1.08rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{font-size:.85rem;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface)}
+.chip b{font-weight:700}
+.plate{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px clamp(16px,3vw,32px);display:grid;gap:16px;min-width:0}
+.plate > p{margin:0;max-width:68ch;color:var(--muted)}
+figure{margin:0;overflow-x:auto}
+figure svg{display:block;width:100%;min-width:720px;height:auto}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:10px;max-width:70ch}
+/* svg classes */
+.t{fill:var(--ink);font-family:var(--body);font-size:13px}
+.tb{fill:var(--ink);font-family:var(--display);font-size:15px;font-weight:600}
+.ts{fill:var(--muted);font-family:var(--body);font-size:11.5px}
+.lab{fill:var(--muted);font-family:var(--body);font-size:11.5px;font-style:italic}
+.ln{stroke:var(--muted);stroke-width:1.6;fill:none}
+.ln-c{stroke:var(--child);stroke-width:2;fill:none}
+.ln-p{stroke:var(--parent);stroke-width:2;fill:none}
+.ln-w{stroke:var(--web);stroke-width:2;fill:none;stroke-dasharray:6 5}
+.ln-s{stroke:var(--star);stroke-width:2;fill:none}
+.box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.b-child{fill:var(--child-soft);stroke:var(--child);stroke-width:1.5}
+.b-parent{fill:var(--parent-soft);stroke:var(--parent);stroke-width:1.5}
+.b-star{fill:var(--star-soft);stroke:var(--star);stroke-width:1.5}
+.b-web{fill:var(--web-soft);stroke:var(--web);stroke-width:1.5}
+.tablet{fill:var(--bg);stroke:var(--ink);stroke-width:2.5}
+.zone{fill:none;stroke:var(--child);stroke-width:1.5;stroke-dasharray:4 6}
+.ah{fill:var(--muted)} .ah-c{fill:var(--child)} .ah-p{fill:var(--parent)} .ah-w{fill:var(--web)} .ah-s{fill:var(--star)}
+/* day track */
+.track{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.track li{border-radius:16px;padding:14px;display:grid;gap:4px;align-content:start;border:1.5px solid}
+.track .when{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.track h3{font-family:var(--display);font-weight:600;font-size:1.1rem;margin:0}
+.track p{margin:0;font-size:.9rem;color:var(--muted)}
+.k-c{background:var(--child-soft);border-color:var(--child)} .k-c .when{color:var(--child)}
+.k-s{background:var(--star-soft);border-color:var(--star)} .k-s .when{color:var(--star)}
+.k-w{background:var(--web-soft);border-color:var(--web)} .k-w .when{color:var(--web)}
+.k-p{background:var(--parent-soft);border-color:var(--parent)} .k-p .when{color:var(--parent)}
+/* compare */
+.cmp{width:100%;border-collapse:collapse;font-size:.94rem;min-width:620px}
+.cmp th,.cmp td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp thead th{font-family:var(--display);font-weight:600;font-size:1rem}
+.cmp tbody th{font-weight:700;color:var(--muted);width:20%}
+.cmp td.new{color:var(--ink)} .cmp td.old{color:var(--muted)}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:999px;margin-left:6px;vertical-align:1px}
+.tag.v{background:var(--star-soft);color:var(--ink);border:1px solid var(--star)}
+.scroll{overflow-x:auto}
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.lane{border-radius:18px;padding:18px;border:1.5px solid var(--line);display:grid;gap:8px;align-content:start}
+.lane h3{margin:0;font-family:var(--display);font-weight:600;font-size:1.2rem}
+.lane ul{margin:0;padding-left:18px;color:var(--muted);font-size:.93rem}
+.lane.now{border-color:var(--child);background:var(--child-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border-radius:4px;border:1.5px solid}
+footer{color:var(--muted);font-size:.85rem;text-align:center}
+</style>
+</head>
+<body>
+
+<main>
+<header>
+  <div class="eyebrow">Product map · v1 public release</div>
+  <h1>Kids' Learning Studio</h1>
+  <p>A learning home screen for children aged about 4–10 that parents install from a browser link. Missions earn stars, stars earn screen time, and everything stays on the family's own tablet.</p>
+  <div class="chips">
+    <span class="chip"><b>Free</b> · MIT licence</span>
+    <span class="chip"><b>No accounts</b> · no tracking</span>
+    <span class="chip"><b>Works offline</b></span>
+    <span class="chip">Fire · Android · iPad</span>
+  </div>
+</header>
+
+<section class="plate" id="map">
+  <div class="eyebrow">1 · The big picture</div>
+  <h2>The app and the child's data live on the tablet</h2>
+  <figure>
+    <svg viewBox="0 0 960 580" role="img" aria-label="The app is delivered once from GitHub Pages and then runs on the tablet. The parent sets it up with a PIN. Videos and audio stream in only when played. Data leaves the tablet only when the parent sends an email report or saves a backup file.">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah"/></marker>
+        <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah-c"/></marker>
+        <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah-p"/></marker>
+        <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah-w"/></marker>
+        <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah-s"/></marker>
+      </defs>
+
+      <!-- privacy zone -->
+      <rect x="280" y="18" width="400" height="544" rx="34" class="zone"/>
+      <text x="480" y="12" text-anchor="middle" class="ts" style="fill:var(--child)">Private zone · no accounts · no tracking</text>
+
+      <!-- tablet -->
+      <rect x="290" y="40" width="380" height="500" rx="28" class="tablet"/>
+      <text x="480" y="74" text-anchor="middle" class="tb">The child's tablet</text>
+      <text x="480" y="90" text-anchor="middle" class="ts">browser app, installed to the home screen</text>
+
+      <rect x="320" y="108" width="320" height="58" rx="14" class="b-parent"/>
+      <text x="480" y="132" text-anchor="middle" class="tb">Setup wizard &amp; parent screen</text>
+      <text x="480" y="150" text-anchor="middle" class="ts">behind the parent PIN</text>
+
+      <rect x="320" y="198" width="320" height="58" rx="14" class="b-child"/>
+      <text x="480" y="222" text-anchor="middle" class="tb">Child's home screen</text>
+      <text x="480" y="240" text-anchor="middle" class="ts">timetable · missions · games · stories · radio · videos</text>
+
+      <rect x="320" y="288" width="320" height="58" rx="14" class="b-star"/>
+      <text x="480" y="312" text-anchor="middle" class="tb">Stars &amp; earned time</text>
+      <text x="480" y="330" text-anchor="middle" class="ts">missions unlock videos, games and stories</text>
+
+      <rect x="320" y="378" width="320" height="58" rx="14" class="box"/>
+      <text x="480" y="402" text-anchor="middle" class="tb">Reports</text>
+      <text x="480" y="420" text-anchor="middle" class="ts">daily · weekly · monthly</text>
+
+      <!-- storage cylinder -->
+      <path d="M360 468 v40 a120 12 0 0 0 240 0 v-40" class="box"/>
+      <ellipse cx="480" cy="468" rx="120" ry="12" class="box"/>
+      <text x="480" y="500" text-anchor="middle" class="t">Saved on this device only</text>
+
+      <!-- inner arrows -->
+      <line x1="440" y1="166" x2="440" y2="196" class="ln-p" marker-end="url(#ap)"/>
+      <text x="448" y="186" class="lab">enables &amp; unlocks</text>
+      <line x1="440" y1="256" x2="440" y2="286" class="ln-c" marker-end="url(#ac)"/>
+      <text x="448" y="276" class="lab">missions earn stars</text>
+      <path d="M612 288 V258" class="ln-s" marker-end="url(#as)"/>
+      <text x="606" y="276" text-anchor="end" class="lab">spend</text>
+      <line x1="440" y1="346" x2="440" y2="376" class="ln" marker-end="url(#a)"/>
+      <text x="448" y="366" class="lab">progress</text>
+
+      <!-- left: parent -->
+      <rect x="20" y="108" width="180" height="58" rx="14" class="b-parent"/>
+      <text x="110" y="132" text-anchor="middle" class="tb">Parent</text>
+      <text x="110" y="150" text-anchor="middle" class="ts">sets everything up</text>
+      <line x1="200" y1="137" x2="318" y2="137" class="ln-p" marker-end="url(#ap)"/>
+      <text x="259" y="129" text-anchor="middle" class="lab">PIN</text>
+
+      <rect x="20" y="378" width="180" height="58" rx="14" class="box"/>
+      <text x="110" y="402" text-anchor="middle" class="tb">Parent's mail app</text>
+      <text x="110" y="420" text-anchor="middle" class="ts">their own email</text>
+      <line x1="318" y1="407" x2="202" y2="407" class="ln-p" marker-end="url(#ap)"/>
+      <text x="240" y="399" text-anchor="middle" class="lab">Email report</text>
+
+      <rect x="20" y="462" width="180" height="58" rx="14" class="box"/>
+      <text x="110" y="486" text-anchor="middle" class="tb">Backup file</text>
+      <text x="110" y="504" text-anchor="middle" class="ts">kept by the parent</text>
+      <line x1="358" y1="491" x2="202" y2="491" class="ln-p" marker-start="url(#ap)" marker-end="url(#ap)"/>
+      <text x="240" y="483" text-anchor="middle" class="lab">Backup</text>
+      <text x="240" y="507" text-anchor="middle" class="lab">Restore</text>
+
+      <!-- right: web -->
+      <rect x="760" y="108" width="180" height="58" rx="14" class="b-web"/>
+      <text x="850" y="132" text-anchor="middle" class="tb">GitHub Pages</text>
+      <text x="850" y="150" text-anchor="middle" class="ts">hosts the app's files</text>
+      <line x1="758" y1="137" x2="672" y2="137" class="ln-w" marker-end="url(#aw)"/>
+      <text x="715" y="129" text-anchor="middle" class="lab">install once</text>
+
+      <rect x="760" y="198" width="180" height="50" rx="14" class="b-web"/>
+      <text x="850" y="220" text-anchor="middle" class="tb">YouTube</text>
+      <text x="850" y="237" text-anchor="middle" class="ts">only allow-listed videos</text>
+      <line x1="758" y1="220" x2="642" y2="220" class="ln-w" marker-end="url(#aw)"/>
+
+      <rect x="760" y="262" width="180" height="50" rx="14" class="b-web"/>
+      <text x="850" y="284" text-anchor="middle" class="tb">Radio &amp; audio</text>
+      <text x="850" y="301" text-anchor="middle" class="ts">stories · stations · faith</text>
+      <path d="M758 287 H700 V240 H642" class="ln-w" marker-end="url(#aw)"/>
+      <text x="850" y="340" text-anchor="middle" class="lab">streamed when played,</text>
+      <text x="850" y="356" text-anchor="middle" class="lab">nothing sent back</text>
+    </svg>
+  </figure>
+  <div class="legend">
+    <span><i class="sw" style="border-color:var(--parent);background:var(--parent-soft)"></i>parent controls</span>
+    <span><i class="sw" style="border-color:var(--child);background:var(--child-soft)"></i>what the child uses</span>
+    <span><i class="sw" style="border-color:var(--star);background:var(--star-soft)"></i>rewards</span>
+    <span><i class="sw" style="border-color:var(--web);background:var(--web-soft)"></i>internet (dashed: one-way, in only)</span>
+  </div>
+</section>
+
+<section class="plate" id="access">
+  <div class="eyebrow">2 · Two-layer access control</div>
+  <h2>Parents decide what exists, then what is open</h2>
+  <figure>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Every item first passes the parent's Enable switch; disabled items are hidden. Enabled items start locked and open either when the child earns them through missions or when the parent unlocks them with the PIN.">
+      <defs>
+        <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ah"/></marker>
+        <marker id="bc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ah-c"/></marker>
+        <marker id="bp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ah-p"/></marker>
+        <marker id="bs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ah-s"/></marker>
+      </defs>
+      <rect x="20" y="110" width="160" height="80" rx="14" class="box"/>
+      <text x="100" y="140" text-anchor="middle" class="tb">Any item</text>
+      <text x="100" y="158" text-anchor="middle" class="ts">game · subject · radio</text>
+      <text x="100" y="174" text-anchor="middle" class="ts">YouTube · calls · faith</text>
+
+      <rect x="220" y="115" width="160" height="70" rx="14" class="b-parent"/>
+      <text x="300" y="144" text-anchor="middle" class="tb">Layer 1 · Enable</text>
+      <text x="300" y="163" text-anchor="middle" class="ts">parent password</text>
+      <line x1="180" y1="150" x2="218" y2="150" class="ln" marker-end="url(#b)"/>
+
+      <rect x="220" y="225" width="160" height="56" rx="14" class="box" style="stroke-dasharray:5 4"/>
+      <text x="300" y="250" text-anchor="middle" class="tb">Hidden</text>
+      <text x="300" y="268" text-anchor="middle" class="ts">child never sees it</text>
+      <line x1="300" y1="185" x2="300" y2="223" class="ln" marker-end="url(#b)"/>
+      <text x="308" y="208" class="lab">off</text>
+
+      <rect x="420" y="115" width="150" height="70" rx="14" class="b-child"/>
+      <text x="495" y="144" text-anchor="middle" class="tb">Layer 2 · Locked</text>
+      <text x="495" y="163" text-anchor="middle" class="ts">visible, with a padlock</text>
+      <line x1="380" y1="150" x2="418" y2="150" class="ln-p" marker-end="url(#bp)"/>
+      <text x="399" y="142" text-anchor="middle" class="lab">on</text>
+
+      <rect x="620" y="40" width="180" height="62" rx="14" class="b-star"/>
+      <text x="710" y="66" text-anchor="middle" class="tb">Earned</text>
+      <text x="710" y="85" text-anchor="middle" class="ts">missions done · stars spent</text>
+      <path d="M570 135 C595 135 595 71 618 71" class="ln-s" marker-end="url(#bs)"/>
+
+      <rect x="620" y="198" width="180" height="62" rx="14" class="b-parent"/>
+      <text x="710" y="224" text-anchor="middle" class="tb">Unlocked by parent</text>
+      <text x="710" y="243" text-anchor="middle" class="ts">PIN · today or until locked</text>
+      <path d="M570 165 C595 165 595 229 618 229" class="ln-p" marker-end="url(#bp)"/>
+
+      <rect x="840" y="115" width="140" height="70" rx="14" class="b-child" style="stroke-width:2.5"/>
+      <text x="910" y="144" text-anchor="middle" class="tb">Open</text>
+      <text x="910" y="163" text-anchor="middle" class="ts">timer runs for video</text>
+      <path d="M800 71 C822 71 820 135 838 135" class="ln-s" marker-end="url(#bs)"/>
+      <path d="M800 229 C822 229 820 165 838 165" class="ln-p" marker-end="url(#bp)"/>
+    </svg>
+    <figcaption>The setup wizard proposes a starter set by age (for example: all learning on, videos locked until earned, calls unlocked). Parents change any item later from the parent screen.</figcaption>
+  </figure>
+</section>
+
+<section class="plate" id="day">
+  <div class="eyebrow">3 · A child's day with the Studio</div>
+  <h2>Learning first, then the fun it earns</h2>
+  <ol class="track">
+    <li class="k-c"><span class="when">Morning</span><h3>Today's lessons</h3><p>Timetable as pictures and what goes in the school bag.</p></li>
+    <li class="k-c"><span class="when">After school</span><h3>Missions</h3><p>Short tasks in maths, languages, flags, patterns and drawing.</p></li>
+    <li class="k-s"><span class="when">Reward</span><h3>Stars &amp; time</h3><p>Stars move along the star track and turn into video and game minutes.</p></li>
+    <li class="k-w"><span class="when">Free time</span><h3>Videos, games, radio</h3><p>Only what the parent enabled, while earned time lasts.</p></li>
+    <li class="k-w"><span class="when">Evening</span><h3>Stories &amp; calls</h3><p>Bedtime stories, optional faith module, one-tap call to family.</p></li>
+    <li class="k-p"><span class="when">Parent</span><h3>Report</h3><p>Daily, weekly or monthly summary, sent from the parent's own mail app.</p></li>
+  </ol>
+</section>
+
+<section class="plate" id="compare">
+  <div class="eyebrow">4 · From the family version to the public v1</div>
+  <h2>What changes when the server goes away</h2>
+  <p>The private family version runs behind a login on a small cloud server and talks to the family dashboard. The public v1 is a set of static files: nothing to log in to, nothing to run, nothing that can leak from a server.</p>
+  <div class="scroll">
+    <table class="cmp">
+      <thead><tr><th></th><th>Private family version</th><th>Public v1</th></tr></thead>
+      <tbody>
+        <tr><th>Hosting</th><td class="old">Cloudflare Worker behind an email login</td><td class="new">GitHub Pages, static files over HTTPS</td></tr>
+        <tr><th>Settings</th><td class="old">Family config file on the server</td><td class="new">Setup wizard on the tablet</td></tr>
+        <tr><th>Progress</th><td class="old">Copied to the server</td><td class="new">On the tablet, plus Backup / Restore file</td></tr>
+        <tr><th>School plan</th><td class="old">Read from the school website every morning</td><td class="new">Manual timetable; notices later as a plugin</td></tr>
+        <tr><th>Calendar</th><td class="old">Family calendars via the dashboard</td><td class="new">Birthdays in the wizard; calendar links in v1.1</td></tr>
+        <tr><th>Read aloud</th><td class="old">Kiosk app's speech engine</td><td class="new">Browser voices, recorded clips as fallback<span class="tag v">verify on Fire</span></td></tr>
+        <tr><th>Lock-down</th><td class="old">Paid kiosk app</td><td class="new">Amazon Kids profile · Android screen pinning · iPad Guided Access<span class="tag v">verify on Fire</span></td></tr>
+        <tr><th>Parent reports</th><td class="old">Fed into the family dashboard</td><td class="new">Reports screen + email from the parent's own mail app</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="plate" id="roadmap">
+  <div class="eyebrow">5 · Roadmap</div>
+  <h2>Small, safe steps</h2>
+  <div class="road">
+    <div class="lane now"><h3>v1 · now</h3><ul>
+      <li>Setup wizard with parent PIN</li><li>Two-layer access control</li><li>Missions, stars, earned video time</li>
+      <li>Reports + email via mailto</li><li>Backup / Restore</li><li>Fire, Android, iPad · offline</li></ul></div>
+    <div class="lane"><h3>v1.1 · plugins</h3><ul>
+      <li>Calendar links (needs a small proxy)</li><li>Automatic email via the parent's own service</li>
+      <li>AI lessons with the parent's own key</li><li>School-notices plugin</li><li>Family dashboard sync</li></ul></div>
+    <div class="lane"><h3>v2 · native</h3><ul>
+      <li>Native app with alarms</li><li>Toddler mode</li><li>App stores</li></ul></div>
+  </div>
+</section>
+
+<footer>Kids' Learning Studio · product map for v1 · no real child data shown</footer>
+</main>
+</body>
+</html>
