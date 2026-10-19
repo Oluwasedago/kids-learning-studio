@@ -6,6 +6,22 @@ import { kvGet, kvSet } from './kv'
 
 type Doc = { updatedAt: number }
 
+const isPlainObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
+
+/**
+ * A stored copy completed with the defaults, one level deep: a field added in a later version (also inside
+ * e.g. `rewards`) gets its default instead of being missing. Pure (tested).
+ */
+export function withDefaults<T extends object>(fallback: T, stored: Partial<T> | undefined): T {
+  if (!stored) return fallback
+  const out: Record<string, unknown> = { ...fallback, ...stored }
+  for (const [k, v] of Object.entries(fallback)) {
+    const s = (stored as Record<string, unknown>)[k]
+    if (isPlainObject(v) && isPlainObject(s)) out[k] = { ...v, ...s }
+  }
+  return out as T
+}
+
 /** `fallback` also fills fields a stored copy does not have yet (e.g. a setting added in a later version). */
 export function useLocalDoc<T extends Doc>(key: string, fallback: T) {
   const [doc, setDoc] = useState<T>(fallback)
@@ -16,7 +32,7 @@ export function useLocalDoc<T extends Doc>(key: string, fallback: T) {
     let cancelled = false
     void kvGet<T>(key).then((stored) => {
       if (cancelled) return
-      const next = { ...fallback, ...stored }
+      const next = withDefaults(fallback, stored)
       latest.current = next
       setDoc(next)
       setReady(true)
