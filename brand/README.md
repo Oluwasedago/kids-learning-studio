@@ -32,3 +32,8 @@ Fredoka is licensed under the SIL Open Font License (`FREDOKA-OFL.txt`).
 - Keep clear space around the mark of at least the star's width.
 - Don't stretch, recolour or rotate the mark, and don't add a real child's photo or name to it.
 - The artwork is original and released with the code under the MIT licence.
+
+## In the app
+
+`npm run dev` and `npm run build` copy the app icons from here into `public/icons/` (`scripts/copy-brand.mjs`),
+so this folder is the only place to change the logo. `public/icons/` is not committed.

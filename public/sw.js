@@ -6,7 +6,7 @@
 // - App files (assets, emoji, fonts): cache first (built file names change with every version, so never stale).
 // Paths are relative to where this file lives, so it works under /kids-learning-studio/ on GitHub Pages.
 
-const CACHE = 'kls-v1'
+const CACHE = 'kls-v2' // bump to make installed apps fetch changed files with fixed names (icons)
 const INDEX = new URL('./', self.registration.scope).href
 
 self.addEventListener('install', () => self.skipWaiting())

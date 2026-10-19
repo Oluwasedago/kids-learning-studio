@@ -1,6 +1,8 @@
 # Dependencies and build output
 node_modules/
 dist/
+# Copied from brand/ by scripts/copy-brand.mjs before dev and build.
+public/icons/
 coverage/
 
 # Secrets and tokens: never committed

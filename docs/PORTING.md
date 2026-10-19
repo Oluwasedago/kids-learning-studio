@@ -11,7 +11,7 @@ private app's history is not part of this repo.
 | `public/emoji/*.png`, `LICENSE.txt` | copied unchanged | Microsoft Fluent Emoji, MIT |
 | `public/emoji/CREDITS.md` | rewritten | source and licence only |
 | `public/sw.js` | ported | relative paths (works under `/kids-learning-studio/`); no login or `/api` handling |
-| `public/manifest.webmanifest`, `public/icons/icon.svg`, `index.html` | ported | product name, neutral colour, relative paths, English |
+| `public/manifest.webmanifest`, `index.html` | ported | product name, brand icons from `brand/` (copied to `public/icons/` at build), relative paths, English |
 | `package.json`, `vite.config.ts`, `tsconfig*.json`, `.oxlintrc.json` | ported | no server proxy, no photo script, no calendar or image libraries; `base: './'` |
 | `src/styles/global.css`, `src/app/Shell.css` | ported | `--pink` → `--accent`, Wi-Fi strength removed, comments neutral |
 | `src/app/Shell.tsx`, `App.tsx`, `studio.ts`, `StudioData.tsx` | ported | no weather, school plan, calendar, radio or kiosk app; data from the device only |

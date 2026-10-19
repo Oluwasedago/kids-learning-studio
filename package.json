@@ -7,7 +7,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/copy-brand.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/copy-brand.mjs",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
