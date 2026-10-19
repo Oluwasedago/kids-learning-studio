@@ -16,7 +16,7 @@ export const ITEM_IDS = [
   'builder',
   'puzzle',
   'snake',
-  // Listening and watching (screens arrive in Step 3).
+  // Listening and watching.
   'radio',
   'stories',
   'videos',
@@ -51,10 +51,10 @@ export const ITEMS: Record<ItemId, Item> = {
   builder: { id: 'builder', group: 'games', emoji: 'memo', ready: true, minAge: 5, starter: 'locked' },
   puzzle: { id: 'puzzle', group: 'games', emoji: 'framed', ready: true, minAge: 4, starter: 'locked' },
   snake: { id: 'snake', group: 'games', emoji: 'snake', ready: true, minAge: 6, starter: 'locked' },
-  radio: { id: 'radio', group: 'media', emoji: 'radio', ready: false, minAge: 4, starter: 'unlocked' },
-  stories: { id: 'stories', group: 'media', emoji: 'openbook', ready: false, minAge: 4, starter: 'unlocked' },
-  videos: { id: 'videos', group: 'media', emoji: 'tv', ready: false, minAge: 4, starter: 'locked' },
-  calls: { id: 'calls', group: 'family', emoji: 'speech', ready: false, minAge: 4, starter: 'unlocked' },
+  radio: { id: 'radio', group: 'media', emoji: 'radio', ready: true, minAge: 4, starter: 'unlocked' },
+  stories: { id: 'stories', group: 'media', emoji: 'openbook', ready: true, minAge: 4, starter: 'unlocked' },
+  videos: { id: 'videos', group: 'media', emoji: 'tv', ready: true, minAge: 4, starter: 'locked' },
+  calls: { id: 'calls', group: 'family', emoji: 'speech', ready: true, minAge: 4, starter: 'unlocked' },
 }
 
 export const GROUPS: ItemGroup[] = ['learning', 'games', 'media', 'family']

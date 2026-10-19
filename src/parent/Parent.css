@@ -316,3 +316,29 @@ button.danger {
 .wrong-cell {
   color: var(--red);
 }
+
+/* Videos, stations and calls. */
+.media-editor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.2rem;
+}
+.media-editor > div {
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+  min-width: 0;
+}
+.media-editor small {
+  overflow-wrap: anywhere;
+}
+.link-add {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  gap: 0.5rem;
+}
+@media (max-width: 760px) {
+  .link-add {
+    grid-template-columns: 1fr;
+  }
+}

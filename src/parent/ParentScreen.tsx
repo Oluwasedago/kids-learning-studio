@@ -6,6 +6,7 @@ import { BackupError, backupDue, deleteAll, makeBackup, parseBackup, restoreBack
 import { usePersistence } from '@/data/persist'
 import type { FamilyBirthday } from '@/data/types'
 import { LOCALES, useLang, useT } from '@/i18n'
+import { callLinkOk, parseYouTube } from '@/listen/sources'
 import { buildReport, mailtoUrl, reportText } from '@/reports/report'
 import { Emoji } from '@/shared/Emoji'
 import { AccessEditor, ChildEditor } from './editors'
@@ -33,6 +34,9 @@ export function ParentScreen() {
       </Card>
       <Card emoji="memo" title={t.parent.backup}>
         <BackupCard />
+      </Card>
+      <Card emoji="tv" title={t.media.title} wide>
+        <MediaEditor />
       </Card>
       <Card emoji="speech" title={t.voice.title}>
         <VoiceCard />
@@ -282,6 +286,121 @@ function BackupCard() {
         {usedMb && ` ${t.storage.used(usedMb)}`}
       </small>
       <small className="muted">{t.backup.private}</small>
+    </div>
+  )
+}
+
+/** A list of name + link entries with an add row (videos, stations, contacts). */
+function LinkList({
+  items,
+  namePlaceholder,
+  linkPlaceholder,
+  check,
+  onAdd,
+  onRemove,
+}: {
+  items: { id: string; name: string; detail: string }[]
+  namePlaceholder: string
+  linkPlaceholder: string
+  /** Returns an error text, or null when the link is fine. */
+  check: (link: string) => string | null
+  onAdd: (name: string, link: string) => void
+  onRemove: (id: string) => void
+}) {
+  const t = useT()
+  const [name, setName] = useState('')
+  const [link, setLink] = useState('')
+  const [error, setError] = useState('')
+  const add = () => {
+    const problem = check(link.trim())
+    if (problem) return setError(problem)
+    onAdd(name.trim(), link.trim())
+    setName('')
+    setLink('')
+    setError('')
+  }
+  return (
+    <div className="editor">
+      <ul className="birthday-list">
+        {items.map((x) => (
+          <li key={x.id}>
+            <span>
+              <b>{x.name}</b> <small className="muted">{x.detail}</small>
+            </span>
+            <button className="secondary" aria-label={t.common.remove} onClick={() => onRemove(x.id)}>
+              <Trash2 />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div className="link-add">
+        <input value={name} maxLength={40} placeholder={namePlaceholder} onChange={(e) => setName(e.target.value)} />
+        <input value={link} placeholder={linkPlaceholder} autoComplete="off" onChange={(e) => setLink(e.target.value)} />
+        <button onClick={add} disabled={!name.trim() || !link.trim()} aria-label={t.common.add}>
+          <Plus />
+        </button>
+      </div>
+      {error && (
+        <p className="parent-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+/** Videos (YouTube links only), extra radio stations and family call links. */
+function MediaEditor() {
+  const t = useT()
+  const { settings, updateSettings } = useStudio()
+  const id = () => crypto.randomUUID()
+  return (
+    <div className="media-editor">
+      <div>
+        <span className="field-label">
+          <Emoji name="tv" size={26} /> {t.items.videos}
+        </span>
+        <small className="muted">{t.media.videosNote}</small>
+        <LinkList
+          items={settings.videos.map((v) => ({ id: v.id + v.kind, name: v.title, detail: v.kind === 'playlist' ? t.media.playlist : t.media.video }))}
+          namePlaceholder={t.media.title_}
+          linkPlaceholder={t.media.youtubeLink}
+          check={(link) => (parseYouTube(link) ? null : t.media.notYouTube)}
+          onAdd={(name, link) => {
+            const v = parseYouTube(link)!
+            updateSettings((s) => ({ ...s, videos: [...s.videos.filter((x) => x.id !== v.id), { ...v, title: name }] }))
+          }}
+          onRemove={(key) => updateSettings((s) => ({ ...s, videos: s.videos.filter((x) => x.id + x.kind !== key) }))}
+        />
+      </div>
+      <div>
+        <span className="field-label">
+          <Emoji name="radio" size={26} /> {t.media.stations}
+        </span>
+        <small className="muted">{t.media.stationsNote}</small>
+        <LinkList
+          items={settings.stations.map((s) => ({ id: s.id, name: s.name, detail: s.url }))}
+          namePlaceholder={t.media.stationName}
+          linkPlaceholder="https://…"
+          check={(link) => (/^https:\/\/\S+$/.test(link) ? null : t.media.notHttps)}
+          onAdd={(name, url) => updateSettings((s) => ({ ...s, stations: [...s.stations, { id: id(), name, url }] }))}
+          onRemove={(key) => updateSettings((s) => ({ ...s, stations: s.stations.filter((x) => x.id !== key) }))}
+        />
+      </div>
+      <div>
+        <span className="field-label">
+          <Emoji name="speech" size={26} /> {t.items.calls}
+        </span>
+        <small className="muted">{t.media.callsNote}</small>
+        <LinkList
+          items={settings.contacts.map((c) => ({ id: c.id, name: c.name, detail: c.link }))}
+          namePlaceholder={t.parent.birthdayName}
+          linkPlaceholder="tel:+44… · https://wa.me/44…"
+          check={(link) => (callLinkOk(link) ? null : t.media.notCallLink)}
+          onAdd={(name, link) => updateSettings((s) => ({ ...s, contacts: [...s.contacts, { id: id(), name, link }] }))}
+          onRemove={(key) => updateSettings((s) => ({ ...s, contacts: s.contacts.filter((x) => x.id !== key) }))}
+        />
+      </div>
     </div>
   )
 }

@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import type { ItemId } from '@/access/catalogue'
+import { ITEMS, type ItemId } from '@/access/catalogue'
 import { backupDue } from '@/data/backup'
 import { GamesScreen } from '@/games/GamesScreen'
 import { LearnScreen } from '@/games/LearnScreen'
 import { useT } from '@/i18n'
+import { ListenScreen } from '@/listen/ListenScreen'
+import { PlayerProvider } from '@/listen/PlayerProvider'
 import { ParentGate } from '@/parent/ParentGate'
 import { ParentScreen } from '@/parent/ParentScreen'
 import { addUsage, currentArea, TICK_SECONDS } from '@/progress/usage'
@@ -44,7 +46,13 @@ function Root() {
     if (wantsDemo) void startDemo()
   }, [wantsDemo])
   if (!ready || wantsDemo) return null
-  return settings.setupDone ? <Screens /> : <SetupWizard />
+  return settings.setupDone ? (
+    <PlayerProvider>
+      <Screens />
+    </PlayerProvider>
+  ) : (
+    <SetupWizard />
+  )
 }
 
 function Screens() {
@@ -55,6 +63,7 @@ function Screens() {
   const [screen, setScreen] = useState<Screen>(() => SCREENS.find((s) => s === asked && s !== 'parents') ?? 'home')
   const [askPin, setAskPin] = useState(false)
   const [startGame, setStartGame] = useState<ItemId | null>(null)
+  const [startListen, setStartListen] = useState<ItemId | null>(null)
   const idle = useIdle(IDLE_MS)
   useAutoUpdate(idle)
   useWakeLock(true)
@@ -76,19 +85,19 @@ function Screens() {
         {screen === 'home' && (
           <Home
             onPlay={(id) => {
-              setStartGame(id)
-              setScreen('games')
+              if (ITEMS[id].group === 'games') {
+                setStartGame(id)
+                setScreen('games')
+              } else {
+                setStartListen(id)
+                setScreen('radio')
+              }
             }}
           />
         )}
         {screen === 'learn' && <LearnScreen />}
         {screen === 'games' && <GamesScreen start={startGame} onStarted={() => setStartGame(null)} />}
-        {screen === 'radio' && (
-          <div className="card time-up">
-            <Emoji name="radio" size={96} />
-            <p>{t.screens.soon}</p>
-          </div>
-        )}
+        {screen === 'radio' && <ListenScreen key={startListen ?? ''} start={startListen} />}
         {screen === 'parents' && <ParentScreen />}
       </Shell>
       {askPin && (

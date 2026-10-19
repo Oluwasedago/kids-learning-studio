@@ -1,0 +1,134 @@
+.listen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 0;
+}
+.listen .shelf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.now-playing {
+  margin-left: auto;
+  gap: 0.5rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.9rem;
+  max-width: 100%;
+}
+.now-playing button {
+  min-height: 2.6rem;
+  min-width: 2.6rem;
+  padding: 0;
+}
+.listen-grid {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  align-content: start;
+  gap: 0.9rem;
+  padding-bottom: 0.8rem;
+}
+.listen-note {
+  grid-column: 1 / -1;
+  font-size: 0.85rem;
+}
+.station {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 7rem;
+  text-align: left;
+  color: var(--ink);
+  font-family: 'Andika', sans-serif;
+  font-weight: 400;
+  border-radius: var(--radius);
+}
+.station h3 {
+  font-size: 1.2rem;
+}
+.station small {
+  color: var(--muted);
+}
+.station.on {
+  box-shadow: 0 0 0 4px var(--accent), var(--shadow);
+}
+.station-go {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #fff;
+}
+.pill.live {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.8rem;
+  background: var(--red-soft);
+  color: var(--red);
+}
+.story-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.story-list ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.story-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.3rem;
+  border-radius: var(--radius-s);
+}
+.story-list li.on {
+  background: var(--accent-soft);
+}
+.story-list li span {
+  display: grid;
+}
+.video-card {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  color: var(--ink);
+  padding: 0.6rem;
+  border-radius: var(--radius);
+}
+.video-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-s);
+}
+.video-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius);
+  background: #000;
+}
+.listen-locked {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem);
+}
+.calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}

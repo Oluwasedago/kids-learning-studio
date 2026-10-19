@@ -4,6 +4,7 @@ import { ITEMS, itemsIn, type ItemId, type Subject } from '@/access/catalogue'
 import type { Score } from '@/data/types'
 import { useT } from '@/i18n'
 import { DidYouKnow } from '@/learn/DidYouKnow'
+import { CallsCard } from '@/listen/CallsCard'
 import { animalOfTheDay } from '@/lessons/data'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, streak, weekStars } from '@/progress/progress'
@@ -32,6 +33,7 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
       <MissionsCard key={nudge} missions={missions} done={done} onStart={setMission} nudge={nudge > 0} />
       <div className="home-side">
         <EarnedCard />
+        <CallsCard />
         <DidYouKnow compact />
         <BirthdaysCard />
       </div>

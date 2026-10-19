@@ -60,6 +60,12 @@ export interface Settings {
     period: 'day' | 'week' | 'month'
   }
   birthdays: FamilyBirthday[]
+  /** Extra radio stations a parent added (any HTTPS audio stream). */
+  stations: { id: string; name: string; url: string }[]
+  /** YouTube videos or playlists a parent picked (the only videos the child can play). */
+  videos: { id: string; kind: 'video' | 'playlist'; title: string }[]
+  /** One-tap calls: a name and a link (tel:, a WhatsApp or FaceTime link). */
+  contacts: { id: string; name: string; link: string }[]
   backup: {
     /** ms since 1970 of the last backup file, or null. */
     lastAt: number | null
@@ -127,6 +133,9 @@ export const DEFAULT_SETTINGS: Settings = {
   rewards: { missionsPerDay: 3, minutesPerStar: 10, maxMinutesPerDay: 45, weeklyGoal: 12, weeklyReward: '' },
   report: { email: '', period: 'week' },
   birthdays: [],
+  stations: [],
+  videos: [],
+  contacts: [],
   backup: { lastAt: null, remindDays: 7 },
   updatedAt: 0,
 }
