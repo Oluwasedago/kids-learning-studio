@@ -63,7 +63,7 @@ export const FACTS: Fact[] = [
   { topic: 'history', emoji: 'speech', text: 'The telephone was invented in the 1870s.' },
   { topic: 'history', emoji: 'sparkles', text: 'The first aeroplane flight with an engine was in 1903. It lasted just 12 seconds.' },
   { topic: 'history', emoji: 'game', text: 'The first computers were as big as a whole room.' },
-  { topic: 'history', emoji: 'animal-mouse', text: 'Dinosaurs died out about 66 million years ago, long before there were people.' },
+  { topic: 'history', emoji: 'footprints', text: 'Dinosaurs died out about 66 million years ago, long before there were people.' },
 ]
 
 /** A new random order of all facts (the next fact is never the one just seen). Pure with a given random. */

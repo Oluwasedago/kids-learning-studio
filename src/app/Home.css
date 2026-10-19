@@ -1,6 +1,14 @@
-/* Home: greeting and missions on top, earned time and play tiles below. Scrolls when it does not fit. */
-.home {
+/* Home: greeting and missions on top, earned time and play tiles below; this part scrolls when it does not
+   fit, while the "Did you know?" strip stays at the bottom. */
+.home-wrap {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.home {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: grid;
   grid-template-columns: 1.6fr 1fr;

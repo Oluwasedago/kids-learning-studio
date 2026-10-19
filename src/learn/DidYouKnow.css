@@ -1,30 +1,36 @@
-.did-you-know {
-  display: grid;
-  gap: 0.6rem;
-  align-content: start;
-  background: linear-gradient(135deg, var(--card), var(--amber-soft));
-}
-.did-you-know .card-title .pill {
-  margin-left: auto;
-  font-size: 0.8rem;
-}
-.dyk-body {
+/* "Did you know?" strip: one slim line across the bottom of the home screen. */
+.dyk-strip {
+  flex: none;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.9rem;
+  border-radius: var(--radius-s);
+  background: var(--lilac-soft);
 }
-.dyk-body p {
-  font-size: 1.15rem;
+.dyk-text {
+  flex: 1;
+  min-width: 0;
+}
+.dyk-text small {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--lilac);
+}
+.dyk-text p {
+  font-family: var(--display);
+  font-weight: 600;
   color: var(--ink);
+  /* At most two lines, never a scrolling box. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.did-you-know.compact .dyk-body p {
-  font-size: 1rem;
-}
-.dyk-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
-}
-.dyk-actions button {
-  min-height: 3.2rem;
+.dyk-strip button {
+  min-height: 3rem;
+  min-width: 3rem;
+  padding: 0;
 }

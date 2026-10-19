@@ -3,7 +3,6 @@ import { ITEMS, SUBJECTS, type Subject } from '@/access/catalogue'
 import { useStudio } from '@/app/studio'
 import { useT } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
-import { DidYouKnow } from '@/learn/DidYouKnow'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { levelOf } from '@/progress/progress'
 import { Emoji } from '@/shared/Emoji'
@@ -38,9 +37,6 @@ export function LearnScreen() {
           </button>
         )
       })}
-      <div className="learn-facts">
-        <DidYouKnow />
-      </div>
       {subject && <MissionScreen subject={subject} onClose={() => setSubject(null)} />}
     </div>
   )

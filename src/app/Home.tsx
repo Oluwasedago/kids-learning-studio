@@ -28,21 +28,23 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
   const tiles = [...itemsIn('games'), ...itemsIn('media')].filter((id) => ITEMS[id].ready)
 
   return (
-    <div className="home">
-      <Hero left={missions.filter((m) => !done.has(m)).length} total={missions.length} />
-      <MissionsCard key={nudge} missions={missions} done={done} onStart={setMission} nudge={nudge > 0} />
-      <div className="home-side">
-        <EarnedCard />
-        <CallsCard />
-        <DidYouKnow compact />
-        <BirthdaysCard />
+    <div className="home-wrap">
+      <div className="home">
+        <Hero left={missions.filter((m) => !done.has(m)).length} total={missions.length} />
+        <MissionsCard key={nudge} missions={missions} done={done} onStart={setMission} nudge={nudge > 0} />
+        <div className="home-side">
+          <EarnedCard />
+          <CallsCard />
+          <BirthdaysCard />
+        </div>
+        <section className="play-row">
+          {tiles.map((id) => (
+            <ItemTile key={id} id={id} onOpen={() => onPlay(id)} onLocked={() => setNudge((n) => n + 1)} />
+          ))}
+        </section>
+        {mission && <MissionScreen subject={mission} onClose={() => setMission(null)} />}
       </div>
-      <section className="play-row">
-        {tiles.map((id) => (
-          <ItemTile key={id} id={id} onOpen={() => onPlay(id)} onLocked={() => setNudge((n) => n + 1)} />
-        ))}
-      </section>
-      {mission && <MissionScreen subject={mission} onClose={() => setMission(null)} />}
+      <DidYouKnow />
     </div>
   )
 }

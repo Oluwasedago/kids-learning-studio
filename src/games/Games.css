@@ -90,11 +90,6 @@
   background: #000;
 }
 
-/* Learn: the facts card spans the whole width under the subjects. */
-.learn-facts {
-  grid-column: 1 / -1;
-}
-
 /* Learn: subject tabs above the shelf. */
 .learn-screen {
   height: 100%;

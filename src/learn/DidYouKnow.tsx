@@ -7,8 +7,11 @@ import { factOrder } from '@/lessons/facts'
 import { Emoji } from '@/shared/Emoji'
 import './DidYouKnow.css'
 
-/** "Did you know?": one random fact at a time; "Another one" shows the next in a fresh random order. */
-export function DidYouKnow({ compact = false }: { compact?: boolean }) {
+/**
+ * "Did you know?": a slim strip along the bottom of the home screen with one random fact; the arrow shows the
+ * next one (a fresh random order once all have been seen). It stays in place; the page above it scrolls.
+ */
+export function DidYouKnow() {
   const t = useT()
   const { accessOf } = useStudio()
   const speaks = useCanSpeak()
@@ -18,32 +21,28 @@ export function DidYouKnow({ compact = false }: { compact?: boolean }) {
   const fact = order[i]
   const next = () => {
     if (i + 1 < order.length) return setI(i + 1)
-    // All seen: a new order that does not start with the fact just shown.
     let fresh = factOrder()
     if (fresh[0] === fact) fresh = [...fresh.slice(1), fresh[0]]
     setOrder(fresh)
     setI(0)
   }
   return (
-    <section className={`card did-you-know ${compact ? 'compact' : ''}`}>
-      <h3 className="card-title">
-        <Emoji name="light" size={36} /> {t.items.facts}
-        <span className="pill">{t.facts.topics[fact.topic]}</span>
-      </h3>
-      <div className="dyk-body">
-        <Emoji name={fact.emoji} size={compact ? 56 : 96} />
+    <section className="dyk-strip" aria-label={t.items.facts}>
+      <Emoji name={fact.emoji} size={40} />
+      <div className="dyk-text">
+        <small>
+          {t.items.facts} · {t.facts.topics[fact.topic]}
+        </small>
         <p>{fact.text}</p>
       </div>
-      <div className="dyk-actions">
-        {speaks && (
-          <button className="secondary" onClick={() => sayText(fact.text)} aria-label={t.mission.hear}>
-            <Volume2 />
-          </button>
-        )}
-        <button className="secondary" onClick={next}>
-          {t.facts.another} <ArrowRight />
+      {speaks && (
+        <button className="secondary" onClick={() => sayText(fact.text)} aria-label={t.mission.hear}>
+          <Volume2 />
         </button>
-      </div>
+      )}
+      <button className="secondary" onClick={next} aria-label={t.facts.another}>
+        <ArrowRight />
+      </button>
     </section>
   )
 }
