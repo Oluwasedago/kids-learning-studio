@@ -14,10 +14,12 @@ permissions:
   pages: write
   id-token: write
 
-# One deploy at a time; a newer push waits instead of cancelling one that is half done.
+# One deploy at a time; a newer push replaces an older run that is still going (every run publishes the
+# whole site, so only the newest matters). Group renamed on 19 Oct 2026: a run stuck in "waiting" during a
+# GitHub incident blocked the old "pages" group.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
   build:
