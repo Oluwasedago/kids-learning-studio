@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
-import { accessState, earnedSecondsLeft } from '@/access/access'
+import { accessState, earnedSecondsLeft, starterAccess } from '@/access/access'
 import { useLocalDoc } from '@/data/localDoc'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE, type Progress, type Settings, type Usage } from '@/data/types'
 import { ageFrom, isoDate } from '@/shared/date'
@@ -33,7 +33,9 @@ export function StudioData({ children }: { children: ReactNode }) {
   const progress = useLocalDoc<Progress>('progress', EMPTY_PROGRESS)
   const usage = useLocalDoc<Usage>('usage', EMPTY_USAGE)
   const today = isoDate(now)
-  const s = settings.doc
+  const age = ageFrom(settings.doc.child.birthMonth, settings.doc.child.birthYear, now)
+  // Items added in a later version are missing from settings saved earlier: they get their starter setting.
+  const s = settings.doc.setupDone ? { ...settings.doc, access: { ...starterAccess(age), ...settings.doc.access } } : settings.doc
   const earnedLeft = earnedSecondsLeft(progress.doc, usage.doc, s.rewards, today)
 
   // The child's colour on buttons and the menu.
@@ -44,7 +46,7 @@ export function StudioData({ children }: { children: ReactNode }) {
   const state: StudioState = {
     now,
     today,
-    age: ageFrom(s.child.birthMonth, s.child.birthYear, now),
+    age,
     settings: s,
     ready: settings.ready && progress.ready && usage.ready,
     updateSettings: settings.update,

@@ -32,13 +32,13 @@ export function earnedSecondsLeft(progress: Progress, usage: Usage, rewards: Set
 
 /**
  * The setup wizard's proposal for a child's age: everything suitable switched on, learning and listening
- * open, games and videos locked until earned. Optional modules (faith) stay off until a parent chooses them.
+ * open, games and videos locked until earned.
  */
 export function starterAccess(age: number): Record<ItemId, AccessRule> {
   const out = {} as Record<ItemId, AccessRule>
   for (const id of ITEM_IDS) {
     const item = ITEMS[id]
-    out[id] = { enabled: !item.optIn && age >= item.minAge, unlocked: item.starter === 'unlocked' }
+    out[id] = { enabled: age >= item.minAge, unlocked: item.starter === 'unlocked' }
   }
   return out
 }

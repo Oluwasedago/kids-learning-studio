@@ -1,0 +1,30 @@
+.did-you-know {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  background: linear-gradient(135deg, var(--card), var(--amber-soft));
+}
+.did-you-know .card-title .pill {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+.dyk-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.dyk-body p {
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.did-you-know.compact .dyk-body p {
+  font-size: 1rem;
+}
+.dyk-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+.dyk-actions button {
+  min-height: 3.2rem;
+}

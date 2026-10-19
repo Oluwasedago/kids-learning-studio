@@ -6,9 +6,8 @@
   grid-template-columns: 1.6fr 1fr;
   grid-template-areas:
     'hero missions'
-    'play earned'
-    'play birthdays';
-  grid-template-rows: auto auto 1fr;
+    'play side';
+  grid-template-rows: auto 1fr;
   align-content: start;
   gap: 0.8rem;
   padding-bottom: 0.6rem;
@@ -22,11 +21,11 @@
 .play-row {
   grid-area: play;
 }
-.earned-card {
-  grid-area: earned;
-}
-.birthdays-card {
-  grid-area: birthdays;
+.home-side {
+  grid-area: side;
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
 }
 .muted {
   color: var(--muted);
@@ -226,7 +225,7 @@
 @media (max-width: 760px) {
   .home {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'hero' 'missions' 'earned' 'play' 'birthdays';
+    grid-template-areas: 'hero' 'missions' 'side' 'play';
     grid-template-rows: none;
   }
   .hero h2 {

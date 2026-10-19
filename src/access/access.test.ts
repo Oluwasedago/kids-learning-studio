@@ -33,12 +33,12 @@ describe('access control', () => {
     expect(earnedSecondsLeft(progress, usage, rewards, today)).toBe(5 * 60)
     expect(earnedSecondsLeft(progress, { ...usage, earnedUsed: { [today]: 99_999 } }, rewards, today)).toBe(0)
   })
-  it('starter set by age: learning open, games locked, faith off, too-young items off', () => {
+  it('starter set by age: learning open, games locked, too-young items off', () => {
     const four = starterAccess(4)
     expect(four.maths).toEqual({ enabled: true, unlocked: true })
     expect(four.memory).toEqual({ enabled: true, unlocked: false })
     expect(four.snake.enabled).toBe(false)
-    expect(four.faith.enabled).toBe(false)
+    expect(four.facts).toEqual({ enabled: true, unlocked: true })
     expect(starterAccess(7).snake.enabled).toBe(true)
   })
 })

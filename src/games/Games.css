@@ -1,12 +1,15 @@
 /* Games shelf: big pastel cards. */
 .games-screen {
   height: 100%;
+  overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  /* Always two rows, so a shelf with few cards keeps the same card size. */
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  align-content: start;
   gap: 1rem;
+  padding-bottom: 1rem;
+}
+.games-screen .game-card {
+  min-height: 15rem;
 }
 .game-card {
   position: relative;
@@ -85,6 +88,11 @@
   border: 0;
   border-radius: var(--radius) var(--radius) 0 0;
   background: #000;
+}
+
+/* Learn: the facts card spans the whole width under the subjects. */
+.learn-facts {
+  grid-column: 1 / -1;
 }
 
 /* Learn: subject tabs above the shelf. */

@@ -3,6 +3,7 @@ import { earnedMinutes } from '@/access/access'
 import { ITEMS, itemsIn, type ItemId, type Subject } from '@/access/catalogue'
 import type { Score } from '@/data/types'
 import { useT } from '@/i18n'
+import { DidYouKnow } from '@/learn/DidYouKnow'
 import { animalOfTheDay } from '@/lessons/data'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, streak, weekStars } from '@/progress/progress'
@@ -29,13 +30,16 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
     <div className="home">
       <Hero left={missions.filter((m) => !done.has(m)).length} total={missions.length} />
       <MissionsCard key={nudge} missions={missions} done={done} onStart={setMission} nudge={nudge > 0} />
-      <EarnedCard />
+      <div className="home-side">
+        <EarnedCard />
+        <DidYouKnow compact />
+        <BirthdaysCard />
+      </div>
       <section className="play-row">
         {tiles.map((id) => (
           <ItemTile key={id} id={id} onOpen={() => onPlay(id)} onLocked={() => setNudge((n) => n + 1)} />
         ))}
       </section>
-      <BirthdaysCard />
       {mission && <MissionScreen subject={mission} onClose={() => setMission(null)} />}
     </div>
   )

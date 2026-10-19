@@ -9,6 +9,8 @@ export const ITEM_IDS = [
   'english',
   'world',
   'patterns',
+  // "Did you know?": a random fact about the world, science, nature, space or history.
+  'facts',
   // Our own games.
   'memory',
   'builder',
@@ -18,7 +20,6 @@ export const ITEM_IDS = [
   'radio',
   'stories',
   'videos',
-  'faith',
   // Family.
   'calls',
 ] as const
@@ -38,8 +39,6 @@ export interface Item {
    * 'locked' opens with earned time (games, videos).
    */
   starter: 'locked' | 'unlocked'
-  /** Optional modules start switched off; the parent chooses them (e.g. faith). */
-  optIn?: boolean
 }
 
 export const ITEMS: Record<ItemId, Item> = {
@@ -47,6 +46,7 @@ export const ITEMS: Record<ItemId, Item> = {
   english: { id: 'english', group: 'learning', emoji: 'letters', ready: true, minAge: 4, starter: 'unlocked' },
   world: { id: 'world', group: 'learning', emoji: 'globe', ready: true, minAge: 5, starter: 'unlocked' },
   patterns: { id: 'patterns', group: 'learning', emoji: 'puzzle', ready: true, minAge: 4, starter: 'unlocked' },
+  facts: { id: 'facts', group: 'learning', emoji: 'light', ready: true, minAge: 4, starter: 'unlocked' },
   memory: { id: 'memory', group: 'games', emoji: 'joystick', ready: true, minAge: 4, starter: 'locked' },
   builder: { id: 'builder', group: 'games', emoji: 'memo', ready: true, minAge: 5, starter: 'locked' },
   puzzle: { id: 'puzzle', group: 'games', emoji: 'framed', ready: true, minAge: 4, starter: 'locked' },
@@ -54,7 +54,6 @@ export const ITEMS: Record<ItemId, Item> = {
   radio: { id: 'radio', group: 'media', emoji: 'radio', ready: false, minAge: 4, starter: 'unlocked' },
   stories: { id: 'stories', group: 'media', emoji: 'openbook', ready: false, minAge: 4, starter: 'unlocked' },
   videos: { id: 'videos', group: 'media', emoji: 'tv', ready: false, minAge: 4, starter: 'locked' },
-  faith: { id: 'faith', group: 'media', emoji: 'candle', ready: false, minAge: 4, starter: 'unlocked', optIn: true },
   calls: { id: 'calls', group: 'family', emoji: 'speech', ready: false, minAge: 4, starter: 'unlocked' },
 }
 
