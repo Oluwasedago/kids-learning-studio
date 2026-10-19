@@ -37,3 +37,12 @@
   gap: 0.8rem;
   text-align: center;
 }
+
+@media (max-width: 760px) {
+  .home {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -156,3 +156,49 @@
 .status-chip.offline {
   color: var(--red);
 }
+
+/* Phones and narrow portrait screens: the menu becomes a bar along the bottom, where thumbs reach it. */
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .sidebar {
+    grid-row: 2;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom, 0px));
+  }
+  .nav-item,
+  .nav-parent {
+    flex: 1;
+    margin-top: 0;
+    min-height: 4.2rem;
+    min-width: 0;
+    border-radius: 1.2rem;
+    font-size: 0.8rem;
+    color: var(--ink);
+  }
+  .nav-item.active::before,
+  .nav-item.active::after {
+    display: none;
+  }
+  .nav-item .emoji {
+    width: 34px;
+    height: 34px;
+  }
+  .shell-main {
+    padding: 0.6rem 0.8rem 0.4rem;
+  }
+  .statusbar-title {
+    font-size: 1.1rem;
+  }
+  .status-chip {
+    min-height: 2.4rem;
+    padding: 0.2rem 0.7rem;
+  }
+  .status-clock {
+    font-size: 1.1rem;
+  }
+}

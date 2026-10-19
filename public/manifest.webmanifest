@@ -1,11 +1,10 @@
 {
   "name": "Kids' Learning Studio",
-  "short_name": "Studio",
+  "short_name": "KL Studio",
   "description": "A free learning home screen for children. Everything stays on this device.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",
-  "orientation": "landscape",
   "background_color": "#1b2540",
   "theme_color": "#1b2540",
   "icons": [
