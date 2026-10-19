@@ -28,14 +28,6 @@ export function weekStars(p: Progress, d: Date): number {
   return sum
 }
 
-/** Days in a row with at least one star, up to today (today without a star yet does not break it). */
-export function streak(p: Progress, today: Date): number {
-  let day = starsOn(p, today) > 0 ? today : addDays(today, -1)
-  let count = 0
-  for (let i = 0; i < 1000 && starsOn(p, day) > 0; i++, day = addDays(day, -1)) count++
-  return count
-}
-
 /** The child's current step on a subject's ladder (the start step for their age when not set yet). */
 export const levelOf = (p: Progress, subject: Subject, age: number) => p.levels[subject] ?? startLevel(subject, age)
 

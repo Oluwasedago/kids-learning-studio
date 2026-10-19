@@ -3,6 +3,7 @@ import type { Mistake, Progress, Score, Settings, Usage } from '@/data/types'
 import type { Strings } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
 import { levelOf } from '@/progress/progress'
+import { computeStreak } from '@/progress/streak'
 import { areaKind } from '@/progress/usage'
 import { addDays, isoDate, mondayOf } from '@/shared/date'
 
@@ -55,6 +56,8 @@ export interface Report {
   missions: number
   minutes: { learning: number; games: number; other: number; earnedUsed: number }
   subjects: SubjectReport[]
+  /** The learning streak now and the longest so far (days in a row). */
+  streak: { current: number; longest: number }
   /** Weakest skills first. */
   needsHelp: HelpItem[]
   /** Wrong answers in the period, newest first (at most 10). */
@@ -136,6 +139,7 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
     missions: Object.entries(progress.missions).reduce((n, [day, done]) => (inRange(day) ? n + done.length : n), 0),
     minutes: { learning: minutes(seconds.learning), games: minutes(seconds.games), other: minutes(seconds.other), earnedUsed: minutes(sum(usage.earnedUsed)) },
     subjects,
+    streak: (({ current, longest }) => ({ current, longest }))(computeStreak(progress.stars, now)),
     needsHelp,
     mistakes: mistakes.slice(0, 10),
   }
@@ -148,6 +152,7 @@ export function reportText(r: Report, t: Strings, childName: string): string {
     '',
     t.reports.activeDays(r.activeDays),
     t.reports.starsLine(r.stars, r.missions),
+    t.reports.streakLine(r.streak.current, r.streak.longest),
     t.reports.minutesLine(r.minutes.learning, r.minutes.games, r.minutes.earnedUsed),
     '',
     t.reports.bySubject,

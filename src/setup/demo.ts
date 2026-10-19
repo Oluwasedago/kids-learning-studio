@@ -7,7 +7,7 @@ import { makePin } from '@/parent/pin'
 import { missionsFor } from '@/progress/progress'
 import { addDays, isoDate } from '@/shared/date'
 
-// "Try the demo": a made-up child with ten days of sample progress, so parents can look around before setting up.
+// "Try the demo": a made-up child with twelve days of sample progress, so parents can look around before setting up.
 // The demo parent PIN is shown on the demo banner. Leaving the demo deletes everything.
 
 export const DEMO_PIN = '1234'
@@ -30,9 +30,10 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
 
   const progress: Progress = { ...EMPTY_PROGRESS, levels: {}, updatedAt: now.getTime() }
   const usage: Usage = { ...EMPTY_USAGE, updatedAt: now.getTime() }
-  // Ten days back, skipping one: 2–3 missions a day with mixed scores, some games with earned time.
-  for (let i = 10; i >= 1; i--) {
-    if (i === 4) continue
+  // Twelve days back, skipping one (covered by a streak freeze earned after 7 days in a row): 2–3 missions a
+  // day with mixed scores, some games with earned time.
+  for (let i = 12; i >= 1; i--) {
+    if (i === 3) continue
     const d = addDays(now, -i)
     const day = isoDate(d)
     const missions = missionsFor(d, access, 3).slice(0, i % 3 === 0 ? 2 : 3)

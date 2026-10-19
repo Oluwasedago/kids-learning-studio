@@ -10,6 +10,8 @@ import { COUNTRIES } from '@/lessons/data'
 import { LADDERS, makeRound, passMark } from '@/lessons/ladder'
 import type { Choice, Visual } from '@/lessons/question'
 import { type Answer, completeMission, levelOf, missionsFor } from '@/progress/progress'
+import { computeStreak, milestoneAt } from '@/progress/streak'
+import '@/progress/Streak.css'
 import { useArea } from '@/progress/usage'
 import { Emoji } from '@/shared/Emoji'
 import { CountryFlag } from './Flag'
@@ -30,17 +32,22 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
   const [counts, setCounts] = useState(isTodays)
   const [level, setLevel] = useState(() => levelOf(progress, subject, age))
   const [round, setRound] = useState(0)
-  const [result, setResult] = useState<{ score: Score; levelAfter: number } | null>(null)
+  const [result, setResult] = useState<{ score: Score; levelAfter: number; milestone: number | null } | null>(null)
   useArea(`mission:${subject}`)
 
   const finish = (answers: Answer[]) => {
     let levelAfter = level
+    let milestone: number | null = null
     updateProgress((p) => {
       const next = completeMission(p, subject, answers, { day: now, age, counts })
       levelAfter = next.levels[subject] ?? level
+      // Today's first star can lift the streak to a milestone (3, 7, 14, 30 … days): celebrate it.
+      const before = computeStreak(p.stars, now)
+      const after = computeStreak(next.stars, now)
+      if (after.current > before.current) milestone = milestoneAt(after.current)
       return next
     })
-    setResult({ score: { right: answers.filter((a) => a.right).length, total: answers.length }, levelAfter })
+    setResult({ score: { right: answers.filter((a) => a.right).length, total: answers.length }, levelAfter, milestone })
   }
   const again = () => {
     setCounts(isTodays())
@@ -69,6 +76,11 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
           <Emoji name={passed ? (counts ? 'glowstar' : 'sparkles') : 'seedling'} size={150} className={passed ? 'mission-star' : ''} />
           <h2>{passed ? t.mission.doneTitle : t.mission.notYetTitle}</h2>
           <p>{t.mission.score(result.score.right, result.score.total)}</p>
+          {result.milestone && (
+            <p className="streak-milestone">
+              <Emoji name="fire" size={36} /> {t.streak.milestone(result.milestone)}
+            </p>
+          )}
           <p>{passed ? (counts ? t.mission.doneText : t.mission.practiceText) : t.mission.notYetText(passMark(result.score.total))}</p>
           {result.levelAfter > level && <p className="pill">{t.mission.levelUp(LADDERS[subject][result.levelAfter].skill)}</p>}
           {result.levelAfter < level && <p className="pill">{t.mission.levelDown(LADDERS[subject][result.levelAfter].skill)}</p>}

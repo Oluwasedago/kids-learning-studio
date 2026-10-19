@@ -128,6 +128,7 @@ function ReportCard() {
       <div className="report-figures">
         <Figure emoji="calendar" value={report.activeDays} label={t.reports.days} />
         <Figure emoji="glowstar" value={report.stars} label={t.reports.stars} />
+        <Figure emoji="fire" value={report.streak.current} label={t.reports.streakNow(report.streak.longest)} />
         <Figure emoji="gradcap" value={report.minutes.learning} label={t.reports.learningMin} />
         <Figure emoji="joystick" value={report.minutes.games} label={t.reports.gamesMin} />
       </div>

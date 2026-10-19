@@ -11,6 +11,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Two-layer access control (on/off → earn/open, unlock for today with PIN) | done |
 | Missions: one try per question (green right / red wrong, the right answer never shown), pass mark 5 of 8, stars, earned time | done |
 | Skills ladder by age, adaptive level (maths, English, world, patterns) | done |
+| Learning streak like Duolingo: days in a row, earned streak freezes, milestones, shown to parents | done |
 | Skill-to-stage placement and US / Berlin equivalents | to verify against each curriculum framework |
 | Animal facts, "Did you know?" facts, capitals, flag colours | to verify (second check of every fact) |
 | Games: memory, word builder, puzzle, snake | done |

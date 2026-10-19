@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { starterAccess } from '@/access/access'
 import { EMPTY_PROGRESS } from '@/data/types'
-import { completeMission, levelOf, missionsFor, scoreOf, streak, weekStars } from './progress'
+import { completeMission, levelOf, missionsFor, scoreOf, weekStars } from './progress'
 
 const day = new Date(2026, 9, 19, 10)
 const access = starterAccess(7)
@@ -56,10 +56,8 @@ describe('progress', () => {
     p = completeMission(p, 'english', answers(6), opts)
     expect(scoreOf(p, 'english', day)).toEqual({ right: 7, total: 8 })
   })
-  it('counts the week and the streak', () => {
+  it('counts the week', () => {
     const p = { ...EMPTY_PROGRESS, stars: { '2026-10-17': 2, '2026-10-18': 1, '2026-10-19': 3, '2026-10-12': 9 } }
     expect(weekStars(p, day)).toBe(3)
-    expect(streak(p, day)).toBe(3)
-    expect(streak({ ...p, stars: { ...p.stars, '2026-10-19': 0 } }, day)).toBe(2)
   })
 })

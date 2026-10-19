@@ -7,7 +7,8 @@ import { DidYouKnow } from '@/learn/DidYouKnow'
 import { CallsCard } from '@/media/CallsCard'
 import { animalOfTheDay } from '@/lessons/data'
 import { MissionScreen } from '@/missions/MissionScreen'
-import { missionsFor, scoreOf, starsOn, streak, weekStars } from '@/progress/progress'
+import { missionsFor, scoreOf, starsOn, weekStars } from '@/progress/progress'
+import { StreakCard } from '@/progress/StreakCard'
 import { StarTrack } from '@/progress/StarTrack'
 import { ItemTile } from '@/rewards/ItemTile'
 import { clock } from '@/shared/clock'
@@ -33,6 +34,7 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
         <Hero left={missions.filter((m) => !done.has(m)).length} total={missions.length} />
         <MissionsCard key={nudge} missions={missions} done={done} onStart={setMission} nudge={nudge > 0} />
         <div className="home-side">
+          <StreakCard />
           <EarnedCard />
           <CallsCard />
           <BirthdaysCard />
@@ -52,7 +54,6 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
 function Hero({ left, total }: { left: number; total: number }) {
   const t = useT()
   const { now, settings, progress } = useStudio()
-  const days = streak(progress, now)
   const animal = animalOfTheDay(now)
   return (
     <section className="hero card">
@@ -64,12 +65,6 @@ function Hero({ left, total }: { left: number; total: number }) {
             <Emoji name="glowstar" size={30} />
             <b>{starsOn(progress, now)}</b> {t.home.starsToday(starsOn(progress, now))}
           </span>
-          {days > 1 && (
-            <span className="badge">
-              <Emoji name="fire" size={26} />
-              {t.home.streak(days)}
-            </span>
-          )}
         </div>
       </div>
       <div className="hero-animal" title={animal.fact}>

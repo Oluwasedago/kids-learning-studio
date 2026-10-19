@@ -27,6 +27,8 @@ Developed by Oluwasedago.
   earns a star. Lessons follow the child's age on a skills ladder aligned to
   Cambridge Primary stages (with approximate US grade and Berlin Klasse equivalents) and adapt: two strong
   rounds move a step up, a weak round a step down.
+- **Learning streak.** Days in a row with a passed mission, like Duolingo: every 7 days earn a streak freeze
+  that saves a missed day, and milestones (3, 7, 14, 30 … days) are celebrated.
 - **Stars earn time.** Each star unlocks minutes for games and videos, up to a daily limit the parent sets.
 - **Two layers of parent control.** Every item can be switched off (hidden), and every item that is on is either
   *open* or *earned* (locked until missions are done). A parent can also unlock an item for today with the PIN.
