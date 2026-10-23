@@ -11,7 +11,8 @@ import { callLinkOk, parseYouTube } from '@/media/sources'
 import { buildReport, mailtoUrl, reportText } from '@/reports/report'
 import { Emoji } from '@/shared/Emoji'
 import { AccessEditor, ChildEditor } from './editors'
-import { ParentGate } from './ParentGate'
+import { ParentGate, RecoveryCode } from './ParentGate'
+import { makePin, newRecoveryCode, normalizeCode } from './pin'
 import './Parent.css'
 
 /** The parent screen (behind the PIN): every setting, reports and backups. */
@@ -511,7 +512,15 @@ function BirthdaysEditor() {
 
 function SecurityCard() {
   const t = useT()
+  const { settings, updateSettings } = useStudio()
   const [changePin, setChangePin] = useState(false)
+  const [code, setCode] = useState('')
+  const newCode = async () => {
+    const fresh = newRecoveryCode()
+    const recovery = await makePin(normalizeCode(fresh))
+    updateSettings((s) => ({ ...s, recovery }))
+    setCode(fresh)
+  }
   const [done, setDone] = useState(false)
   const wipe = async () => {
     if (!confirm(t.parent.deleteConfirm)) return
@@ -524,11 +533,16 @@ function SecurityCard() {
         <button className="secondary" onClick={() => setChangePin(true)}>
           {t.parent.changePin}
         </button>
+        <button className="secondary" onClick={() => void newCode()}>
+          {t.parent.newRecoveryCode}
+        </button>
         <button className="secondary danger" onClick={() => void wipe()}>
           {t.parent.deleteAll}
         </button>
       </div>
       {done && <p role="status">{t.parent.pinChanged}</p>}
+      <small className="muted">{settings.recovery ? t.parent.recoveryNote : t.parent.noRecoveryCode}</small>
+      {code && <RecoveryCode code={code} onDone={() => setCode('')} />}
       <small className="muted">{t.parent.deleteNote}</small>
       {changePin && (
         <ParentGate

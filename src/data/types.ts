@@ -48,6 +48,10 @@ export interface Settings {
   voice: { name: string | null; rate: number }
   /** The parent PIN, stored only as a salted PBKDF2 hash (see parent/pin.ts). null until the wizard sets it. */
   pin: { salt: string; hash: string; iterations: number } | null
+  /** The recovery code for a forgotten PIN, stored only as a hash like the PIN. null on devices set up before it. */
+  recovery: { salt: string; hash: string; iterations: number } | null
+  /** A reset asked for without the recovery code: possible 24 hours after `requestedAt`; the right PIN cancels it. */
+  pinReset: { requestedAt: number } | null
   access: Record<ItemId, AccessRule>
   rewards: {
     /** Missions a day (1-4). */
@@ -136,6 +140,8 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
   voice: { name: null, rate: 0.9 },
   pin: null,
+  recovery: null,
+  pinReset: null,
   // Filled by the setup wizard (access/starter.ts); this default only matters before the wizard has run.
   access: {} as Record<ItemId, AccessRule>,
   rewards: { missionsPerDay: 3, questionsPerMission: 10, minutesPerStar: 10, maxMinutesPerDay: 45, weeklyGoal: 12, weeklyReward: '' },

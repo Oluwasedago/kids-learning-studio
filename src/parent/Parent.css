@@ -344,3 +344,49 @@ button.danger {
     grid-template-columns: 1fr;
   }
 }
+
+/* Forgotten PIN: the recovery code (big, easy to copy by hand), the code form and a waiting reset. */
+.link-button {
+  min-height: 2.6rem;
+  background: none;
+  box-shadow: none;
+  color: var(--accent-deep);
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+.recovery-box {
+  text-align: center;
+}
+.recovery-box > button:not(.pin-close):not(.link-button),
+.recovery-form button {
+  width: 100%;
+}
+.recovery-code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: clamp(1.4rem, 7vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--sunken-soft);
+  border-radius: var(--radius-s);
+  padding: 0.6rem 1rem;
+  user-select: all;
+}
+.recovery-form {
+  display: grid;
+  gap: 0.4rem;
+  width: 100%;
+  text-align: left;
+}
+.recovery-form input {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.recovery-pending {
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--amber-soft);
+  border-radius: var(--radius-s);
+  padding: 0.5rem 0.8rem;
+}

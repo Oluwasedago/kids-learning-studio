@@ -1,5 +1,5 @@
 import { Delete, X } from 'lucide-react'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { useT } from '@/i18n'
 import { PIN_LENGTH } from './pin'
 import './Parent.css'
@@ -11,10 +11,12 @@ interface Props {
   note?: string
   onPin: (pin: string) => void
   onClose?: () => void
+  /** Under the keys (e.g. "Forgot the PIN?"). */
+  footer?: ReactNode
 }
 
 /** Big number pad for the parent PIN. Digits are never shown, only dots. */
-export function PinPad({ title, error, note, onPin, onClose }: Props) {
+export function PinPad({ title, error, note, onPin, onClose, footer }: Props) {
   const t = useT()
   const [pin, setPin] = useState('')
   const press = (digit: string) => {
@@ -57,6 +59,7 @@ export function PinPad({ title, error, note, onPin, onClose }: Props) {
             <Delete />
           </button>
         </div>
+        {footer}
       </div>
     </div>
   )
