@@ -324,7 +324,6 @@ export const fr: Strings = {
     funkids: 'Radio britannique pour les 6–12 ans (en anglais, avec de courtes publicités)',
     'funkids-junior': 'Chansons et histoires pour les plus petits (en anglais, avec de courtes publicités)',
     monpetitfranceinter: 'La radio des enfants de Radio France, pour les 6–12 ans (sans publicité)',
-    pommedapi: 'Chansons, comptines et histoires pour les 3–7 ans',
   },
   media: {
     title: 'Vidéos, radio et appels',

@@ -325,7 +325,6 @@ export const en = {
     funkids: 'UK children’s radio, ages 6–12 (in English, with short adverts)',
     'funkids-junior': 'Songs and stories for younger children (in English, with short adverts)',
     monpetitfranceinter: 'French children’s radio from Radio France, ages 6–12 (in French, no adverts)',
-    pommedapi: 'French songs, rhymes and stories for ages 3–7 (in French)',
   },
   media: {
     title: 'Videos, radio and calls',

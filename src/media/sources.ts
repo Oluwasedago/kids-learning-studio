@@ -31,8 +31,6 @@ export const STATIONS: Station[] = [
   // Radio France's children's station (public service, no adverts); the plain MP3 stream, not the HLS playlist,
   // so every browser can play it.
   { id: 'monpetitfranceinter', name: 'Mon Petit France Inter', url: 'https://icecast.radiofrance.fr/monpetitfranceinter-midfi.mp3', lang: 'fr', emoji: 'music', builtIn: true },
-  // Bayard's radio for ages 3–7; this address forwards to its current stream (on RadioKing).
-  { id: 'pommedapi', name: 'Radio Pomme d’Api', url: 'https://www.radiopommedapi.com/radio.mp3', lang: 'fr', emoji: 'fruit-apple', builtIn: true },
 ]
 
 /** The built-in stations with the ones in the app language first (otherwise in the order above). */

@@ -55,7 +55,7 @@ Reports leave the device only when a parent sends them from their own mail app.
 - Code: [MIT](LICENSE).
 - Pictures: [Microsoft Fluent Emoji](public/emoji/CREDITS.md) (MIT). Fonts: Andika and Fredoka (SIL Open Font
   License). Logo: [brand/](brand/README.md) (MIT, with the code).
-- Stories: LibriVox recordings (public domain), hosted by the Internet Archive. Radio: Die Maus (WDR), Fun Kids, Mon Petit France Inter (Radio France), Radio Pomme d’Api.
+- Stories: LibriVox recordings (public domain), hosted by the Internet Archive. Radio: Die Maus (WDR), Fun Kids, Mon Petit France Inter (Radio France).
   Details and the status of each source: [docs/CONTENT.md](docs/CONTENT.md).
 - QR codes on the install page: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) (MIT).
 
