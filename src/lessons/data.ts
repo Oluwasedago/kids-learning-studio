@@ -31,50 +31,55 @@ export interface Animal {
   name: string
   /** One simple, true fact, written with "It" so it can be asked as "Which animal is this?". */
   fact: string
+  /**
+   * Animals the fact is also true of (or nearly, for a child): they are never offered as a wrong answer to it,
+   * so every fact question has exactly one right answer. Checked by content.test.ts.
+   */
+  notWith?: string[]
   sea?: boolean
 }
 
 export const ANIMALS: Animal[] = [
-  { id: 'fox', name: 'fox', fact: 'It hears so well that it can hear a mouse under the snow.' },
+  { id: 'fox', name: 'fox', fact: 'It hears so well that it can hear a mouse under the snow.', notWith: ['owl'] },
   { id: 'owl', name: 'owl', fact: 'It can turn its head a very long way round.' },
   { id: 'hedgehog', name: 'hedgehog', fact: 'It has thousands of spines on its back.' },
   { id: 'elephant', name: 'elephant', fact: 'It sucks up water with its trunk and squirts it into its mouth.' },
   { id: 'giraffe', name: 'giraffe', fact: 'It is the tallest animal on land.' },
-  { id: 'penguin', name: 'penguin', fact: 'It cannot fly, but it swims very well.' },
-  { id: 'dolphin', name: 'dolphin', fact: 'It is a clever sea animal that clicks and whistles to talk to others.', sea: true },
+  { id: 'penguin', name: 'penguin', fact: 'It is a bird that cannot fly, but it swims very well.' },
+  { id: 'dolphin', name: 'dolphin', fact: 'It is a clever sea animal that clicks and whistles to talk to others.', notWith: ['spouting-whale'], sea: true },
   { id: 'lion', name: 'lion', fact: 'It lives in a group called a pride.' },
   { id: 'panda', name: 'panda', fact: 'It eats almost nothing but bamboo.' },
   { id: 'koala', name: 'koala', fact: 'It eats the leaves of eucalyptus trees.' },
-  { id: 'turtle', name: 'turtle', fact: 'It has a hard shell and can live for a very long time.' },
+  { id: 'turtle', name: 'turtle', fact: 'It has a hard shell and can live for a very long time.', notWith: ['snail', 'crab'] },
   { id: 'butterfly', name: 'butterfly', fact: 'It used to be a caterpillar.' },
   { id: 'honeybee', name: 'bee', fact: 'It makes honey from the nectar of flowers.' },
   { id: 'octopus', name: 'octopus', fact: 'It has eight arms.', sea: true },
   { id: 'frog', name: 'frog', fact: 'As a baby it was a tadpole in the water.' },
-  { id: 'rabbit', name: 'rabbit', fact: 'It hops, has long ears and loves to nibble plants.' },
+  { id: 'rabbit', name: 'rabbit', fact: 'It hops, has long ears and loves to nibble plants.', notWith: ['kangaroo'] },
   { id: 'chipmunk', name: 'chipmunk', fact: 'It carries nuts in its cheeks.' },
-  { id: 'bear', name: 'bear', fact: 'It is very big and furry, and in winter it sleeps for a long time in a den.' },
+  { id: 'bear', name: 'bear', fact: 'It is very big and furry, and in winter it sleeps for a long time in a den.', notWith: ['panda'] },
   { id: 'tiger', name: 'tiger', fact: 'It is the biggest wild cat in the world.' },
   { id: 'zebra', name: 'zebra', fact: 'It lives in a big herd and has black and white stripes.' },
-  { id: 'kangaroo', name: 'kangaroo', fact: 'It carries its baby in a pouch on its tummy.' },
+  { id: 'kangaroo', name: 'kangaroo', fact: 'It carries its baby in a pouch on its tummy.', notWith: ['koala'] },
   { id: 'spouting-whale', name: 'whale', fact: 'The blue one is the biggest animal in the world.', sea: true },
   { id: 'parrot', name: 'parrot', fact: 'Some of them can copy words.' },
   { id: 'flamingo', name: 'flamingo', fact: 'It is pink because it eats tiny pink shrimps.' },
   { id: 'snail', name: 'snail', fact: 'Its eyes sit on top of its feelers.' },
   { id: 'lady-beetle', name: 'ladybird', fact: 'It eats tiny bugs called aphids and so helps plants.' },
   { id: 'crab', name: 'crab', fact: 'It often walks sideways.', sea: true },
-  { id: 'horse', name: 'horse', fact: 'People ride on it, and it eats hay and grass.' },
-  { id: 'cow', name: 'cow', fact: 'It eats grass and gives us milk.' },
+  { id: 'horse', name: 'horse', fact: 'People ride on it, and it eats hay and grass.', notWith: ['camel', 'elephant'] },
+  { id: 'cow', name: 'cow', fact: 'It eats grass and gives us milk.', notWith: ['camel', 'horse'] },
   { id: 'hippopotamus', name: 'hippo', fact: "Its name means 'river horse'." },
   { id: 'camel', name: 'camel', fact: 'It has a hump on its back and can go a long time without water.' },
-  { id: 'bat', name: 'bat', fact: 'It flies at night and finds its way with sounds.' },
+  { id: 'bat', name: 'bat', fact: 'It flies at night and finds its way with sounds.', notWith: ['owl'] },
   { id: 'peacock', name: 'peacock', fact: 'The male has colourful tail feathers.' },
   { id: 'shark', name: 'shark', fact: 'It keeps growing new teeth.', sea: true },
   { id: 'sloth', name: 'sloth', fact: 'It moves very, very slowly and hangs upside down in trees.' },
   { id: 'otter', name: 'otter', fact: 'Some of them float on their backs and hold paws while they sleep.' },
   { id: 'beaver', name: 'beaver', fact: 'It builds dams out of branches.' },
-  { id: 'seal', name: 'seal', fact: 'On land it moves by wriggling along on its tummy.', sea: true },
+  { id: 'seal', name: 'seal', fact: 'On land it moves by wriggling along on its tummy.', notWith: ['snail'], sea: true },
   { id: 'swan', name: 'swan', fact: 'Its babies are grey.' },
-  { id: 'mouse', name: 'mouse', fact: 'It is small, has a long thin tail and squeaks.' },
+  { id: 'mouse', name: 'mouse', fact: 'It is small, has a long thin tail and squeaks.', notWith: ['chipmunk'] },
 ]
 
 /** Days since 1 Jan 1970 in local time. */
@@ -175,3 +180,19 @@ export const A_AN: { word: string; emoji?: string }[] = [
   { word: 'pear', emoji: 'fruit-pear' }, { word: 'bear', emoji: 'animal-bear' }, { word: 'snail', emoji: 'animal-snail' },
   { word: 'cake', emoji: 'cake' }, { word: 'bus', emoji: 'bus' },
 ]
+
+/**
+ * Common short English words. A "missing letter" question never offers a wrong letter that would make one of
+ * these (b_t → "bet", "bit", "but"), so only the right letter makes a real word. Add words here when needed.
+ */
+export const COMMON_WORDS = new Set(
+  `bad bag ban bar bash bat bean bear bed bee beer beg bet bid big bin bit boar bog bowl box bud bug bun bus bush
+  but cab can cap car cash cat coal cool cot cow crab cram crib cub cup cut dad dear deer den did die dig dim dip
+  dish dog door dot dug ear eat egg end fan far fat fax fear fed fig fin fish fit fix foal fog four fox frog from
+  fun fur gap gas gear get goal got grab gum gun had ham hare has hat hen her here hid him hip hire his hit hog
+  hole hop hot howl hug hut jam jar jet jog jug kid kit lamp lap leg let lid lie limp lion lip lit log loin lot
+  lump mad male man map mare mash mat men met mile mire mix mole mop more mud mug mule nap near net nod not nut
+  owl owls pan pat pear peer peg pen pet pie pier pig pin pit poor pot pub pup rag ram ran rat red rib rid rim
+  rip rob rod rot row rub rug run sad sail sat seal sell set sit six sob soil sow sun tab tag tan tap ten tie tin
+  tip toe ton top tour tow tub tug van vet wag web wet wig win wish wit yes yet zip`.split(/\s+/),
+)

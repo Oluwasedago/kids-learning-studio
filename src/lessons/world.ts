@@ -49,7 +49,7 @@ function animalFact(r: Random): Question {
   return {
     prompt: a.fact,
     spoken: `${a.fact} Which animal is it?`,
-    ...shuffleIn(r, { visual: { kind: 'emoji', name: `animal-${a.id}` } }, others(r, ANIMALS, a, 2, (x, y) => x.id === y.id).map((x) => ({ visual: { kind: 'emoji', name: `animal-${x.id}` } }))),
+    ...shuffleIn(r, { visual: { kind: 'emoji', name: `animal-${a.id}` } }, others(r, ANIMALS.filter((x) => !a.notWith?.includes(x.id)), a, 2, (x, y) => x.id === y.id).map((x) => ({ visual: { kind: 'emoji', name: `animal-${x.id}` } }))),
   }
 }
 

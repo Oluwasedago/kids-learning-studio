@@ -1,4 +1,4 @@
-import { A_AN, OPPOSITES, PAST_TENSES, PLURALS, WORDS } from './data'
+import { A_AN, COMMON_WORDS, OPPOSITES, PAST_TENSES, PLURALS, WORDS } from './data'
 import { others, pick, type Question, type Random, shuffled, shuffleIn } from './question'
 import type { Step } from './step'
 
@@ -8,6 +8,8 @@ import type { Step } from './step'
 const wordsUpTo = (max: number) => WORDS.filter((w) => /^[a-z]+$/.test(w.word) && w.word.length <= max)
 
 const LETTERS = 'abcdefghijklmnoprstw'.split('')
+const VOWELS = 'aeiou'.split('')
+const CONSONANTS = 'bdfgklmnprst'.split('')
 
 /** Wrong spellings a child might write: a dropped letter, a doubled letter, two letters swapped, a vowel changed. Pure (tested). */
 export function misspellings(word: string, r: Random, count = 2): string[] {
@@ -66,13 +68,22 @@ function missingLetter(r: Random): Question {
     prompt: `Which letter is missing? ${gap}`,
     spoken: `Which letter is missing in ${w.word}?`,
     visual: { kind: 'emoji', name: w.emoji },
-    ...shuffleIn(r, { label: w.word[i] }, others(r, LETTERS, w.word[i]).map((l) => ({ label: l }))),
+    // A missing vowel gets consonants as wrong answers and the other way round, and no wrong letter may make
+    // another real word (b_t: "e", "i" and "u" would all make words; be_: "g" makes "beg").
+    ...shuffleIn(r, { label: w.word[i] }, others(r, (VOWELS.includes(w.word[i]) ? CONSONANTS : VOWELS).filter((l) => !COMMON_WORDS.has(w.word.slice(0, i) + l + w.word.slice(i + 1))), w.word[i]).map((l) => ({ label: l }))),
   }
 }
 
 function spelling(r: Random, maxLetters: number): Question {
   const w = pick(r, wordsUpTo(maxLetters).filter((x) => x.word.length >= 3))
-  return { prompt: 'Which word is spelt correctly?', visual: { kind: 'emoji', name: w.emoji }, ...shuffleIn(r, { label: w.word }, misspellings(w.word, r).map((m) => ({ label: m }))) }
+  // Asked about the picture, not "which word is spelt correctly": a changed letter can make another real
+  // word (bear → bar), which is spelt correctly but is not the word for this picture.
+  return {
+    prompt: 'How do you spell the word for this picture?',
+    spoken: `How do you spell ${w.word}?`,
+    visual: { kind: 'emoji', name: w.emoji },
+    ...shuffleIn(r, { label: w.word }, misspellings(w.word, r).map((m) => ({ label: m }))),
+  }
 }
 
 function aOrAn(r: Random): Question {
@@ -101,7 +112,7 @@ function plural(r: Random): Question {
 function pastTense(r: Random): Question {
   const [now, then] = pick(r, PAST_TENSES)
   const wrong = wrongForms(now, then, now.endsWith('e') ? ['s', ''] : ['ed', 's'])
-  return { prompt: `Today I ${now}. Yesterday I …?`, ...shuffleIn(r, { label: then }, wrong.map((l) => ({ label: l }))) }
+  return { prompt: `Yesterday I ___ . (${now})`, spoken: `Yesterday I … what? Use the word ${now}.`, ...shuffleIn(r, { label: then }, wrong.map((l) => ({ label: l }))) }
 }
 
 function opposite(r: Random): Question {

@@ -13,7 +13,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Skills ladder by age, adaptive level (maths, English, world, patterns) | done |
 | Learning streak like Duolingo: days in a row, earned streak freezes, milestones, shown to parents | done |
 | Skill-to-stage placement and US / Berlin equivalents | to verify against each curriculum framework |
-| Animal facts, "Did you know?" facts, capitals, flag colours | to verify (second check of every fact) |
+| Animal facts, "Did you know?" facts, capitals, flag colours | second check done 23 Oct 2026 (pictures matched to facts, ambiguous questions fixed); `src/lessons/content.test.ts` checks every question type for exactly one true answer |
 | Games: memory, word builder, puzzle, snake | done |
 | Media: radio (Die Maus / WDR, Fun Kids) | to verify: each station's terms for other players (none published) |
 | Media: LibriVox stories (public domain) | done; recordings are public domain in the USA, to verify per country |

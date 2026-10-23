@@ -6,7 +6,7 @@ import { useStudio } from '@/app/studio'
 import { sayText, useCanSpeak } from '@/audio/say'
 import type { Score } from '@/data/types'
 import { useT } from '@/i18n'
-import { COUNTRIES } from '@/lessons/data'
+import { COUNTRIES, WORDS } from '@/lessons/data'
 import { LADDERS, makeRound, passMark } from '@/lessons/ladder'
 import type { Choice, Visual } from '@/lessons/question'
 import { type Answer, completeMission, levelOf, missionsFor } from '@/progress/progress'
@@ -105,7 +105,7 @@ function describe(c: Choice): string {
   if (!v) return '?'
   if (v.kind === 'text') return v.text
   if (v.kind === 'flag') return `flag of ${COUNTRIES.find((x) => x.id === v.id)?.name ?? v.id}`
-  if (v.kind === 'emoji') return `picture: ${v.name.replace(/^(animal|fruit)-/, '').replace(/-/g, ' ')}`
+  if (v.kind === 'emoji') return `picture: ${WORDS.find((w) => w.emoji === v.name)?.word ?? v.name.replace(/^(animal|fruit)-/, '').replace(/-/g, ' ')}`
   return '?'
 }
 
