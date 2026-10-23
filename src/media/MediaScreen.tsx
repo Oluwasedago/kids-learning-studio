@@ -4,13 +4,13 @@ import { isOpen } from '@/access/access'
 import type { ItemId } from '@/access/catalogue'
 import { StatusBar } from '@/app/Shell'
 import { useStudio } from '@/app/studio'
-import { useT } from '@/i18n'
+import { useLang, useT } from '@/i18n'
 import { useArea } from '@/progress/usage'
 import { ItemTile } from '@/rewards/ItemTile'
 import { clock } from '@/shared/clock'
 import { Emoji } from '@/shared/Emoji'
 import { usePlayer } from './player'
-import { COLLECTIONS, type Collection, embedUrl, STATIONS, thumbnail } from './sources'
+import { COLLECTIONS, type Collection, embedUrl, stationsFor, thumbnail } from './sources'
 import '@/games/Games.css'
 import './Media.css'
 
@@ -71,7 +71,8 @@ function RadioTab() {
   const t = useT()
   const { settings } = useStudio()
   const p = usePlayer()
-  const stations = [...STATIONS, ...settings.stations.map((s) => ({ ...s, about: t.listen.addedByParent, emoji: 'radio', builtIn: false }))]
+  const lang = useLang()
+  const stations = [...stationsFor(lang), ...settings.stations.map((s) => ({ ...s, emoji: 'radio', builtIn: false }))]
   return (
     <div className="listen-grid">
       {stations.map((s) => {
@@ -81,7 +82,7 @@ function RadioTab() {
             <Emoji name={s.emoji} size={72} />
             <span>
               <h3>{s.name}</h3>
-              <small>{s.about}</small>
+              <small>{s.builtIn ? t.stations[s.id as keyof typeof t.stations] : t.listen.addedByParent}</small>
             </span>
             <span className="station-go">{on ? <Square fill="currentColor" /> : <Play fill="currentColor" />}</span>
             {on && p.state === 'playing' && <span className="pill live">● {t.listen.live}</span>}

@@ -315,9 +315,16 @@ export const de: Strings = {
     addedByParent: 'Von den Eltern hinzugefügt',
     stories: (n: number) => (n === 1 ? '1 Geschichte' : `${n} Geschichten`),
     credit: (author: string) => `${author}. Gelesen von LibriVox-Freiwilligen; gemeinfrei. Quelle:`,
-    radioNote: 'Das Radio kommt live vom jeweiligen Sender. Die Maus hat keine Werbung; Fun Kids spielt kurze Werbung.',
+    radioNote: 'Das Radio kommt live vom jeweiligen Sender. Die Maus und Mon Petit France Inter haben keine Werbung; Fun Kids spielt kurze Werbung.',
     storiesNote: 'Klassische Kinderbücher auf Englisch, vorgelesen von LibriVox-Freiwilligen (gemeinfrei), gestreamt vom Internet Archive.',
     noVideos: 'Noch keine Videos. Eltern können im Elternbereich YouTube-Videos hinzufügen.',
+  },
+  stations: {
+    maus: 'Kinderradio vom WDR (auf Deutsch, ohne Werbung)',
+    funkids: 'Kinderradio aus Großbritannien, 6–12 Jahre (auf Englisch, mit kurzer Werbung)',
+    'funkids-junior': 'Lieder und Geschichten für Jüngere (auf Englisch, mit kurzer Werbung)',
+    monpetitfranceinter: 'Kinderradio von Radio France, 6–12 Jahre (auf Französisch, ohne Werbung)',
+    pommedapi: 'Lieder, Reime und Geschichten für 3- bis 7-Jährige (auf Französisch)',
   },
   media: {
     title: 'Videos, Radio und Anrufe',

@@ -12,6 +12,7 @@ streamed from their source when the child plays them.
 | Story selection | — | Left out: "How the Leopard got his Spots" (contains a racial slur), "The Butterfly that Stamped", "The Tabu Tale", Aesop (18th-century translation with outdated language), long Potter tales | choice |
 | Radio (German) | Die Maus (WDR), HTTPS MP3 stream (forwards to a signed link; web players allowed by CORS) | No terms for other players published; public broadcaster, no adverts | **to verify** with WDR before release |
 | Radio (English) | Fun Kids, Fun Kids Junior (funkidslive.com), HTTPS MP3 streams | No terms for other players published; the streams are public and listed in radio directories; they carry short adverts | **to verify** with the station before release |
+| Radio (French) | Mon Petit France Inter (Radio France, ages 6–12), HTTPS MP3 stream (icecast.radiofrance.fr); Radio Pomme d’Api (Bayard, ages 3–7), radiopommedapi.com/radio.mp3, which forwards to its RadioKing stream | No terms for other players published; both streams are public and listed in radio directories; Mon Petit France Inter is public service without adverts | **to verify** with Radio France and Bayard before release |
 | Videos | YouTube, only videos a parent adds | Played in YouTube's own embedded player (youtube-nocookie.com), as YouTube allows for embedding | confirmed (YouTube terms apply to the parent's choice) |
 | Lessons, facts | Written for this project | MIT, with the code | facts to verify |
 

@@ -316,9 +316,16 @@ export const en = {
     addedByParent: 'Added by a parent',
     stories: (n: number) => (n === 1 ? '1 story' : `${n} stories`),
     credit: (author: string) => `${author}. Read by LibriVox volunteers; public domain. Source:`,
-    radioNote: 'Radio is streamed live from each station. Die Maus has no adverts; Fun Kids plays short adverts.',
+    radioNote: 'Radio is streamed live from each station. Die Maus and Mon Petit France Inter have no adverts; Fun Kids plays short adverts.',
     storiesNote: 'Classic children’s books read aloud by LibriVox volunteers (public domain), streamed from the Internet Archive.',
     noVideos: 'No videos yet. A parent can add YouTube videos on the parent screen.',
+  },
+  stations: {
+    maus: 'German children’s radio from WDR (in German, no adverts)',
+    funkids: 'UK children’s radio, ages 6–12 (in English, with short adverts)',
+    'funkids-junior': 'Songs and stories for younger children (in English, with short adverts)',
+    monpetitfranceinter: 'French children’s radio from Radio France, ages 6–12 (in French, no adverts)',
+    pommedapi: 'French songs, rhymes and stories for ages 3–7 (in French)',
   },
   media: {
     title: 'Videos, radio and calls',

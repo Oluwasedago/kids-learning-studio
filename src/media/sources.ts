@@ -17,18 +17,26 @@ export interface Station {
   id: string
   name: string
   url: string
-  /** Who it is for and where it comes from. */
-  about: string
+  /** The language it speaks: stations in the app language come first. Parents' own stations have none. */
+  lang?: 'en' | 'de' | 'fr'
   emoji: string
   /** Built in (true) or added by a parent. */
   builtIn: boolean
 }
 
 export const STATIONS: Station[] = [
-  { id: 'maus', name: 'Die Maus', url: 'https://wdr-diemaus-live.icecastssl.wdr.de/wdr/diemaus/live/mp3/128/stream.mp3', about: 'German children’s radio from WDR (in German, no adverts)', emoji: 'mouse', builtIn: true },
-  { id: 'funkids', name: 'Fun Kids', url: 'https://listen-funkids.sharp-stream.com/funkids.mp3', about: 'UK children’s radio, ages 6–12 (with short adverts)', emoji: 'radio', builtIn: true },
-  { id: 'funkids-junior', name: 'Fun Kids Junior', url: 'https://listen-funkids.sharp-stream.com/funkidsjunior.mp3', about: 'Songs and stories for younger children (with short adverts)', emoji: 'teddy', builtIn: true },
+  { id: 'maus', name: 'Die Maus', url: 'https://wdr-diemaus-live.icecastssl.wdr.de/wdr/diemaus/live/mp3/128/stream.mp3', lang: 'de', emoji: 'mouse', builtIn: true },
+  { id: 'funkids', name: 'Fun Kids', url: 'https://listen-funkids.sharp-stream.com/funkids.mp3', lang: 'en', emoji: 'radio', builtIn: true },
+  { id: 'funkids-junior', name: 'Fun Kids Junior', url: 'https://listen-funkids.sharp-stream.com/funkidsjunior.mp3', lang: 'en', emoji: 'teddy', builtIn: true },
+  // Radio France's children's station (public service, no adverts); the plain MP3 stream, not the HLS playlist,
+  // so every browser can play it.
+  { id: 'monpetitfranceinter', name: 'Mon Petit France Inter', url: 'https://icecast.radiofrance.fr/monpetitfranceinter-midfi.mp3', lang: 'fr', emoji: 'music', builtIn: true },
+  // Bayard's radio for ages 3–7; this address forwards to its current stream (on RadioKing).
+  { id: 'pommedapi', name: 'Radio Pomme d’Api', url: 'https://www.radiopommedapi.com/radio.mp3', lang: 'fr', emoji: 'fruit-apple', builtIn: true },
 ]
+
+/** The built-in stations with the ones in the app language first (otherwise in the order above). */
+export const stationsFor = (lang: string) => [...STATIONS].sort((a, b) => Number(b.lang === lang) - Number(a.lang === lang))
 
 export interface Track {
   id: string
