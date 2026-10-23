@@ -78,7 +78,8 @@ function Screens() {
     <>
       {settings.demo && (
         <div className="demo-banner" role="note">
-          <Emoji name="sparkles" size={24} /> {t.demo.banner(DEMO_PIN)}
+          <Emoji name="sparkles" size={24} /> <span className="wide-only">{t.demo.banner(DEMO_PIN)}</span>
+          <span className="narrow-only">{t.demo.bannerShort(DEMO_PIN)}</span>
         </div>
       )}
       <Shell screen={screen} title={screen === 'home' ? undefined : t.nav[screen]} onNavigate={navigate} parentsDot={backupDue(settings, now)}>

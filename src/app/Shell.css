@@ -191,8 +191,21 @@
   .shell-main {
     padding: 0.6rem 0.8rem 0.4rem;
   }
+  .statusbar {
+    gap: 0.5rem;
+  }
   .statusbar-title {
     font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .statusbar-right {
+    gap: 0.4rem;
+  }
+  /* A phone shows its own battery; the space goes to the screen title. */
+  .status-chip.battery {
+    display: none;
   }
   .status-chip {
     min-height: 2.4rem;

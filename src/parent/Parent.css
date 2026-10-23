@@ -17,7 +17,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  width: 26rem;
+  width: min(26rem, calc(100vw - 1.5rem));
   box-shadow: 0 30px 60px -20px rgb(61 30 71 / 50%);
 }
 .pin-close {
@@ -101,7 +101,7 @@
   height: 100%;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
   align-content: start;
   gap: 1rem;
   padding-bottom: 1rem;
@@ -130,6 +130,7 @@ button.danger {
 }
 .stepper-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
@@ -145,7 +146,7 @@ button.danger {
 /* Access editor: one row per item with On/Off and Earn/Open. */
 .access-editor {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
   gap: 0.4rem 1.6rem;
 }
 .access-editor > p {
@@ -191,7 +192,7 @@ button.danger {
 }
 .report-figures {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
   gap: 0.6rem;
 }
 .figure {
@@ -274,6 +275,7 @@ button.danger {
   }
   .report-table {
     font-size: 0.85rem;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -320,7 +322,7 @@ button.danger {
 /* Videos, stations and calls. */
 .media-editor {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
   gap: 1.2rem;
 }
 .media-editor > div {

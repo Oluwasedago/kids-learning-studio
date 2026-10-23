@@ -6,6 +6,7 @@ import { useT } from '@/i18n'
 import { DidYouKnow } from '@/learn/DidYouKnow'
 import { CallsCard } from '@/media/CallsCard'
 import { animalOfTheDay } from '@/lessons/data'
+import { starsFor } from '@/lessons/ladder'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, weekStars } from '@/progress/progress'
 import { StreakCard } from '@/progress/StreakCard'
@@ -136,7 +137,7 @@ function EarnedCard() {
         {t.home.earnedTitle}
       </h3>
       <p className="earned-big">{earnedLeft > 0 ? clock(earnedLeft) : '0:00'}</p>
-      <p className="muted">{earned === 0 ? t.home.earnHow(settings.rewards.minutesPerStar) : t.home.earnedOf(earned)}</p>
+      <p className="muted">{earned === 0 ? t.home.earnHow(settings.rewards.minutesPerStar, starsFor(settings.rewards.questionsPerMission)) : t.home.earnedOf(earned)}</p>
     </section>
   )
 }

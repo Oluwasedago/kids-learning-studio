@@ -56,10 +56,13 @@ export function startLevel(subject: Subject, age: number): number {
   return i === -1 ? steps.length - 1 : i
 }
 
-/** A mission is passed (ticked off, a star) with at least 60 % right: 5 of 8. Pure (tested). */
-export const passMark = (total: number) => Math.ceil(total * 0.6)
+/** A mission is passed (ticked off, stars) with at least 70 % right: 7 of 10, 18 of 25, 35 of 50. Pure (tested). */
+export const passMark = (total: number) => Math.ceil(total * 0.7 - 1e-9)
 
-/** A round counts as strong at 7 of 8 right, weak at half or less. */
+/** Stars for a passed mission: one per 10 questions, rounded (10 → 1, 25 → 3, 50 → 5). Pure (tested). */
+export const starsFor = (total: number) => Math.max(1, Math.round(total / 10))
+
+/** A round counts as strong at 85 % right or more, weak at half or less. */
 export const STRONG = 0.85
 export const WEAK = 0.5
 
@@ -74,22 +77,40 @@ export function adapt(level: number, recent: number[], result: number, maxLevel:
   return { level, recent: history }
 }
 
-export const QUESTIONS_PER_MISSION = 8
+/** Mission lengths a parent can choose; the default is the first. */
+export const MISSION_LENGTHS = [10, 25, 50] as const
+export const QUESTIONS_PER_MISSION = MISSION_LENGTHS[0]
 
 /**
- * A mission round: two warm-up questions from the step below (revision), then questions from the current
- * step, no question twice. Pure with a seeded `r` (tested).
+ * A mission round: a fifth warm-up questions from the step below (revision), then questions from the current
+ * step, no question twice. When the current step has no new questions left (a long round on a small step,
+ * like "a" or "an"), it goes on with revision from the steps below, and only then repeats a question, never
+ * twice in a row. Pure with a seeded `r` (tested).
  */
-export function makeRound(subject: Subject, level: number, r: Random = Math.random, count = QUESTIONS_PER_MISSION): Question[] {
+export function makeRound(subject: Subject, level: number, r: Random = Math.random, count: number = QUESTIONS_PER_MISSION): Question[] {
   const steps = LADDERS[subject]
-  const now = steps[Math.max(0, Math.min(level, steps.length - 1))]
-  const before = level > 0 ? steps[level - 1] : null
+  const at = Math.max(0, Math.min(level, steps.length - 1))
+  const warmUps = at > 0 ? Math.round(count / 5) : 0
   const out: Question[] = []
-  const key = (q: Question) => JSON.stringify([q.prompt, q.visual])
-  for (let guard = 0; out.length < count && guard < count * 30; guard++) {
-    const step = before && out.length < 2 ? before : now
-    const q = { ...step.make(r), step: step.id }
-    if (!out.some((o) => key(o) === key(q))) out.push(q)
+  const key = (q: Question) => JSON.stringify([q.prompt, q.visual, q.choices.map((c) => c.label ?? c.visual)])
+  const seen = new Set<string>()
+  /** Adds up to `n` new questions from a step; gives up on the step after many tries without a new one. */
+  const fill = (step: Step, n: number, unique: boolean) => {
+    for (let added = 0, misses = 0; added < n && misses < 60; ) {
+      const q = { ...step.make(r), step: step.id }
+      const k = key(q)
+      const repeatOk = !unique && (out.length === 0 || key(out[out.length - 1]) !== k)
+      if (!seen.has(k) || repeatOk) {
+        seen.add(k)
+        out.push(q)
+        added++
+        misses = 0
+      } else misses++
+    }
   }
+  if (warmUps > 0) fill(steps[at - 1], warmUps, true)
+  fill(steps[at], count - out.length, true)
+  for (let below = at - 1; below >= 0 && out.length < count; below--) fill(steps[below], count - out.length, true)
+  if (out.length < count) fill(steps[at], count - out.length, false)
   return out
 }

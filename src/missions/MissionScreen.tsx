@@ -7,7 +7,7 @@ import { sayText, useCanSpeak } from '@/audio/say'
 import type { Score } from '@/data/types'
 import { useT } from '@/i18n'
 import { COUNTRIES, WORDS } from '@/lessons/data'
-import { LADDERS, makeRound, passMark } from '@/lessons/ladder'
+import { LADDERS, makeRound, passMark, starsFor } from '@/lessons/ladder'
 import type { Choice, Visual } from '@/lessons/question'
 import { type Answer, completeMission, levelOf, missionsFor } from '@/progress/progress'
 import { computeStreak, milestoneAt } from '@/progress/streak'
@@ -18,10 +18,10 @@ import { CountryFlag } from './Flag'
 import './Missions.css'
 
 /**
- * A mission, full screen: 8 questions at the child's level, one try each. The tapped answer turns green when
+ * A mission, full screen: 10, 25 or 50 questions (the parent's choice) at the child's level, one try each. The tapped answer turns green when
  * right and red when wrong, but the right answer is never shown, so the child has to think rather than tap
  * until something turns green. The score comes at the end.
- * Passed (5 of 8 or more) and one of today's missions: ticked off with a star. Otherwise "not yet", and a new
+ * Passed (70 % or more) and one of today's missions: ticked off with a star per 10 questions. Otherwise "not yet", and a new
  * try later with new questions in a new order. Either way the answers move the adaptive level and go into the
  * parents' report (which shows the right answers to the parents, never to the child).
  */
@@ -62,8 +62,8 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
       <StatusBar
         left={
           <>
-            <button className="secondary" onClick={onClose}>
-              <ArrowLeft /> {t.common.back}
+            <button className="secondary mission-back" onClick={onClose} aria-label={t.common.back}>
+              <ArrowLeft /> <span>{t.common.back}</span>
             </button>
             <h2>
               <Emoji name={ITEMS[subject].emoji} size={40} /> {t.items[subject]}
@@ -81,7 +81,7 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
               <Emoji name="fire" size={36} /> {t.streak.milestone(result.milestone)}
             </p>
           )}
-          <p>{passed ? (counts ? t.mission.doneText : t.mission.practiceText) : t.mission.notYetText(passMark(result.score.total))}</p>
+          <p>{passed ? (counts ? t.mission.doneText(starsFor(result.score.total)) : t.mission.practiceText) : t.mission.notYetText(passMark(result.score.total))}</p>
           {result.levelAfter > level && <p className="pill">{t.mission.levelUp(LADDERS[subject][result.levelAfter].skill)}</p>}
           {result.levelAfter < level && <p className="pill">{t.mission.levelDown(LADDERS[subject][result.levelAfter].skill)}</p>}
           <div className="settings-buttons">
@@ -92,7 +92,7 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
           </div>
         </section>
       ) : (
-        <Quiz key={round} subject={subject} level={level} onDone={finish} />
+        <Quiz key={round} subject={subject} level={level} count={settings.rewards.questionsPerMission} onDone={finish} />
       )}
     </div>
   )
@@ -109,9 +109,9 @@ function describe(c: Choice): string {
   return '?'
 }
 
-function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onDone: (answers: Answer[]) => void }) {
+function Quiz({ subject, level, count, onDone }: { subject: Subject; level: number; count: number; onDone: (answers: Answer[]) => void }) {
   const t = useT()
-  const [round] = useState(() => makeRound(subject, level))
+  const [round] = useState(() => makeRound(subject, level, Math.random, count))
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Answer[]>([])
@@ -136,11 +136,17 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
 
   return (
     <section className="card quiz">
-      <div className="quiz-dots" aria-label={`${index + 1} / ${round.length}`}>
-        {round.map((_, i) => {
-          const a = answers[i]
-          return <i key={i} className={a ? (a.right ? 'done' : 'missed') : i === index ? 'now' : ''} />
-        })}
+      {/* One segment per question (green right, red wrong), so 10 or 50 questions fit any screen. */}
+      <div className="quiz-progress" role="progressbar" aria-valuemin={1} aria-valuemax={round.length} aria-valuenow={index + 1} aria-label={t.mission.progress(index + 1, round.length)}>
+        <div className="quiz-dots">
+          {round.map((_, i) => {
+            const a = answers[i]
+            return <i key={i} className={a ? (a.right ? 'done' : 'missed') : i === index ? 'now' : ''} />
+          })}
+        </div>
+        <small>
+          {index + 1} / {round.length}
+        </small>
       </div>
       <div className="quiz-ask">
         <p>{q.prompt}</p>
@@ -155,7 +161,7 @@ function Quiz({ subject, level, onDone }: { subject: Subject; level: number; onD
           <VisualView visual={q.visual} big />
         </div>
       )}
-      <div className="quiz-choices">
+      <div className={`quiz-choices ${q.choices.every((c) => c.label === undefined) ? 'pictures' : ''}`}>
         {q.choices.map((c, i) => (
           <button
             key={i}

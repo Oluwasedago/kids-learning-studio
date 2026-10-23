@@ -22,9 +22,9 @@ Developed by Oluwasedago.
 
 ## What it does
 
-- **Missions every day.** Short rounds of 8 questions in maths, English, the world and patterns. One try per
-  question: a right answer turns green, a wrong one red, and the right answer is never given away; 5 of 8 right
-  earns a star. Lessons follow the child's age on a skills ladder aligned to
+- **Missions every day.** Rounds of 10, 25 or 50 questions (the parent chooses) in maths, English, the world and
+  patterns. One try per question: a right answer turns green, a wrong one red, and the right answer is never given
+  away; 70 % right passes and earns a star per 10 questions (10 → 1, 25 → 3, 50 → 5). Lessons follow the child's age on a skills ladder aligned to
   Cambridge Primary stages (with approximate US grade and Berlin Klasse equivalents) and adapt: two strong
   rounds move a step up, a weak round a step down.
 - **Learning streak.** Days in a row with a passed mission, like Duolingo: every 7 days earn a streak freeze

@@ -4,6 +4,7 @@ import { useStudio } from '@/app/studio'
 import { sayText, setVoicePreference, useVoices } from '@/audio/say'
 import { BackupError, backupDue, deleteAll, makeBackup, parseBackup, restoreBackup, saveBackup } from '@/data/backup'
 import { usePersistence } from '@/data/persist'
+import { MISSION_LENGTHS, passMark, starsFor } from '@/lessons/ladder'
 import type { FamilyBirthday } from '@/data/types'
 import { LOCALES, useLang, useT } from '@/i18n'
 import { callLinkOk, parseYouTube } from '@/media/sources'
@@ -98,6 +99,17 @@ function RewardsEditor() {
   return (
     <div className="editor">
       <Stepper label={t.parent.missionsPerDay} value={r.missionsPerDay} min={1} max={4} onChange={(n) => set({ missionsPerDay: n })} />
+      <div className="stepper-row">
+        <span>{t.parent.questionsPerMission}</span>
+        <div className="segmented">
+          {MISSION_LENGTHS.map((n) => (
+            <button key={n} className={r.questionsPerMission === n ? '' : 'secondary'} onClick={() => set({ questionsPerMission: n })}>
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="muted">{t.parent.questionsHelp(passMark(r.questionsPerMission), r.questionsPerMission, starsFor(r.questionsPerMission))}</p>
       <Stepper label={t.parent.minutesPerStar} value={r.minutesPerStar} min={5} max={30} step={5} unit="min" onChange={(n) => set({ minutesPerStar: n })} />
       <Stepper label={t.parent.maxPerDay} value={r.maxMinutesPerDay} min={10} max={180} step={5} unit="min" onChange={(n) => set({ maxMinutesPerDay: n })} />
       <Stepper label={t.parent.weeklyGoal} value={r.weeklyGoal} min={3} max={28} onChange={(n) => set({ weeklyGoal: n })} />

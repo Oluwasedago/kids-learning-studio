@@ -1,6 +1,6 @@
 import { type ItemId, SUBJECTS, type Subject } from '@/access/catalogue'
 import { type AccessRule, MAX_MISTAKES, type Mistake, type Progress, type Score } from '@/data/types'
-import { adapt, LADDERS, passMark, startLevel } from '@/lessons/ladder'
+import { adapt, LADDERS, passMark, starsFor, startLevel } from '@/lessons/ladder'
 import { addDays, dayNumber, isoDate, mondayOf } from '@/shared/date'
 
 // Missions, stars and levels. Pure functions (tested in progress.test.ts).
@@ -43,7 +43,8 @@ export interface Answer {
 /**
  * A finished mission round (one try per question). Every answer is counted per skill step, and wrong ones are
  * kept for the parents. The result moves the adaptive level every time (practice too). The mission is ticked
- * off with one star only when it is passed (passMark) and is one of the day's missions not yet done.
+ * off only when it is passed (passMark) and is one of the day's missions not yet done; it then gives one star
+ * per 10 questions (starsFor), so a longer mission earns more time.
  */
 export function completeMission(p: Progress, subject: Subject, answers: Answer[], opts: { day: Date; age: number; counts: boolean; now?: number }): Progress {
   const now = opts.now ?? Date.now()
@@ -76,7 +77,7 @@ export function completeMission(p: Progress, subject: Subject, answers: Answer[]
   }
   const done = p.missions[date] ?? []
   if (!opts.counts || done.includes(subject) || score.right < passMark(score.total)) return out
-  return { ...out, missions: { ...p.missions, [date]: [...done, subject] }, stars: { ...p.stars, [date]: (p.stars[date] ?? 0) + 1 } }
+  return { ...out, missions: { ...p.missions, [date]: [...done, subject] }, stars: { ...p.stars, [date]: (p.stars[date] ?? 0) + starsFor(score.total) } }
 }
 
 /** Score of a subject's mission today, or null when not done yet. */

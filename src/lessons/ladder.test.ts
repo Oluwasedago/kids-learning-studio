@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SUBJECTS } from '@/access/catalogue'
 import { misspellings } from './english'
-import { adapt, LADDERS, makeRound, stageTags, startLevel } from './ladder'
+import { adapt, LADDERS, makeRound, passMark, stageTags, starsFor, startLevel } from './ladder'
 import { seeded } from './question'
 
 describe('skills ladder', () => {
@@ -49,10 +49,25 @@ describe('skills ladder', () => {
     expect(adapt(10, [1], 1, 10)).toEqual({ level: 10, recent: [1, 1] })
   })
 
-  it('a round has 8 different questions', () => {
+  it('a round has 10 different questions', () => {
     const round = makeRound('maths', 5, seeded(7))
-    expect(round).toHaveLength(8)
-    expect(new Set(round.map((q) => q.prompt)).size).toBe(8)
+    expect(round).toHaveLength(10)
+    expect(new Set(round.map((q) => q.prompt)).size).toBe(10)
+  })
+
+  it('every step can make a full 50-question round, never the same question twice in a row', () => {
+    for (const s of SUBJECTS)
+      for (const level of LADDERS[s].keys()) {
+        const round = makeRound(s, level, seeded(level + 3), 50)
+        expect(round, `${s} level ${level}`).toHaveLength(50)
+        const keys = round.map((q) => JSON.stringify([q.prompt, q.visual, q.choices]))
+        expect(keys.some((k, i) => i > 0 && k === keys[i - 1]), `${s} level ${level}`).toBe(false)
+      }
+  })
+
+  it('pass marks and stars: 7 of 10, 18 of 25, 35 of 50', () => {
+    expect([10, 25, 50].map(passMark)).toEqual([7, 18, 35])
+    expect([10, 25, 50].map(starsFor)).toEqual([1, 3, 5])
   })
 
   it('misspellings differ from the word and from each other', () => {

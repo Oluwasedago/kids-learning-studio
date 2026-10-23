@@ -46,6 +46,8 @@ export interface Settings {
   rewards: {
     /** Missions a day (1-4). */
     missionsPerDay: number
+    /** Questions in one mission (10, 25 or 50); a passed mission gives one star per 10 questions. */
+    questionsPerMission: number
     /** Earned minutes per star. */
     minutesPerStar: number
     /** Most earned minutes in one day. */
@@ -130,7 +132,7 @@ export const DEFAULT_SETTINGS: Settings = {
   pin: null,
   // Filled by the setup wizard (access/starter.ts); this default only matters before the wizard has run.
   access: {} as Record<ItemId, AccessRule>,
-  rewards: { missionsPerDay: 3, minutesPerStar: 10, maxMinutesPerDay: 45, weeklyGoal: 12, weeklyReward: '' },
+  rewards: { missionsPerDay: 3, questionsPerMission: 10, minutesPerStar: 10, maxMinutesPerDay: 45, weeklyGoal: 12, weeklyReward: '' },
   report: { email: '', period: 'week' },
   birthdays: [],
   stations: [],

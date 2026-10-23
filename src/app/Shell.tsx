@@ -68,7 +68,14 @@ export function StatusBar({ title, left }: { title?: string; left?: ReactNode })
       {left ? (
         <div className="statusbar-left">{left}</div>
       ) : (
-        <h1 className="statusbar-title">{title ?? now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}</h1>
+        <h1 className="statusbar-title">
+          {title ?? (
+            <>
+              <span className="wide-only">{now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+              <span className="narrow-only">{now.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+            </>
+          )}
+        </h1>
       )}
       <div className="statusbar-right">
         {!online && <span className="status-chip offline">{t.status.offline}</span>}

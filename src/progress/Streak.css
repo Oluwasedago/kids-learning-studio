@@ -48,9 +48,13 @@
   color: var(--muted);
   font-weight: 700;
 }
+.streak-day {
+  min-width: 0;
+}
 .streak-day i {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: min(2.2rem, 100%);
+  aspect-ratio: 1;
+  height: auto;
   border-radius: 50%;
   display: grid;
   place-items: center;

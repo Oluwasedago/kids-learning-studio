@@ -6,6 +6,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
   padding: 1rem 1.2rem 1.2rem;
   background: var(--bg);
 }
@@ -18,25 +19,41 @@
   gap: 0.8rem;
   min-height: 0;
 }
-.quiz-dots {
+.quiz-progress {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  max-width: 40rem;
+}
+/* One segment per question, sharing the width, so 10 or 50 questions fit on any screen. */
+.quiz-dots {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+  min-width: 0;
 }
 .quiz-dots i {
-  width: 1.1rem;
-  height: 1.1rem;
-  border-radius: 50%;
+  flex: 1;
+  min-width: 0;
+  height: 0.8rem;
+  border-radius: 999px;
   background: var(--sunken);
 }
 .quiz-dots i.now {
-  background: var(--accent-soft);
-  box-shadow: inset 0 0 0 3px var(--accent);
+  background: var(--accent);
 }
 .quiz-dots i.done {
   background: var(--mint);
 }
 .quiz-dots i.missed {
   background: var(--red);
+}
+.quiz-progress small {
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .quiz-ask {
   display: flex;
@@ -75,6 +92,8 @@
 }
 .quiz-pattern {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 0.6rem;
   padding: 1rem 1.4rem;
@@ -100,6 +119,7 @@
   max-width: 56rem;
 }
 .quiz-choice {
+  min-width: 0;
   min-height: 7.5rem;
   border-radius: var(--radius);
   background: var(--card);
@@ -109,6 +129,7 @@
   transition: transform 0.15s, background 0.2s;
 }
 .quiz-label {
+  overflow-wrap: anywhere;
   font-family: var(--display);
   font-size: 2.4rem;
   font-weight: 700;
@@ -205,4 +226,57 @@
   min-height: 4.4rem;
   padding: 0 2rem;
   font-size: 1.4rem;
+}
+
+/* Phones: answers with words stack in one column (full width, nothing cut off); picture answers stay side by
+   side. Text shrinks with the screen, the battery chip and the word "Back" make room for the subject name. */
+@media (max-width: 600px) {
+  .mission-screen {
+    gap: 0.6rem;
+    padding: 0.6rem 0.7rem 0.8rem;
+  }
+  .mission-screen .card {
+    padding: 1rem 0.8rem;
+  }
+  .mission-screen .status-chip.battery,
+  .mission-back span {
+    display: none;
+  }
+  .mission-back {
+    padding: 0 0.9rem;
+  }
+  .mission-screen .statusbar-left {
+    gap: 0.5rem;
+  }
+  .mission-screen .statusbar-left h2 {
+    font-size: 1.2rem;
+    min-width: 0;
+  }
+  .quiz-ask {
+    gap: 0.6rem;
+  }
+  .quiz-ask p {
+    font-size: clamp(1.15rem, 5.5vw, 1.9rem);
+  }
+  .quiz-sum {
+    font-size: clamp(2.4rem, 13vw, 5rem);
+  }
+  .quiz-choices {
+    gap: 0.6rem;
+  }
+  .quiz-choices:not(.pictures) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .quiz-choices:not(.pictures) .quiz-choice {
+    min-height: 4.2rem;
+  }
+  .quiz-choices.pictures .quiz-choice {
+    min-height: 6rem;
+  }
+  .quiz-label {
+    font-size: clamp(1.4rem, 6.5vw, 2.4rem);
+  }
+  .mission-done h2 {
+    font-size: 2rem;
+  }
 }
