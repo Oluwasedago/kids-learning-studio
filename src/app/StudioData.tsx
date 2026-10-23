@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
-import { accessState, earnedSecondsLeft, starterAccess } from '@/access/access'
+import { accessState, earnedSecondsLeft, withStarterAccess } from '@/access/access'
 import { useLocalDoc } from '@/data/localDoc'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE, type Progress, type Settings, type Usage } from '@/data/types'
 import { stageForAge } from '@/lessons/ladder'
@@ -36,8 +36,7 @@ export function StudioData({ children }: { children: ReactNode }) {
   const today = isoDate(now)
   const age = ageFrom(settings.doc.child.birthMonth, settings.doc.child.birthYear, now)
   const stage = settings.doc.child.school?.stage ?? stageForAge(age)
-  // Items added in a later version are missing from settings saved earlier: they get their starter setting.
-  const s = settings.doc.setupDone ? { ...settings.doc, access: { ...starterAccess(age), ...settings.doc.access } } : settings.doc
+  const s = withStarterAccess(settings.doc, age)
   const earnedLeft = earnedSecondsLeft(progress.doc, usage.doc, s.rewards, today)
 
   // The child's colour on buttons and the menu.
@@ -52,7 +51,9 @@ export function StudioData({ children }: { children: ReactNode }) {
     stage,
     settings: s,
     ready: settings.ready && progress.ready && usage.ready,
-    updateSettings: settings.update,
+    // Every change starts from the same filled-in settings the screens show (a new item keeps its starter
+    // setting when a parent first changes it, instead of starting from "off").
+    updateSettings: (change) => settings.update((doc) => change(withStarterAccess(doc, ageFrom(doc.child.birthMonth, doc.child.birthYear, new Date())))),
     progress: progress.doc,
     updateProgress: progress.update,
     usage: usage.doc,

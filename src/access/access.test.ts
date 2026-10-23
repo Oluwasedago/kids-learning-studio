@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE } from '@/data/types'
-import { accessState, changeAccess, earnedMinutes, earnedSecondsLeft, isOpen, starterAccess } from './access'
+import { accessState, changeAccess, earnedMinutes, earnedSecondsLeft, isOpen, starterAccess, withStarterAccess } from './access'
 
 const today = '2026-10-19'
 const rewards = { ...DEFAULT_SETTINGS.rewards, minutesPerStar: 10, maxMinutesPerDay: 25 }
@@ -40,5 +40,15 @@ describe('access control', () => {
     expect(four.snake.enabled).toBe(false)
     expect(four.facts).toEqual({ enabled: true, unlocked: true })
     expect(starterAccess(7).snake.enabled).toBe(true)
+  })
+  it('an item added in a later version keeps its starter setting when a parent first changes it', () => {
+    // Settings saved before the code breaker existed: no rule for it.
+    const { codebreaker: _, ...old } = starterAccess(7)
+    const saved = { ...DEFAULT_SETTINGS, setupDone: true, access: old as typeof DEFAULT_SETTINGS.access }
+    const filled = withStarterAccess(saved, 7)
+    expect(filled.access.codebreaker).toEqual({ enabled: true, unlocked: false })
+    // A parent opens it: it stays switched on (before the fix it was saved as "off").
+    expect(changeAccess(filled.access.codebreaker, 'unlock', '2026-10-23')).toEqual({ enabled: true, unlocked: true })
+    expect(withStarterAccess({ ...saved, setupDone: false }, 7).access.codebreaker).toBeUndefined()
   })
 })

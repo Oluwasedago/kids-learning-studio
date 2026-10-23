@@ -46,6 +46,14 @@ export function starterAccess(age: number): Record<ItemId, AccessRule> {
 /** A parent's choice on the parent screen or behind a locked tile. */
 export type AccessChange = 'enable' | 'disable' | 'lock' | 'unlock' | 'unlockToday'
 
+/**
+ * Items added in a later version are missing from settings saved earlier: they get their starter setting for the
+ * child's age (once set up). Pure (tested).
+ */
+export function withStarterAccess<T extends { setupDone: boolean; access: Partial<Record<ItemId, AccessRule>> }>(settings: T, age: number): T {
+  return settings.setupDone ? { ...settings, access: { ...starterAccess(age), ...settings.access } } : settings
+}
+
 export function changeAccess(rule: AccessRule | undefined, change: AccessChange, today: string): AccessRule {
   const r: AccessRule = rule ?? { enabled: false, unlocked: false }
   switch (change) {

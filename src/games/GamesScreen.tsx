@@ -10,12 +10,13 @@ import { ItemTile } from '@/rewards/ItemTile'
 import { clock } from '@/shared/clock'
 import { Emoji } from '@/shared/Emoji'
 import { WordBuilder } from './builder/WordBuilder'
+import { CodeBreaker } from './codebreaker/CodeBreaker'
 import { MemoryGame } from './memory/MemoryGame'
 import { PuzzleGame } from './puzzle/PuzzleGame'
 import { SnakeGame } from './snake/SnakeGame'
 import './Games.css'
 
-const GAMES: Partial<Record<ItemId, ComponentType>> = { memory: MemoryGame, builder: WordBuilder, puzzle: PuzzleGame, snake: SnakeGame }
+const GAMES: Partial<Record<ItemId, ComponentType>> = { memory: MemoryGame, builder: WordBuilder, puzzle: PuzzleGame, snake: SnakeGame, codebreaker: CodeBreaker }
 
 /** The games shelf: every enabled game as a tile (locked ones with a padlock). `start` opens one at once. */
 export function GamesScreen({ start, onStarted }: { start?: ItemId | null; onStarted?: () => void }) {

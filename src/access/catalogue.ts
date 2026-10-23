@@ -19,6 +19,7 @@ export const ITEM_IDS = [
   'builder',
   'puzzle',
   'snake',
+  'codebreaker',
   // Listening and watching.
   'radio',
   'stories',
@@ -56,6 +57,7 @@ export const ITEMS: Record<ItemId, Item> = {
   builder: { id: 'builder', group: 'games', emoji: 'memo', ready: true, minAge: 5, starter: 'locked' },
   puzzle: { id: 'puzzle', group: 'games', emoji: 'framed', ready: true, minAge: 4, starter: 'locked' },
   snake: { id: 'snake', group: 'games', emoji: 'snake', ready: true, minAge: 6, starter: 'locked' },
+  codebreaker: { id: 'codebreaker', group: 'games', emoji: 'key', ready: true, minAge: 6, starter: 'locked' },
   radio: { id: 'radio', group: 'media', emoji: 'radio', ready: true, minAge: 4, starter: 'unlocked' },
   stories: { id: 'stories', group: 'media', emoji: 'openbook', ready: true, minAge: 4, starter: 'unlocked' },
   videos: { id: 'videos', group: 'media', emoji: 'tv', ready: true, minAge: 4, starter: 'locked' },
