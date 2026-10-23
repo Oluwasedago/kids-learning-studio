@@ -11,6 +11,11 @@ describe('voice choice', () => {
     expect(voiceScore(v('Samantha (Compact)', 'en-US'))).toBeLessThan(voiceScore(v('Samantha', 'en-US')))
     expect(voiceScore(v('Anna', 'de-DE'))).toBeLessThan(0)
   })
+  it('scores voices for the language asked for', () => {
+    expect(voiceScore(v('Anna', 'de-DE'), 'de-DE')).toBeGreaterThan(0)
+    expect(voiceScore(v('Daniel', 'en-GB'), 'de-DE')).toBeLessThan(0)
+    expect(voiceScore(v('Thomas', 'fr-FR'), 'fr-FR')).toBeGreaterThan(voiceScore(v('Amélie', 'fr-CA'), 'fr-FR'))
+  })
   it('prefers voices on the device (even over online natural ones), and the preferred English variant', () => {
     expect(voiceScore(v('Voice', 'en-GB', true))).toBeGreaterThan(voiceScore(v('Voice', 'en-GB', false)))
     expect(voiceScore(v('Microsoft Hazel', 'en-GB', true))).toBeGreaterThan(voiceScore(v('Microsoft Sonia Online (Natural)', 'en-GB', false)))

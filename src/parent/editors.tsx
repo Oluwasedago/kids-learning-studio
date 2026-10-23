@@ -2,7 +2,7 @@ import { type AccessChange, changeAccess } from '@/access/access'
 import { GROUPS, ITEMS, itemsIn, type ItemId } from '@/access/catalogue'
 import { useStudio } from '@/app/studio'
 import { ACCENTS } from '@/data/types'
-import { LOCALES, useLang, useT } from '@/i18n'
+import { LANGS, LOCALES, useLang, useT } from '@/i18n'
 import { classesOf, guessSystem, SCHOOL_SYSTEMS, type SchoolSystem } from '@/lessons/classes'
 import { stageTags } from '@/lessons/ladder'
 import { Emoji } from '@/shared/Emoji'
@@ -58,6 +58,7 @@ export function ChildEditor({ showTheme = true }: { showTheme?: boolean }) {
       </div>
       {showTheme && (
         <>
+          <LanguagePicker />
           <span className="field-label">{t.setup.theme}</span>
           <div className="segmented">
             {THEME_MODES.map((m) => (
@@ -69,6 +70,26 @@ export function ChildEditor({ showTheme = true }: { showTheme?: boolean }) {
         </>
       )}
     </div>
+  )
+}
+
+/** The app language (English, Deutsch, Français), each named in itself. */
+export function LanguagePicker() {
+  const t = useT()
+  const lang = useLang()
+  const { updateSettings } = useStudio()
+  return (
+    <>
+      <span className="field-label">{t.language.label}</span>
+      <div className="segmented" role="radiogroup" aria-label={t.language.label}>
+        {LANGS.map((l) => (
+          <button key={l.id} role="radio" aria-checked={lang === l.id} lang={l.id} className={lang === l.id ? '' : 'secondary'} onClick={() => updateSettings((s) => ({ ...s, lang: l.id }))}>
+            {l.name}
+          </button>
+        ))}
+      </div>
+      <small className="muted">{t.language.note}</small>
+    </>
   )
 }
 

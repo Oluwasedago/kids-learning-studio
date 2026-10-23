@@ -3,7 +3,7 @@ import { ITEMS, type ItemId } from '@/access/catalogue'
 import { backupDue } from '@/data/backup'
 import { GamesScreen } from '@/games/GamesScreen'
 import { LearnScreen } from '@/games/LearnScreen'
-import { useT } from '@/i18n'
+import { deviceLang, LangContext, useT } from '@/i18n'
 import { MediaScreen } from '@/media/MediaScreen'
 import { PlayerProvider } from '@/media/PlayerProvider'
 import { ParentGate } from '@/parent/ParentGate'
@@ -40,18 +40,26 @@ function Root() {
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light'
   }, [dark])
+  const lang = settings.lang ?? deviceLang()
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
   // A "Try the demo" link (…/?demo) on a device that is not set up yet opens the demo straight away.
   const wantsDemo = ready && !settings.setupDone && new URLSearchParams(location.search).has('demo')
   useEffect(() => {
     if (wantsDemo) void startDemo()
   }, [wantsDemo])
   if (!ready || wantsDemo) return null
-  return settings.setupDone ? (
-    <PlayerProvider>
-      <Screens />
-    </PlayerProvider>
-  ) : (
-    <SetupWizard />
+  return (
+    <LangContext.Provider value={lang}>
+      {settings.setupDone ? (
+        <PlayerProvider>
+          <Screens />
+        </PlayerProvider>
+      ) : (
+        <SetupWizard />
+      )}
+    </LangContext.Provider>
   )
 }
 

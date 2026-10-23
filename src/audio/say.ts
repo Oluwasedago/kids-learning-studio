@@ -26,9 +26,16 @@ export function setVoicePreference(p: VoicePreference) {
 const NOVELTY = /compact|espeak|novelty|whisper|bad news|bells|boing|bubbles|cellos|jester|organ|superstar|trinoids|zarvox|albert|bahh|fred|junior|ralph/i
 const GOOD = /natural|neural|premium|enhanced|wavenet|siri/i
 
-/** How natural a voice probably sounds (higher is better). Pure (tested). */
+/** Languages the app reads aloud in: the app languages, and English for the English lessons. */
+export type SpeechLang = 'en' | 'de' | 'fr'
+const DEFAULT_VARIANT: Record<SpeechLang, string> = { en: 'en-GB', de: 'de-DE', fr: 'fr-FR' }
+
+/** The preferred variant of a language: the device's own (en-US, de-AT…) when it matches, else a default. */
+const variant = (lang: SpeechLang) => (globalThis.navigator?.language?.toLowerCase().startsWith(lang) ? navigator.language : DEFAULT_VARIANT[lang])
+
+/** How natural a voice probably sounds for a language (higher is better; other languages far below). Pure (tested). */
 export function voiceScore(v: { name: string; lang: string; localService: boolean }, preferredLang = 'en-GB'): number {
-  if (!v.lang.toLowerCase().startsWith('en')) return -100
+  if (!v.lang.toLowerCase().startsWith(preferredLang.slice(0, 2).toLowerCase())) return -100
   let score = 0
   if (GOOD.test(v.name)) score += 10
   if (/google/i.test(v.name)) score += 5
@@ -40,42 +47,41 @@ export function voiceScore(v: { name: string; lang: string; localService: boolea
   return score
 }
 
-/** English voices, best first. */
-export function englishVoices(): SpeechSynthesisVoice[] {
+/** The voices for a language, best first. */
+export function voicesFor(lang: SpeechLang): SpeechSynthesisVoice[] {
   if (!('speechSynthesis' in window)) return []
-  const lang = navigator.language.startsWith('en') ? navigator.language : 'en-GB'
+  const preferred = variant(lang)
   return speechSynthesis
     .getVoices()
-    .filter((v) => v.lang.toLowerCase().startsWith('en'))
-    .sort((a, b) => voiceScore(b, lang) - voiceScore(a, lang))
+    .filter((v) => v.lang.toLowerCase().startsWith(lang))
+    .sort((a, b) => voiceScore(b, preferred) - voiceScore(a, preferred))
 }
 
-function currentVoice(): SpeechSynthesisVoice | undefined {
-  const voices = englishVoices()
+/** The parent's chosen voice when it speaks this language, else the best one for it. */
+function currentVoice(lang: SpeechLang): SpeechSynthesisVoice | undefined {
+  const voices = voicesFor(lang)
   return (preference.name && voices.find((v) => v.name === preference.name)) || voices[0]
 }
 
-/** True when this device can read aloud in English. */
-export const canSpeak = () => Boolean(currentVoice())
-
-/** The English voices, updated when the browser finishes loading them (they often arrive after the page). */
-export function useVoices(): SpeechSynthesisVoice[] {
-  const [voices, setVoices] = useState(englishVoices)
+/** The voices for a language, updated when the browser finishes loading them (they often arrive after the page). */
+export function useVoices(lang: SpeechLang = 'en'): SpeechSynthesisVoice[] {
+  const [voices, setVoices] = useState(() => voicesFor(lang))
   useEffect(() => {
     if (!('speechSynthesis' in window)) return
-    const update = () => setVoices(englishVoices())
+    const update = () => setVoices(voicesFor(lang))
+    update()
     speechSynthesis.addEventListener('voiceschanged', update)
     return () => speechSynthesis.removeEventListener('voiceschanged', update)
-  }, [])
+  }, [lang])
   return voices
 }
 
-/** canSpeak() that updates when the voices arrive. */
-export const useCanSpeak = () => useVoices().length > 0
+/** True (and updated when the voices arrive) when this device can read aloud in the language. */
+export const useCanSpeak = (lang: SpeechLang = 'en') => useVoices(lang).length > 0
 
-/** Reads a text aloud (stops anything still being read). Returns false when no voice is available. */
-export function sayText(text: string): boolean {
-  const voice = currentVoice()
+/** Reads a text aloud in its language (stops anything still being read). Returns false when no voice is available. */
+export function sayText(text: string, lang: SpeechLang = 'en'): boolean {
+  const voice = currentVoice(lang)
   if (!voice) return false
   try {
     speechSynthesis.cancel()

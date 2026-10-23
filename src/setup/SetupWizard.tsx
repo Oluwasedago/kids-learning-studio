@@ -4,7 +4,7 @@ import { starterAccess } from '@/access/access'
 import { useStudio } from '@/app/studio'
 import { BackupError, parseBackup, restoreBackup } from '@/data/backup'
 import { requestPersistence } from '@/data/persist'
-import { useT } from '@/i18n'
+import { LANGS, useLang, useT } from '@/i18n'
 import { guessSystem } from '@/lessons/classes'
 import { AccessEditor, ChildEditor } from '@/parent/editors'
 import { ParentGate } from '@/parent/ParentGate'
@@ -127,13 +127,15 @@ function Nav({ onBack, onNext, nextDisabled, nextLabel }: { onBack: () => void; 
 
 function Welcome({ onStart }: { onStart: () => void }) {
   const t = useT()
+  const lang = useLang()
+  const { settings, updateSettings } = useStudio()
   const file = useRef<HTMLInputElement>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
   const demo = async () => {
     setBusy(true)
-    await startDemo()
+    await startDemo(settings.lang)
   }
   const restore = async (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]
@@ -152,6 +154,13 @@ function Welcome({ onStart }: { onStart: () => void }) {
 
   return (
     <div className="welcome">
+      <div className="segmented welcome-lang" role="radiogroup" aria-label={t.language.label}>
+        {LANGS.map((l) => (
+          <button key={l.id} role="radio" aria-checked={lang === l.id} lang={l.id} className={lang === l.id ? '' : 'secondary'} onClick={() => updateSettings((s) => ({ ...s, lang: l.id }))}>
+            {l.name}
+          </button>
+        ))}
+      </div>
       <img src={`${import.meta.env.BASE_URL}icons/icon.svg`} alt="" width={120} height={120} />
       <h1>{t.appName}</h1>
       <p>{t.setup.welcomeText}</p>

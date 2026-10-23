@@ -2,8 +2,8 @@ import type { ItemGroup, ItemId } from '@/access/catalogue'
 import type { SchoolSystem } from '@/lessons/classes'
 import type { ThemeMode } from '@/shared/theme'
 
-// Every text the app shows, in English (v1). To add a language later: copy this file to e.g. de.ts, type it
-// as `Strings` (index.ts) so a missing key fails the build, translate, and add it to LANGS in index.ts.
+// Every text the app shows, in English. Other languages: de.ts, fr.ts. To add one: copy this file, type it as
+// `Strings` (so a missing text fails the build), translate, and add it to LANGS and STRINGS in index.ts.
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`
 
@@ -76,7 +76,7 @@ export const en = {
     },
     subline: (done: number, total: number) => (done >= total ? 'All missions done – well done!' : `${plural(total - done, 'mission is', 'missions are')} waiting for you today.`),
     noMissions: 'No missions today. Ask a grown-up to switch some on.',
-    starsToday: (n: number) => (n === 1 ? 'star today' : 'stars today'),
+    starsToday: (n: number): string => (n === 1 ? 'star today' : 'stars today'),
     missions: 'Your missions',
     missionsDone: (done: number, total: number) => `${done} of ${total} done`,
     animalOfDay: 'Animal of the day',
@@ -123,7 +123,7 @@ export const en = {
     chooseNew: 'Choose a new PIN',
   },
   streak: {
-    days: (n: number) => (n === 1 ? 'day in a row' : 'days in a row'),
+    days: (n: number): string => (n === 1 ? 'day in a row' : 'days in a row'),
     atRisk: 'Do a mission today to keep your streak!',
     safe: 'Streak safe for today. Well done!',
     start: 'Pass a mission to start a streak.',
@@ -389,6 +389,7 @@ export const en = {
   demo: {
     banner: (pin: string) => `Demo with made-up data · parent PIN ${pin}`,
     bannerShort: (pin: string) => `Demo · PIN ${pin}`,
+    reward: 'Trip to the park',
     title: 'This is the demo',
     text: 'Everything here is made up. Leaving the demo deletes it and starts the setup wizard.',
     leave: 'Leave the demo',
@@ -406,6 +407,10 @@ export const en = {
     privacy: 'No accounts, no tracking, no server. Everything stays on this device.',
     licence: 'Free and open source (MIT licence).',
     credits: 'Pictures: Microsoft Fluent Emoji (MIT). Fonts: Andika and Fredoka (SIL Open Font License).',
+  },
+  language: {
+    label: 'Language',
+    note: 'The language of the app. The English lessons stay in English.',
   },
 }
 

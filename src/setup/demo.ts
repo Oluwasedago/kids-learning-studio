@@ -1,6 +1,7 @@
 import { starterAccess } from '@/access/access'
 import { SUBJECTS } from '@/access/catalogue'
 import { kvSet } from '@/data/kv'
+import { deviceLang, type Lang, stringsFor } from '@/i18n'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE, type Progress, type Settings, type Usage } from '@/data/types'
 import { levelRange, startLevel } from '@/lessons/ladder'
 import { makePin } from '@/parent/pin'
@@ -15,7 +16,7 @@ export const DEMO_AGE = 7
 /** Sam's class: Cambridge Stage 2 (a 7-year-old can be in Stage 2 or 3; the parent decides). */
 export const DEMO_STAGE = 2
 
-export async function makeDemo(now = new Date()): Promise<{ settings: Settings; progress: Progress; usage: Usage }> {
+export async function makeDemo(now = new Date(), lang: Lang | null = null): Promise<{ settings: Settings; progress: Progress; usage: Usage }> {
   const access = starterAccess(DEMO_AGE)
   const settings: Settings = {
     ...DEFAULT_SETTINGS,
@@ -24,7 +25,8 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
     child: { name: 'Sam', birthMonth: now.getMonth() + 1, birthYear: now.getFullYear() - DEMO_AGE, school: { system: 'cambridge', stage: DEMO_STAGE }, accent: '#178c84' },
     pin: await makePin(DEMO_PIN),
     access,
-    rewards: { ...DEFAULT_SETTINGS.rewards, weeklyReward: 'Trip to the park' },
+    lang,
+    rewards: { ...DEFAULT_SETTINGS.rewards, weeklyReward: stringsFor(lang ?? deviceLang()).demo.reward },
     birthdays: [{ id: 'demo-1', name: 'Grandma', month: addDays(now, 9).getMonth() + 1, day: addDays(now, 9).getDate() }],
     backup: { lastAt: null, remindDays: 7 },
     updatedAt: now.getTime(),
@@ -57,9 +59,9 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
   return { settings, progress, usage }
 }
 
-/** Saves the demo data and reloads into it (without "?demo" in the address). */
-export async function startDemo() {
-  const d = await makeDemo()
+/** Saves the demo data (in the language chosen so far) and reloads into it (without "?demo" in the address). */
+export async function startDemo(lang: Lang | null = null) {
+  const d = await makeDemo(new Date(), lang)
   await kvSet('settings', d.settings)
   await kvSet('progress', d.progress)
   await kvSet('usage', d.usage)

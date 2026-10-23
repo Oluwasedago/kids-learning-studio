@@ -1,4 +1,5 @@
 import type { ItemId, Subject } from '@/access/catalogue'
+import type { Lang } from '@/i18n'
 import type { SchoolSystem } from '@/lessons/classes'
 import type { ThemeMode } from '@/shared/theme'
 
@@ -44,6 +45,8 @@ export interface Settings {
     accent: string
   }
   theme: ThemeMode
+  /** The app language; null = the device language. */
+  lang: Lang | null
   /** Reading aloud: the chosen voice (null = best available on the device) and speed. */
   voice: { name: string | null; rate: number }
   /** The parent PIN, stored only as a salted PBKDF2 hash (see parent/pin.ts). null until the wizard sets it. */
@@ -138,6 +141,7 @@ export const DEFAULT_SETTINGS: Settings = {
   demo: false,
   child: { name: '', birthMonth: 1, birthYear: new Date().getFullYear() - 6, school: null, accent: ACCENTS[0] },
   theme: 'system',
+  lang: null,
   voice: { name: null, rate: 0.9 },
   pin: null,
   recovery: null,

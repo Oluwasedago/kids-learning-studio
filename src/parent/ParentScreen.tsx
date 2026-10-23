@@ -423,12 +423,14 @@ function MediaEditor() {
 function VoiceCard() {
   const t = useT()
   const { settings, updateSettings } = useStudio()
-  const voices = useVoices()
+  // Voices for the app language (lesson texts in other languages still find their own best voice).
+  const lang = useLang()
+  const voices = useVoices(lang)
   const v = settings.voice
   const set = (change: Partial<typeof v>) => updateSettings((s) => ({ ...s, voice: { ...s.voice, ...change } }))
   const test = () => {
     setVoicePreference({ ...settings.voice })
-    sayText(t.voice.sample)
+    sayText(t.voice.sample, lang)
   }
   if (voices.length === 0) return <p className="muted">{t.voice.none}</p>
   const chosen = voices.find((x) => x.name === v.name)

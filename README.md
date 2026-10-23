@@ -39,6 +39,7 @@ Developed by Oluwasedago.
 - **Did you know?** A random fact about space, science, nature, the world or history.
 - **Reports for parents:** day, week or month; skills that need help and recent wrong answers; sent by email from
   the parent's own mail app.
+- **English, Deutsch, Français.** The app follows the device language; parents can change it.
 - **Backup and restore** in one file, with a reminder; data is kept on the device (persistent storage).
 
 ## Privacy

@@ -2,9 +2,17 @@ import '@fontsource/andika/latin-400.css'
 import '@fontsource/andika/latin-700.css'
 import '@fontsource/fredoka/latin-600.css'
 import qrcode from 'qrcode-generator'
-import { en as t } from '@/i18n/en'
+import { de } from '@/i18n/de'
+import { en } from '@/i18n/en'
+import { fr } from '@/i18n/fr'
 import { DEVICES, type Device, detectDevice } from './device'
 import './install.css'
+
+// The page speaks the device's language (German, French, else English); it has no settings to read.
+const lang = navigator.language.toLowerCase().startsWith('de') ? 'de' : navigator.language.toLowerCase().startsWith('fr') ? 'fr' : 'en'
+const t = { en, de, fr }[lang]
+document.documentElement.lang = lang
+document.title = t.install.title
 
 // The install page (install.html): steps for the device that opened it, the other devices one tap away,
 // a QR code for opening this page on a tablet, and links to the app and the demo. No React: it is small.
