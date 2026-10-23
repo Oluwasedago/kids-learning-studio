@@ -123,9 +123,9 @@ function RewardsEditor() {
 
 function ReportCard() {
   const t = useT()
-  const { settings, updateSettings, progress, usage, now, age } = useStudio()
+  const { settings, updateSettings, progress, usage, now, stage } = useStudio()
   const period = settings.report.period
-  const report = buildReport(progress, usage, period, now, age)
+  const report = buildReport(progress, usage, period, now, stage)
   const text = reportText(report, t, settings.child.name)
   const setReport = (change: Partial<typeof settings.report>) => updateSettings((s) => ({ ...s, report: { ...s.report, ...change } }))
   return (

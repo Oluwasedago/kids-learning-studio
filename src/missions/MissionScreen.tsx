@@ -27,10 +27,10 @@ import './Missions.css'
  */
 export function MissionScreen({ subject, onClose }: { subject: Subject; onClose: () => void }) {
   const t = useT()
-  const { now, today, age, progress, settings, updateProgress } = useStudio()
+  const { now, today, stage, progress, settings, updateProgress } = useStudio()
   const isTodays = () => missionsFor(now, settings.access, settings.rewards.missionsPerDay).includes(subject) && !(progress.missions[today] ?? []).includes(subject)
   const [counts, setCounts] = useState(isTodays)
-  const [level, setLevel] = useState(() => levelOf(progress, subject, age))
+  const [level, setLevel] = useState(() => levelOf(progress, subject, stage))
   const [round, setRound] = useState(0)
   const [result, setResult] = useState<{ score: Score; levelAfter: number; milestone: number | null } | null>(null)
   useArea(`mission:${subject}`)
@@ -39,7 +39,7 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
     let levelAfter = level
     let milestone: number | null = null
     updateProgress((p) => {
-      const next = completeMission(p, subject, answers, { day: now, age, counts })
+      const next = completeMission(p, subject, answers, { day: now, stage, counts })
       levelAfter = next.levels[subject] ?? level
       // Today's first star can lift the streak to a milestone (3, 7, 14, 30 … days): celebrate it.
       const before = computeStreak(p.stars, now)

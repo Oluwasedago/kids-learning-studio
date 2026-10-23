@@ -15,6 +15,8 @@ export interface StudioState {
   today: string
   /** The child's age in years (from birth month and year). */
   age: number
+  /** The stage of the child's school class on the skills ladder (the class the parent set, or a guess by age). */
+  stage: number
   settings: Settings
   /** All three documents have been read from the device. */
   ready: boolean

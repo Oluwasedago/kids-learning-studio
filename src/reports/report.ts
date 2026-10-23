@@ -74,7 +74,7 @@ export function periodRange(period: Period, now: Date): { from: Date; to: Date }
   return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: new Date(now.getFullYear(), now.getMonth() + 1, 0) }
 }
 
-export function buildReport(progress: Progress, usage: Usage, period: Period, now: Date, age: number): Report {
+export function buildReport(progress: Progress, usage: Usage, period: Period, now: Date, stage: number): Report {
   const { from, to } = periodRange(period, now)
   const first = isoDate(from)
   const last = isoDate(to)
@@ -107,7 +107,7 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
         total += s.total
       }
     }
-    const step = LADDERS[subject][Math.min(levelOf(progress, subject, age), LADDERS[subject].length - 1)]
+    const step = LADDERS[subject][Math.min(levelOf(progress, subject, stage), LADDERS[subject].length - 1)]
     return { subject, missions, accuracy: total > 0 ? right / total : null, skill: step.skill, stage: stageTags(step.stage).cambridge }
   })
 

@@ -2,7 +2,7 @@ import { starterAccess } from '@/access/access'
 import { SUBJECTS } from '@/access/catalogue'
 import { kvSet } from '@/data/kv'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE, type Progress, type Settings, type Usage } from '@/data/types'
-import { startLevel } from '@/lessons/ladder'
+import { levelRange, startLevel } from '@/lessons/ladder'
 import { makePin } from '@/parent/pin'
 import { missionsFor } from '@/progress/progress'
 import { addDays, isoDate } from '@/shared/date'
@@ -12,6 +12,8 @@ import { addDays, isoDate } from '@/shared/date'
 
 export const DEMO_PIN = '1234'
 export const DEMO_AGE = 7
+/** Sam's class: Cambridge Stage 2 (a 7-year-old can be in Stage 2 or 3; the parent decides). */
+export const DEMO_STAGE = 2
 
 export async function makeDemo(now = new Date()): Promise<{ settings: Settings; progress: Progress; usage: Usage }> {
   const access = starterAccess(DEMO_AGE)
@@ -19,7 +21,7 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
     ...DEFAULT_SETTINGS,
     setupDone: true,
     demo: true,
-    child: { name: 'Sam', birthMonth: now.getMonth() + 1, birthYear: now.getFullYear() - DEMO_AGE, accent: '#178c84' },
+    child: { name: 'Sam', birthMonth: now.getMonth() + 1, birthYear: now.getFullYear() - DEMO_AGE, school: { system: 'cambridge', stage: DEMO_STAGE }, accent: '#178c84' },
     pin: await makePin(DEMO_PIN),
     access,
     rewards: { ...DEFAULT_SETTINGS.rewards, weeklyReward: 'Trip to the park' },
@@ -51,7 +53,7 @@ export async function makeDemo(now = new Date()): Promise<{ settings: Settings; 
     { day: isoDate(addDays(now, -1)), subject: 'maths', step: 'add-sub-20', prompt: 'What is 13 − 6?', given: '8', answer: '7' },
     { day: isoDate(addDays(now, -1)), subject: 'world', step: 'easy-flags', prompt: 'Which country has this flag?', given: 'Italy', answer: 'Ireland' },
   ]
-  for (const s of SUBJECTS) progress.levels[s] = startLevel(s, DEMO_AGE) + 1
+  for (const s of SUBJECTS) progress.levels[s] = Math.min(startLevel(s, DEMO_STAGE) + 1, levelRange(s, DEMO_STAGE).max)
   return { settings, progress, usage }
 }
 

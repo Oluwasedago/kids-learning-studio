@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from 'react'
 import { accessState, earnedSecondsLeft, starterAccess } from '@/access/access'
 import { useLocalDoc } from '@/data/localDoc'
 import { DEFAULT_SETTINGS, EMPTY_PROGRESS, EMPTY_USAGE, type Progress, type Settings, type Usage } from '@/data/types'
+import { stageForAge } from '@/lessons/ladder'
 import { ageFrom, isoDate } from '@/shared/date'
 import { StudioContext, type StudioState } from './studio'
 
@@ -34,6 +35,7 @@ export function StudioData({ children }: { children: ReactNode }) {
   const usage = useLocalDoc<Usage>('usage', EMPTY_USAGE)
   const today = isoDate(now)
   const age = ageFrom(settings.doc.child.birthMonth, settings.doc.child.birthYear, now)
+  const stage = settings.doc.child.school?.stage ?? stageForAge(age)
   // Items added in a later version are missing from settings saved earlier: they get their starter setting.
   const s = settings.doc.setupDone ? { ...settings.doc, access: { ...starterAccess(age), ...settings.doc.access } } : settings.doc
   const earnedLeft = earnedSecondsLeft(progress.doc, usage.doc, s.rewards, today)
@@ -47,6 +49,7 @@ export function StudioData({ children }: { children: ReactNode }) {
     now,
     today,
     age,
+    stage,
     settings: s,
     ready: settings.ready && progress.ready && usage.ready,
     updateSettings: settings.update,

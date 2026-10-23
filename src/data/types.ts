@@ -1,4 +1,5 @@
 import type { ItemId, Subject } from '@/access/catalogue'
+import type { SchoolSystem } from '@/lessons/classes'
 import type { ThemeMode } from '@/shared/theme'
 
 // The documents saved on the device (IndexedDB, see kv.ts). All three go into a backup file.
@@ -31,9 +32,14 @@ export interface Settings {
   child: {
     /** First name or nickname, shown in the greeting. May stay empty. */
     name: string
-    /** Birth month (1-12) and year only, never the day: enough to choose lessons by age. */
+    /** Birth month (1-12) and year only, never the day: for the age (birthdays, what is switched on). */
     birthMonth: number
     birthYear: number
+    /**
+     * The school class the parent chose (its system for the name, and its stage on the skills ladder); it sets
+     * the lesson level. null until chosen: then the class is guessed from the age.
+     */
+    school: { system: SchoolSystem; stage: number } | null
     /** The child's colour (buttons, menu). */
     accent: string
   }
@@ -126,7 +132,7 @@ export const ACCENTS = ['#5b6cf0', '#e2557e', '#178c84', '#e08a1e', '#8b5cf6', '
 export const DEFAULT_SETTINGS: Settings = {
   setupDone: false,
   demo: false,
-  child: { name: '', birthMonth: 1, birthYear: new Date().getFullYear() - 6, accent: ACCENTS[0] },
+  child: { name: '', birthMonth: 1, birthYear: new Date().getFullYear() - 6, school: null, accent: ACCENTS[0] },
   theme: 'system',
   voice: { name: null, rate: 0.9 },
   pin: null,

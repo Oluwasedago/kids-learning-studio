@@ -5,6 +5,7 @@ import { useStudio } from '@/app/studio'
 import { BackupError, parseBackup, restoreBackup } from '@/data/backup'
 import { requestPersistence } from '@/data/persist'
 import { useT } from '@/i18n'
+import { guessSystem } from '@/lessons/classes'
 import { AccessEditor, ChildEditor } from '@/parent/editors'
 import { ParentGate } from '@/parent/ParentGate'
 import { Emoji } from '@/shared/Emoji'
@@ -20,12 +21,17 @@ const STEPS: Step[] = ['welcome', 'child', 'pin', 'access', 'done']
  */
 export function SetupWizard() {
   const t = useT()
-  const { settings, updateSettings, age } = useStudio()
+  const { settings, updateSettings, age, stage } = useStudio()
   const [step, setStep] = useState<Step>('welcome')
   const [askPin, setAskPin] = useState(false)
   const at = STEPS.indexOf(step)
   const go = (s: Step) => setStep(s)
 
+  const toPin = () => {
+    // Keep the class shown on the child page (a guess by age until the parent picks one).
+    if (!settings.child.school) updateSettings((s) => ({ ...s, child: { ...s.child, school: { system: guessSystem(), stage } } }))
+    go('pin')
+  }
   const toAccess = () => {
     // The proposal by age, which the parent can change on the next page.
     updateSettings((s) => ({ ...s, access: starterAccess(age) }))
@@ -53,7 +59,7 @@ export function SetupWizard() {
           <>
             <h2>{t.setup.childTitle}</h2>
             <ChildEditor showTheme={false} />
-            <Nav onBack={() => go('welcome')} onNext={() => go('pin')} />
+            <Nav onBack={() => go('welcome')} onNext={toPin} />
           </>
         )}
 

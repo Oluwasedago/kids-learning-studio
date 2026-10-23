@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { SUBJECTS } from '@/access/catalogue'
 import { misspellings } from './english'
-import { adapt, LADDERS, makeRound, passMark, stageTags, starsFor, startLevel } from './ladder'
+import { classLabel, classesOf } from './classes'
+import { adapt, LADDERS, levelRange, makeRound, passMark, stageTags, starsFor, startLevel } from './ladder'
 import { seeded } from './question'
 
 describe('skills ladder', () => {
@@ -34,10 +35,29 @@ describe('skills ladder', () => {
     expect(stageTags(3)).toEqual({ cambridge: 'Stage 3', us: 'Grade 2', berlin: 'Klasse 2' })
   })
 
-  it('starts a little below the age, never past the top', () => {
-    expect(LADDERS.maths[startLevel('maths', 4)].stage).toBe(0)
-    expect(LADDERS.maths[startLevel('maths', 7)].stage).toBe(2)
-    expect(startLevel('world', 30)).toBe(LADDERS.world.length - 1)
+  it('starts at the class stage, never past the top', () => {
+    expect(LADDERS.maths[startLevel('maths', 0)].stage).toBe(0)
+    expect(LADDERS.maths[startLevel('maths', 3)].stage).toBe(3)
+    expect(startLevel('world', 6)).toBe(LADDERS.world.length - 1)
+  })
+
+  it('keeps the level within a stage of the class: one below to one above', () => {
+    for (const s of SUBJECTS)
+      for (let stage = 0; stage <= 6; stage++) {
+        const { min, max } = levelRange(s, stage)
+        const start = startLevel(s, stage)
+        expect(min <= start && start <= max, `${s} stage ${stage}`).toBe(true)
+        expect(LADDERS[s][max].stage, `${s} stage ${stage}`).toBeLessThanOrEqual(Math.max(stage + 1, LADDERS[s][start].stage))
+        expect(LADDERS[s][min].stage, `${s} stage ${stage}`).toBeGreaterThanOrEqual(Math.min(stage - 1, LADDERS[s][start].stage))
+      }
+  })
+
+  it('names classes in each school system', () => {
+    expect(classLabel('germany', 2)).toBe('Klasse 1')
+    expect(classLabel('us', 1)).toBe('Kindergarten')
+    expect(classLabel('england', 3)).toBe('Year 3')
+    expect(classLabel('nigeria', 6)).toBe('Primary 6')
+    for (const sys of ['cambridge', 'england', 'us', 'germany', 'nigeria'] as const) expect(classesOf(sys).map((c) => c.stage)).toEqual([0, 1, 2, 3, 4, 5, 6])
   })
 
   it('adapts: up after two strong rounds, down after a weak one', () => {

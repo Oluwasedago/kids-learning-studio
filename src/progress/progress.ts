@@ -1,6 +1,6 @@
 import { type ItemId, SUBJECTS, type Subject } from '@/access/catalogue'
 import { type AccessRule, MAX_MISTAKES, type Mistake, type Progress, type Score } from '@/data/types'
-import { adapt, LADDERS, passMark, starsFor, startLevel } from '@/lessons/ladder'
+import { adapt, LADDERS, levelRange, passMark, starsFor, startLevel } from '@/lessons/ladder'
 import { addDays, dayNumber, isoDate, mondayOf } from '@/shared/date'
 
 // Missions, stars and levels. Pure functions (tested in progress.test.ts).
@@ -28,8 +28,8 @@ export function weekStars(p: Progress, d: Date): number {
   return sum
 }
 
-/** The child's current step on a subject's ladder (the start step for their age when not set yet). */
-export const levelOf = (p: Progress, subject: Subject, age: number) => p.levels[subject] ?? startLevel(subject, age)
+/** The child's current step on a subject's ladder (the start step for their class when not set yet). */
+export const levelOf = (p: Progress, subject: Subject, stage: number) => p.levels[subject] ?? startLevel(subject, stage)
 
 /** One answered question of a round. */
 export interface Answer {
@@ -46,13 +46,16 @@ export interface Answer {
  * off only when it is passed (passMark) and is one of the day's missions not yet done; it then gives one star
  * per 10 questions (starsFor), so a longer mission earns more time.
  */
-export function completeMission(p: Progress, subject: Subject, answers: Answer[], opts: { day: Date; age: number; counts: boolean; now?: number }): Progress {
+export function completeMission(p: Progress, subject: Subject, answers: Answer[], opts: { day: Date; stage: number; counts: boolean; now?: number }): Progress {
   const now = opts.now ?? Date.now()
   const date = isoDate(opts.day)
   const score: Score = { right: answers.filter((a) => a.right).length, total: answers.length }
   const share = score.total > 0 ? score.right / score.total : 0
-  const level = levelOf(p, subject, opts.age)
-  const next = adapt(level, p.recent[subject] ?? [], share, LADDERS[subject].length - 1)
+  const level = levelOf(p, subject, opts.stage)
+  // The level moves with the results, but stays within a stage of the class (levelRange).
+  const range = levelRange(subject, opts.stage)
+  const moved = adapt(level, p.recent[subject] ?? [], share, LADDERS[subject].length - 1)
+  const next = { level: Math.max(range.min, Math.min(range.max, moved.level)), recent: moved.recent }
   const old = p.scores[date]?.[subject]
   const better = !old || share > old.right / old.total
 

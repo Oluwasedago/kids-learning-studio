@@ -1,4 +1,5 @@
 import type { ItemGroup, ItemId } from '@/access/catalogue'
+import type { SchoolSystem } from '@/lessons/classes'
 import type { ThemeMode } from '@/shared/theme'
 
 // Every text the app shows, in English (v1). To add a language later: copy this file to e.g. de.ts, type it
@@ -196,7 +197,7 @@ export const en = {
   },
   setup: {
     welcomeText: 'A learning home screen for your child: missions earn stars, stars earn screen time.',
-    welcomeStars: 'Lessons follow your child’s age and get harder as they grow.',
+    welcomeStars: 'Lessons follow your child’s school class and get harder as they learn.',
     setUp: 'Set up',
     tryDemo: 'Try the demo',
     restore: 'Restore from backup',
@@ -207,8 +208,13 @@ export const en = {
     nameNote: 'Shown in the greeting. You can leave it empty.',
     birthMonth: 'Birth month',
     birthYear: 'Birth year',
-    birthNote: 'Month and year only, to choose lessons by age. The app never asks for the full date of birth.',
-    ageLine: (age: number, cambridge: string, us: string, berlin: string) => `Age ${age}: lessons start around ${cambridge} (US ${us}, Berlin ${berlin}).`,
+    birthNote: 'Month and year only, for the age. The app never asks for the full date of birth.',
+    schoolSystem: 'School system',
+    schoolSystems: { cambridge: 'Cambridge Primary', england: 'England', us: 'United States', germany: 'Germany', nigeria: 'Nigeria' } satisfies Record<SchoolSystem, string>,
+    schoolClass: 'Class',
+    classLine: (cambridge: string, us: string, berlin: string) => `Lessons at about ${cambridge} (US ${us}, Berlin ${berlin}).`,
+    classNote: 'Lessons start at this class and move up or down with the results, up to one class either way. Change the class when your child moves up: the lessons follow straight away.',
+    classGuess: (age: number) => `A first guess for age ${age}; please check it.`,
     colour: 'Colour',
     theme: 'Light or dark',
     themes: { system: 'Like the device', light: 'Light', dark: 'Dark' } satisfies Record<ThemeMode, string>,

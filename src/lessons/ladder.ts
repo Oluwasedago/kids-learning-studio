@@ -42,18 +42,27 @@ export function stageTags(stage: number): StageTags {
   }
 }
 
-/** The stage that matches an age (age 5 → Stage 1). */
+/** The stage that matches an age (age 5 → Stage 1): only a first guess of the class; the parent sets the class. */
 export const stageForAge = (age: number) => Math.max(0, Math.min(6, age - 4))
 
-/**
- * Where a child starts: the first step one stage below their age, so the first missions feel easy;
- * the adaptive level moves them up after two strong rounds. Pure (tested).
- */
-export function startLevel(subject: Subject, age: number): number {
+/** Where a child of a class (its stage) starts on a subject: the first step of that stage. Pure (tested). */
+export function startLevel(subject: Subject, stage: number): number {
   const steps = LADDERS[subject]
-  const target = Math.max(0, stageForAge(age) - 1)
-  const i = steps.findIndex((s) => s.stage >= target)
+  const i = steps.findIndex((s) => s.stage >= stage)
   return i === -1 ? steps.length - 1 : i
+}
+
+/**
+ * The steps a child of a class works on: from one stage below (revision) to one stage above (a stretch).
+ * The adaptive level stays inside; a parent changes the class to go further. Pure (tested).
+ */
+export function levelRange(subject: Subject, stage: number): { min: number; max: number } {
+  const steps = LADDERS[subject]
+  const start = startLevel(subject, stage)
+  const first = steps.findIndex((s) => s.stage >= stage - 1)
+  let max = start
+  while (max + 1 < steps.length && steps[max + 1].stage <= stage + 1) max++
+  return { min: Math.min(first === -1 ? start : first, start), max }
 }
 
 /** A mission is passed (ticked off, stars) with at least 70 % right: 7 of 10, 18 of 25, 35 of 50. Pure (tested). */

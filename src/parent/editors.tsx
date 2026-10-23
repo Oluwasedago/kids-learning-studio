@@ -3,7 +3,8 @@ import { GROUPS, ITEMS, itemsIn, type ItemId } from '@/access/catalogue'
 import { useStudio } from '@/app/studio'
 import { ACCENTS } from '@/data/types'
 import { LOCALES, useLang, useT } from '@/i18n'
-import { stageForAge, stageTags } from '@/lessons/ladder'
+import { classesOf, guessSystem, SCHOOL_SYSTEMS, type SchoolSystem } from '@/lessons/classes'
+import { stageTags } from '@/lessons/ladder'
 import { Emoji } from '@/shared/Emoji'
 import { THEME_MODES } from '@/shared/theme'
 import './Parent.css'
@@ -14,11 +15,10 @@ import './Parent.css'
 export function ChildEditor({ showTheme = true }: { showTheme?: boolean }) {
   const t = useT()
   const locale = LOCALES[useLang()]
-  const { settings, updateSettings, age, now } = useStudio()
+  const { settings, updateSettings, now } = useStudio()
   const child = settings.child
   const setChild = (change: Partial<typeof child>) => updateSettings((s) => ({ ...s, child: { ...s.child, ...change } }))
   const years = Array.from({ length: 11 }, (_, i) => now.getFullYear() - 2 - i)
-  const tags = stageTags(stageForAge(age))
   return (
     <div className="editor">
       <label className="field">
@@ -48,10 +48,8 @@ export function ChildEditor({ showTheme = true }: { showTheme?: boolean }) {
           </select>
         </label>
       </div>
-      <p className="editor-note">
-        <Emoji name="gradcap" size={28} /> {t.setup.ageLine(age, tags.cambridge, tags.us, tags.berlin)}
-      </p>
       <small className="muted">{t.setup.birthNote}</small>
+      <ClassEditor />
       <span className="field-label">{t.setup.colour}</span>
       <div className="swatches" role="radiogroup" aria-label={t.setup.colour}>
         {ACCENTS.map((c) => (
@@ -71,6 +69,53 @@ export function ChildEditor({ showTheme = true }: { showTheme?: boolean }) {
         </>
       )}
     </div>
+  )
+}
+
+/**
+ * The child's school class: a school system (for the class names) and the class. The class sets the lesson
+ * level; changing it moves every subject to the start of the new class at once.
+ */
+export function ClassEditor() {
+  const t = useT()
+  const { settings, updateSettings, updateProgress, stage, age } = useStudio()
+  const school = settings.child.school
+  const system = school?.system ?? guessSystem()
+  const setSchool = (next: { system: SchoolSystem; stage: number }) => {
+    updateSettings((s) => ({ ...s, child: { ...s.child, school: next } }))
+    // A new class: every subject starts again at that class's level (levelOf falls back to it).
+    if (next.stage !== stage) updateProgress((p) => ({ ...p, levels: {}, recent: {} }))
+  }
+  const tags = stageTags(stage)
+  return (
+    <>
+      <div className="field-row">
+        <label className="field">
+          <span>{t.setup.schoolSystem}</span>
+          <select value={system} onChange={(e) => setSchool({ system: e.target.value as SchoolSystem, stage })}>
+            {SCHOOL_SYSTEMS.map((s) => (
+              <option key={s.id} value={s.id}>
+                {t.setup.schoolSystems[s.id]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          <span>{t.setup.schoolClass}</span>
+          <select value={stage} onChange={(e) => setSchool({ system, stage: Number(e.target.value) })}>
+            {classesOf(system).map((c) => (
+              <option key={c.stage} value={c.stage}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <p className="editor-note">
+        <Emoji name="gradcap" size={28} /> {t.setup.classLine(tags.cambridge, tags.us, tags.berlin)} {!school && t.setup.classGuess(age)}
+      </p>
+      <small className="muted">{t.setup.classNote}</small>
+    </>
   )
 }
 

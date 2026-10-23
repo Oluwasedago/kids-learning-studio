@@ -14,7 +14,7 @@ const COLORS: Record<Subject, string> = { maths: 'var(--sky-soft)', english: 'va
 /** Learn: every enabled subject with the skill being practised now; any of them can be practised at any time. */
 export function LearnScreen() {
   const t = useT()
-  const { accessOf, progress, age } = useStudio()
+  const { accessOf, progress, stage } = useStudio()
   const [subject, setSubject] = useState<Subject | null>(null)
   const subjects = SUBJECTS.filter((s) => accessOf(s) !== 'hidden')
 
@@ -22,7 +22,7 @@ export function LearnScreen() {
     <div className="games-screen">
       {subjects.map((s) => {
         const steps = LADDERS[s]
-        const level = Math.min(levelOf(progress, s, age), steps.length - 1)
+        const level = Math.min(levelOf(progress, s, stage), steps.length - 1)
         const step = steps[level]
         const tags = stageTags(step.stage)
         return (
