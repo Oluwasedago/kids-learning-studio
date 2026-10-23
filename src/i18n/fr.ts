@@ -128,8 +128,9 @@ export const fr: Strings = {
   },
   library: {
     title: 'Bibliothèque',
-    lives: 'Où il vit',
-    country: 'Pays',
+    lives: 'Où il vit :',
+    country: 'Pays :',
+    countryFilter: 'Pays',
     allCountries: 'Tous les pays',
     previous: 'Précédent',
     next: 'Suivant',

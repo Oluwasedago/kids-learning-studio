@@ -7,18 +7,23 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Area | Status |
 |---|---|
 | App shell, offline start, GitHub Pages deploy, brand icons | done |
-| Setup wizard (birth month + year only), demo, restore on first start | done |
+| Setup wizard (birth month + year, school class, language), demo, restore on first start | done |
 | Two-layer access control (on/off → earn/open, unlock for today with PIN) | done |
-| Missions: one try per question (green right / red wrong, the right answer never shown), pass mark 5 of 8, stars, earned time | done |
-| Skills ladder by age, adaptive level (maths, English, world, patterns) | done |
+| Forgotten PIN: recovery code, or a reset after 24 hours | done |
+| Missions: 10, 25 or 50 questions (parent's choice), one try each (green right / red wrong, the answer never shown), pass mark 70 %, a star per 10 questions, earned time | done |
+| Skills ladder by school class (58 skills, Stage 0–6), adaptive within one stage of the class | done |
 | Learning streak like Duolingo: days in a row, earned streak freezes, milestones, shown to parents | done |
 | Skill-to-stage placement and US / Berlin equivalents | to verify against each curriculum framework |
 | Class-to-stage mapping (England Year, US Grade, German Klasse, Nigerian Primary) in `src/lessons/classes.ts` | assumed from the usual ages; to verify |
 | German and French app texts (`src/i18n/de.ts`, `fr.ts`) | translated by the developer; to check by native speakers |
 | German and French lessons and facts (`src/lessons/text-de.ts`, `text-fr.ts`, `facts.ts`) | translated by the developer, checked by the content test for completeness and one right answer; wording to check by native speakers |
 | Animal facts, "Did you know?" facts, capitals, flag colours | second check done 23 Oct 2026 (pictures matched to facts, ambiguous questions fixed); `src/lessons/content.test.ts` checks every question type for exactly one true answer |
-| Games: memory, word builder, puzzle, snake | done |
-| Media: radio (Die Maus / WDR, Fun Kids) | to verify: each station's terms for other players (none published) |
+| Games: memory, word builder, puzzle, snake, code breaker | done |
+| Library: 40 animals and 40 places of the world with real photos (Wikimedia Commons, credited), photo questions in World | done; facts to verify again like all facts |
+| Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter) | to verify: each station's terms for other players (none published) |
+| Media: story speed (slow, a bit slower, normal) | done |
+| Media: video library (how things are made / work, live animal cams; official channels) | done; run `node scripts/check-videos.mjs` before each release (live ids can change) |
+| Phone layout (320–390 px, larger text) | done; checked automatically for overflow on every screen |
 | Media: LibriVox stories (public domain) | done; recordings are public domain in the USA, to verify per country |
 | Media: parent-approved YouTube videos (youtube-nocookie) | done |
 | Family calls (tel:, WhatsApp, FaceTime links) | to verify which links open on Fire, Android, iPad |
@@ -26,6 +31,13 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Backup / restore + reminder; persistent storage | done; share sheet on iPad and storage on Fire to verify |
 | Reading aloud: best voice on the device, parent voice picker | done; voices on Fire to verify |
 | Install page (device steps, QR code) | done; Fire and Amazon Kids steps to verify |
+
+## Not possible from the code (needs a person or a device)
+
+- Repository "About" text and topics on GitHub: needs the repository owner (the token has no Administration right).
+- Checks on real devices: Amazon Fire voices, Amazon Kids browser, mailto, share sheet, family-call links.
+- Terms of use of the radio streams (WDR, Fun Kids, Radio France).
+- Native-speaker reading of the German and French texts.
 
 ## v1.1 (plugins, each optional and off by default)
 
@@ -36,7 +48,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 - Automatic email reports through the parent's own email service.
 - AI-made lessons with the parent's own API key.
 - School-notices plugin.
-- More languages (the strings are in one file: `src/i18n/en.ts`).
+- More languages (app texts in `src/i18n/`, lesson texts in `src/lessons/text-*.ts`).
 - More stories (other public-domain recordings) and stations, after checking their terms.
 
 ## v2 (native)

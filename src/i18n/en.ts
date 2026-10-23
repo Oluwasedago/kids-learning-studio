@@ -130,8 +130,9 @@ export const en = {
   },
   library: {
     title: 'Library',
-    lives: 'Where it lives',
-    country: 'Country',
+    lives: 'Where it lives:',
+    country: 'Country:',
+    countryFilter: 'Country',
     allCountries: 'All countries',
     previous: 'Previous',
     next: 'Next',

@@ -26,6 +26,9 @@ interface Entry {
   lines: { label?: string; text: string }[]
 }
 
+/** "manchot" → "Manchot", as a title (German nouns already start with a capital). */
+const capitalize = (s: string, lang: Lang) => s.charAt(0).toLocaleUpperCase(lang) + s.slice(1)
+
 const credits = CREDITS as Record<string, { author: string; licence: string }>
 
 function entries(shelf: Shelf, lang: Lang, country: string | null, t: ReturnType<typeof useT>): Entry[] {
@@ -34,7 +37,7 @@ function entries(shelf: Shelf, lang: Lang, country: string | null, t: ReturnType
     return ANIMALS.map((a) => ({
       id: a.id,
       photo: animalPhoto(a.id),
-      name: T.animals[a.id].name,
+      name: capitalize(T.animals[a.id].name, lang),
       lines: [{ text: T.animals[a.id].fact }, { label: t.library.lives, text: ANIMAL_HOMES[a.id][lang] }],
     })).sort((a, b) => a.name.localeCompare(b.name, lang))
   }
@@ -74,7 +77,7 @@ export function LibraryScreen({ shelf, onClose }: { shelf: Shelf; onClose: () =>
       ) : (
         <div className="library-body">
           {shelf === 'places' && (
-            <div className="library-filter" role="radiogroup" aria-label={t.library.country}>
+            <div className="library-filter" role="radiogroup" aria-label={t.library.countryFilter}>
               <button role="radio" aria-checked={country === null} className={country === null ? '' : 'secondary'} onClick={() => setCountry(null)}>
                 {t.library.allCountries}
               </button>
@@ -105,7 +108,7 @@ function Detail({ entry, onPrev, onNext }: { entry: Entry; onPrev: () => void; o
   const lang = useLang()
   const speaks = useCanSpeak(lang)
   const credit = credits[entry.id]
-  const spoken = [entry.name, ...entry.lines.map((l) => (l.label ? `${l.label}: ${l.text}` : l.text))].join('. ')
+  const spoken = [entry.name, ...entry.lines.map((l) => (l.label ? `${l.label} ${l.text}` : l.text))].join('. ')
   return (
     <section className="card library-detail">
       <figure>
@@ -123,7 +126,7 @@ function Detail({ entry, onPrev, onNext }: { entry: Entry; onPrev: () => void; o
         </h2>
         {entry.lines.map((l, i) => (
           <p key={i}>
-            {l.label && <b>{l.label}: </b>}
+            {l.label && <b>{l.label} </b>}
             {l.text}
           </p>
         ))}
