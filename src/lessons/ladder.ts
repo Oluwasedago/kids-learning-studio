@@ -1,4 +1,5 @@
 import type { Subject } from '@/access/catalogue'
+import type { Lang } from '@/i18n'
 import { ENGLISH } from './english'
 import { MATHS } from './maths'
 import { PATTERNS } from './patterns'
@@ -96,17 +97,18 @@ export const QUESTIONS_PER_MISSION = MISSION_LENGTHS[0]
  * like "a" or "an"), it goes on with revision from the steps below, and only then repeats a question, never
  * twice in a row. Pure with a seeded `r` (tested).
  */
-export function makeRound(subject: Subject, level: number, r: Random = Math.random, count: number = QUESTIONS_PER_MISSION): Question[] {
+export function makeRound(subject: Subject, level: number, r: Random = Math.random, count: number = QUESTIONS_PER_MISSION, lang: Lang = 'en'): Question[] {
   const steps = LADDERS[subject]
   const at = Math.max(0, Math.min(level, steps.length - 1))
   const warmUps = at > 0 ? Math.round(count / 5) : 0
   const out: Question[] = []
-  const key = (q: Question) => JSON.stringify([q.prompt, q.visual, q.choices.map((c) => c.label ?? c.visual)])
+  // The same question is the same prompt, picture and right answer, whatever the order of the buttons.
+  const key = (q: Question) => JSON.stringify([q.prompt, q.visual, q.choices[q.answer]])
   const seen = new Set<string>()
   /** Adds up to `n` new questions from a step; gives up on the step after many tries without a new one. */
   const fill = (step: Step, n: number, unique: boolean) => {
     for (let added = 0, misses = 0; added < n && misses < 60; ) {
-      const q = { ...step.make(r), step: step.id }
+      const q = { ...step.make(r, lang), step: step.id }
       const k = key(q)
       const repeatOk = !unique && (out.length === 0 || key(out[out.length - 1]) !== k)
       if (!seen.has(k) || repeatOk) {

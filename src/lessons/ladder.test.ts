@@ -18,7 +18,7 @@ describe('skills ladder', () => {
       for (const [level, step] of LADDERS[s].entries()) {
         const r = seeded(level + 1)
         for (let i = 0; i < 40; i++) {
-          const q = step.make(r)
+          const q = step.make(r, 'en')
           expect(q.answer, `${s}/${step.id}`).toBeGreaterThanOrEqual(0)
           expect(q.answer, `${s}/${step.id}`).toBeLessThan(q.choices.length)
           expect(q.choices.length, `${s}/${step.id}`).toBeGreaterThanOrEqual(2)
@@ -69,10 +69,16 @@ describe('skills ladder', () => {
     expect(adapt(10, [1], 1, 10)).toEqual({ level: 10, recent: [1, 1] })
   })
 
-  it('a round has 10 different questions', () => {
+  it('a round has 10 different questions (shuffled buttons do not make a question new)', () => {
     const round = makeRound('maths', 5, seeded(7))
     expect(round).toHaveLength(10)
     expect(new Set(round.map((q) => q.prompt)).size).toBe(10)
+    for (const s of SUBJECTS)
+      for (const level of LADDERS[s].keys()) {
+        const r = makeRound(s, level, seeded(50 + level), 10, 'de')
+        const keys = r.map((q) => JSON.stringify([q.prompt, q.visual, q.choices[q.answer]]))
+        expect(new Set(keys).size, s + ' level ' + level).toBe(keys.length)
+      }
   })
 
   it('every step can make a full 50-question round, never the same question twice in a row', () => {
@@ -80,7 +86,7 @@ describe('skills ladder', () => {
       for (const level of LADDERS[s].keys()) {
         const round = makeRound(s, level, seeded(level + 3), 50)
         expect(round, `${s} level ${level}`).toHaveLength(50)
-        const keys = round.map((q) => JSON.stringify([q.prompt, q.visual, q.choices]))
+        const keys = round.map((q) => JSON.stringify([q.prompt, q.visual, q.choices[q.answer]]))
         expect(keys.some((k, i) => i > 0 && k === keys[i - 1]), `${s} level ${level}`).toBe(false)
       }
   })
@@ -107,7 +113,7 @@ describe('skills ladder', () => {
         const seen = new Set<number>()
         let choices = 0
         for (let i = 0; i < 200; i++) {
-          const q = step.make(r)
+          const q = step.make(r, 'en')
           seen.add(q.answer)
           choices = q.choices.length
         }

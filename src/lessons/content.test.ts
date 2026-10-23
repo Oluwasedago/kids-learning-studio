@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { SUBJECTS } from '@/access/catalogue'
 import { A_AN, ANIMALS, COMMON_WORDS, COUNTRIES, FRUITS, OPPOSITES, PAST_TENSES, PLURALS, WORDS } from './data'
 import { FACTS } from './facts'
+import type { Lang } from '@/i18n'
 import { LADDERS } from './ladder'
 import { type Choice, type Question, seeded, type Visual } from './question'
+import { LESSON_EN, lessonText } from './text'
 
 // The content check: every lesson question must have exactly one right answer, and that answer must be true.
 // Each step's questions are made thousands of times and checked against an answer key written here, apart
@@ -46,7 +48,9 @@ function solve(text: string): number {
   if ((m = text.match(/^double (\d+)$/))) return 2 * Number(m[1])
   if ((m = text.match(/^half of (\d+)$/))) return Number(m[1]) / 2
   if ((m = text.match(/^1\/(\d+) of (\d+)$/))) return Number(m[2]) / Number(m[1])
-  if ((m = text.match(/^(\d) tens? \+ (\d) ones?$/))) return 10 * Number(m[1]) + Number(m[2])
+  if ((m = text.match(/^1\/(\d+) × (\d+)$/))) return Number(m[2]) / Number(m[1])
+  // Tens and ones in any language: "3 tens + 4 ones", "3 Zehner + 4 Einer", "3 dizaines + 4 unités".
+  if ((m = text.match(/^(\d) \D+ \+ (\d) \D+$/))) return 10 * Number(m[1]) + Number(m[2])
   if ((m = text.match(/^(\d+), \?$/))) return Number(m[1]) + 1
   if ((m = text.match(/^\?, (\d+)$/))) return Number(m[1]) - 1
   throw new Error(`cannot solve "${text}"`)
@@ -68,7 +72,8 @@ function nextInPattern(items: string[]): string {
 }
 
 /** The answer key: checks one question of a step. Returns a problem, or null. */
-function check(step: string, q: Question): string | null {
+function check(step: string, q: Question, lang: Lang): string | null {
+  const T = lessonText(lang)
   const r = right(q)
   const w = wrongs(q)
   const isNumber = /^\d+$/.test(label(r))
@@ -78,7 +83,8 @@ function check(step: string, q: Question): string | null {
       return q.visual?.kind === 'emoji' && Number(label(r)) === q.visual.count ? null : 'wrong count'
     case 'which-animal': {
       const a = animalByEmoji(emojiOf(q.visual))
-      return a && label(r) === a.name && !w.some((c) => label(c) === a.name) ? null : 'name does not match the picture'
+      const name = a && T.animals[a.id].name
+      return name && label(r) === name && !w.some((c) => label(c) === name) ? null : 'name does not match the picture'
     }
     case 'sea-animals': {
       const a = animalByEmoji(emojiOf(r.visual))
@@ -86,26 +92,27 @@ function check(step: string, q: Question): string | null {
     }
     case 'animal-facts': {
       const a = animalByEmoji(emojiOf(r.visual))
-      if (!a || q.prompt !== a.fact) return 'fact does not match the animal'
-      const bad = w.map((c) => animalByEmoji(emojiOf(c.visual))!).find((x) => ALSO_FITS[a.id]?.includes(x.id) || x.fact === a.fact)
-      return bad ? `"${a.fact}" is also true of the ${bad.name}` : null
+      if (!a || q.prompt !== T.animals[a.id].fact) return 'fact does not match the animal'
+      const bad = w.map((c) => animalByEmoji(emojiOf(c.visual))!).find((x) => ALSO_FITS[a.id]?.includes(x.id) || T.animals[x.id].fact === T.animals[a.id].fact)
+      return bad ? `"${q.prompt}" is also true of the ${T.animals[bad.id].name}` : null
     }
     case 'easy-flags':
     case 'flags': {
       if (q.visual?.kind === 'flag') {
         const c = COUNTRIES.find((x) => x.id === (q.visual as { id: string }).id)
-        return c && label(r) === c.name ? null : 'flag and country do not match'
+        return c && label(r) === T.countries[c.id].name ? null : 'flag and country do not match'
       }
-      const c = COUNTRIES.find((x) => q.prompt === `Which flag belongs to ${x.name}?`)
+      const c = COUNTRIES.find((x) => q.prompt === T.whichFlag(T.countries[x.id].name))
       return c && r.visual?.kind === 'flag' && r.visual.id === c.id ? null : 'flag and country do not match'
     }
     case 'continents': {
-      const c = COUNTRIES.find((x) => q.prompt === `Which continent is ${x.name} in?`)
-      return c && label(r) === c.continent && !w.some((x) => label(x) === c.continent) ? null : 'wrong continent'
+      const c = COUNTRIES.find((x) => q.prompt === T.whichContinent(T.countries[x.id].name))
+      const name = c && T.continents[c.continent]
+      return name && label(r) === name && !w.some((x) => label(x) === name) ? null : 'wrong continent'
     }
     case 'capitals': {
-      const c = COUNTRIES.find((x) => q.prompt === `What is the capital city of ${x.name}?`)
-      return c && label(r) === c.capital ? null : 'wrong capital'
+      const c = COUNTRIES.find((x) => q.prompt === T.capitalOf(T.countries[x.id].name))
+      return c && label(r) === T.countries[c.id].capital ? null : 'wrong capital'
     }
     case 'first-letter': {
       const word = q.prompt.match(/"(\w+)"/)![1]
@@ -164,19 +171,22 @@ function check(step: string, q: Question): string | null {
   }
 }
 
+const LANGS: Lang[] = ['en', 'de', 'fr']
+
 describe('lesson content is right', () => {
+  for (const lang of LANGS)
   for (const subject of SUBJECTS) {
     for (const [level, step] of LADDERS[subject].entries()) {
-      it(`${subject} / ${step.id}: exactly one right answer, and it is true`, () => {
+      it(`${lang} · ${subject} / ${step.id}: exactly one right answer, and it is true`, () => {
         const r = seeded(1000 + level)
         const problems = new Set<string>()
         for (let i = 0; i < ROUNDS; i++) {
-          const q = step.make(r)
+          const q = step.make(r, lang)
           const keys = q.choices.map((c) => JSON.stringify(c))
           if (new Set(keys).size !== keys.length) problems.add(`same choice twice: ${keys.join(' | ')}`)
           if (q.answer < 0 || q.answer >= q.choices.length) problems.add('answer out of range')
           else {
-            const p = check(step.id, q)
+            const p = check(step.id, q, lang)
             if (p) problems.add(`${p} — ${q.prompt} [${keys.join(' | ')}]`)
           }
         }
@@ -191,7 +201,7 @@ describe('lesson content is right', () => {
       for (const step of LADDERS[subject]) {
         const r = seeded(5)
         for (let i = 0; i < 300; i++) {
-          const q = step.make(r)
+          const q = step.make(r, 'en')
           for (const v of [q.visual, ...q.choices.map((c) => c.visual)]) {
             if (v?.kind === 'emoji') names.add(v.name)
             if (v?.kind === 'pattern') v.items.forEach((x) => names.add(x))
@@ -201,6 +211,35 @@ describe('lesson content is right', () => {
     const files = new Set(Object.keys(import.meta.glob('/public/emoji/*.png')).map((f) => f.replace('/public/emoji/', '').replace('.png', '')))
     const missing = [...names].filter((n) => !files.has(n))
     expect(missing).toEqual([])
+  })
+
+  it('every language has every animal, country, continent and skill, with no name twice', () => {
+    const stepIds = SUBJECTS.flatMap((s) => LADDERS[s].map((x) => x.id))
+    for (const lang of ['de', 'fr'] as const) {
+      const T = lessonText(lang)
+      expect(Object.keys(T.animals).sort(), lang).toEqual(Object.keys(LESSON_EN.animals).sort())
+      expect(Object.keys(T.countries).sort(), lang).toEqual(Object.keys(LESSON_EN.countries).sort())
+      expect(Object.keys(T.skills).sort(), lang).toEqual([...stepIds].sort())
+    }
+    for (const lang of LANGS) {
+      const T = lessonText(lang)
+      const names = Object.values(T.animals).map((a) => a.name.toLowerCase())
+      expect(new Set(names).size, lang).toBe(names.length)
+      const countries = Object.values(T.countries).map((c) => c.name)
+      expect(new Set(countries).size, lang).toBe(countries.length)
+    }
+  })
+
+  it('every "Did you know?" fact is translated (not left in English)', () => {
+    for (const f of FACTS) for (const lang of ['de', 'fr'] as const) expect(f[lang].length > 10 && f[lang] !== f.text, f.text).toBe(true)
+  })
+
+  it('no animal fact gives the answer away by naming the animal', () => {
+    for (const lang of LANGS) {
+      const T = lessonText(lang)
+      const giveaways = Object.values(T.animals).filter((a) => a.fact.toLowerCase().includes(a.name.toLowerCase()))
+      expect(giveaways.map((a) => `${lang}: ${a.fact}`)).toEqual([])
+    }
   })
 
   it('every animal in a "never together" list exists', () => {

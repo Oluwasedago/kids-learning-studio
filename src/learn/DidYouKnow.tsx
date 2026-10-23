@@ -2,8 +2,8 @@ import { ArrowRight, Volume2 } from 'lucide-react'
 import { useState } from 'react'
 import { useStudio } from '@/app/studio'
 import { sayText, useCanSpeak } from '@/audio/say'
-import { useT } from '@/i18n'
-import { factOrder } from '@/lessons/facts'
+import { useLang, useT } from '@/i18n'
+import { factOrder, factText } from '@/lessons/facts'
 import { Emoji } from '@/shared/Emoji'
 import './DidYouKnow.css'
 
@@ -14,7 +14,8 @@ import './DidYouKnow.css'
 export function DidYouKnow() {
   const t = useT()
   const { accessOf } = useStudio()
-  const speaks = useCanSpeak()
+  const lang = useLang()
+  const speaks = useCanSpeak(lang)
   const [order, setOrder] = useState(() => factOrder())
   const [i, setI] = useState(0)
   if (accessOf('facts') === 'hidden') return null
@@ -33,10 +34,10 @@ export function DidYouKnow() {
         <small>
           {t.items.facts} · {t.facts.topics[fact.topic]}
         </small>
-        <p>{fact.text}</p>
+        <p>{factText(fact, lang)}</p>
       </div>
       {speaks && (
-        <button className="secondary" onClick={() => sayText(fact.text)} aria-label={t.mission.hear}>
+        <button className="secondary" onClick={() => sayText(factText(fact, lang), lang)} aria-label={t.mission.hear}>
           <Volume2 />
         </button>
       )}

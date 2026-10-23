@@ -5,9 +5,10 @@ import { StatusBar } from '@/app/Shell'
 import { useStudio } from '@/app/studio'
 import { sayText, useCanSpeak } from '@/audio/say'
 import type { Score } from '@/data/types'
-import { useT } from '@/i18n'
+import { type Lang, useLang, useT } from '@/i18n'
 import { COUNTRIES, WORDS } from '@/lessons/data'
 import { LADDERS, makeRound, passMark, starsFor } from '@/lessons/ladder'
+import { animalName, skillName } from '@/lessons/text'
 import type { Choice, Visual } from '@/lessons/question'
 import { type Answer, completeMission, levelOf, missionsFor } from '@/progress/progress'
 import { computeStreak, milestoneAt } from '@/progress/streak'
@@ -27,6 +28,7 @@ import './Missions.css'
  */
 export function MissionScreen({ subject, onClose }: { subject: Subject; onClose: () => void }) {
   const t = useT()
+  const lang = useLang()
   const { now, today, stage, progress, settings, updateProgress } = useStudio()
   const isTodays = () => missionsFor(now, settings.access, settings.rewards.missionsPerDay).includes(subject) && !(progress.missions[today] ?? []).includes(subject)
   const [counts, setCounts] = useState(isTodays)
@@ -82,8 +84,8 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
             </p>
           )}
           <p>{passed ? (counts ? t.mission.doneText(starsFor(result.score.total)) : t.mission.practiceText) : t.mission.notYetText(passMark(result.score.total))}</p>
-          {result.levelAfter > level && <p className="pill">{t.mission.levelUp(LADDERS[subject][result.levelAfter].skill)}</p>}
-          {result.levelAfter < level && <p className="pill">{t.mission.levelDown(LADDERS[subject][result.levelAfter].skill)}</p>}
+          {result.levelAfter > level && <p className="pill">{t.mission.levelUp(skillName(LADDERS[subject][result.levelAfter], lang))}</p>}
+          {result.levelAfter < level && <p className="pill">{t.mission.levelDown(skillName(LADDERS[subject][result.levelAfter], lang))}</p>}
           <div className="settings-buttons">
             {!passed && <button onClick={again}>{t.mission.tryAgain}</button>}
             <button className={passed ? '' : 'secondary'} onClick={onClose}>
@@ -99,24 +101,27 @@ export function MissionScreen({ subject, onClose }: { subject: Subject; onClose:
 }
 
 /** A choice as words, for the parents' report ("fox", "France", "12"). */
-function describe(c: Choice): string {
+function describe(c: Choice, lang: Lang): string {
   if (c.label !== undefined) return c.label
   const v = c.visual
   if (!v) return '?'
   if (v.kind === 'text') return v.text
   if (v.kind === 'flag') return `flag of ${COUNTRIES.find((x) => x.id === v.id)?.name ?? v.id}`
-  if (v.kind === 'emoji') return `picture: ${WORDS.find((w) => w.emoji === v.name)?.word ?? v.name.replace(/^(animal|fruit)-/, '').replace(/-/g, ' ')}`
+  if (v.kind === 'emoji') return `🖼 ${v.name.startsWith('animal-') ? animalName(v.name.slice(7), lang) : (WORDS.find((w) => w.emoji === v.name)?.word ?? v.name.replace(/^fruit-/, '').replace(/-/g, ' '))}`
   return '?'
 }
 
 function Quiz({ subject, level, count, onDone }: { subject: Subject; level: number; count: number; onDone: (answers: Answer[]) => void }) {
   const t = useT()
-  const [round] = useState(() => makeRound(subject, level, Math.random, count))
+  const lang = useLang()
+  // Questions in the app language; the English subject is always in English (it teaches English).
+  const speech = subject === 'english' ? 'en' : lang
+  const [round] = useState(() => makeRound(subject, level, Math.random, count, lang))
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Answer[]>([])
   const q = round[index]
-  const speaks = useCanSpeak()
+  const speaks = useCanSpeak(speech)
 
   const advance = (all: Answer[]) => {
     if (index + 1 >= round.length) return onDone(all)
@@ -127,7 +132,7 @@ function Quiz({ subject, level, count, onDone }: { subject: Subject; level: numb
     if (picked !== null) return
     setPicked(i)
     const right = i === q.answer
-    const all = [...answers, { step: q.step ?? '', prompt: q.prompt, given: describe(q.choices[i]), answer: describe(q.choices[q.answer]), right }]
+    const all = [...answers, { step: q.step ?? '', prompt: q.prompt, given: describe(q.choices[i], lang), answer: describe(q.choices[q.answer], lang), right }]
     setAnswers(all)
     // The chosen answer turns green (right) or red (wrong) for a moment, then the next question.
     // The right answer is not revealed.
@@ -151,7 +156,7 @@ function Quiz({ subject, level, count, onDone }: { subject: Subject; level: numb
       <div className="quiz-ask">
         <p>{q.prompt}</p>
         {speaks && (
-          <button className="secondary quiz-hear" onClick={() => sayText(q.spoken ?? q.prompt)} aria-label={t.mission.hear}>
+          <button className="secondary quiz-hear" onClick={() => sayText(q.spoken ?? q.prompt, speech)} aria-label={t.mission.hear}>
             <Volume2 />
           </button>
         )}

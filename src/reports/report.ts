@@ -1,7 +1,9 @@
 import { SUBJECTS, type Subject } from '@/access/catalogue'
 import type { Mistake, Progress, Score, Settings, Usage } from '@/data/types'
 import type { Strings } from '@/i18n'
+import type { Lang } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
+import { skillName } from '@/lessons/text'
 import { levelOf } from '@/progress/progress'
 import { computeStreak } from '@/progress/streak'
 import { areaKind } from '@/progress/usage'
@@ -74,7 +76,7 @@ export function periodRange(period: Period, now: Date): { from: Date; to: Date }
   return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: new Date(now.getFullYear(), now.getMonth() + 1, 0) }
 }
 
-export function buildReport(progress: Progress, usage: Usage, period: Period, now: Date, stage: number): Report {
+export function buildReport(progress: Progress, usage: Usage, period: Period, now: Date, stage: number, lang: Lang = 'en'): Report {
   const { from, to } = periodRange(period, now)
   const first = isoDate(from)
   const last = isoDate(to)
@@ -108,7 +110,7 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
       }
     }
     const step = LADDERS[subject][Math.min(levelOf(progress, subject, stage), LADDERS[subject].length - 1)]
-    return { subject, missions, accuracy: total > 0 ? right / total : null, skill: step.skill, stage: stageTags(step.stage).cambridge }
+    return { subject, missions, accuracy: total > 0 ? right / total : null, skill: skillName(step, lang), stage: stageTags(step.stage).cambridge }
   })
 
   // Skills that need help: answers per step over the period.
@@ -125,7 +127,7 @@ export function buildReport(progress: Progress, usage: Usage, period: Period, no
   for (const [step, s] of perStep) {
     const info = findStep(step)
     if (!info || s.total < HELP_MIN_TRIES || s.right / s.total >= HELP_BELOW) continue
-    needsHelp.push({ subject: info.subject, step, skill: info.skill, stage: stageTags(info.stage).cambridge, ...s, examples: mistakes.filter((m) => m.step === step).slice(0, 3) })
+    needsHelp.push({ subject: info.subject, step, skill: skillName({ id: step, skill: info.skill }, lang), stage: stageTags(info.stage).cambridge, ...s, examples: mistakes.filter((m) => m.step === step).slice(0, 3) })
   }
   needsHelp.sort((a, b) => a.right / a.total - b.right / b.total)
 

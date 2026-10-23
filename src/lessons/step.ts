@@ -1,3 +1,4 @@
+import type { Lang } from '@/i18n'
 import type { Question, Random } from './question'
 
 /**
@@ -9,5 +10,6 @@ export interface Step {
   stage: number
   /** What the child practises, for parents ("Adding within 20"). */
   skill: string
-  make: (r: Random) => Question
+  /** Makes a question in a language (the English subject ignores it: it teaches English). */
+  make: (r: Random, lang: Lang) => Question
 }

@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { earnedMinutes } from '@/access/access'
 import { ITEMS, itemsIn, type ItemId, type Subject } from '@/access/catalogue'
 import type { Score } from '@/data/types'
-import { useT } from '@/i18n'
+import { useLang, useT } from '@/i18n'
 import { DidYouKnow } from '@/learn/DidYouKnow'
 import { CallsCard } from '@/media/CallsCard'
 import { animalOfTheDay } from '@/lessons/data'
+import { animalName } from '@/lessons/text'
 import { starsFor } from '@/lessons/ladder'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, weekStars } from '@/progress/progress'
@@ -56,6 +57,7 @@ function Hero({ left, total }: { left: number; total: number }) {
   const t = useT()
   const { now, settings, progress } = useStudio()
   const animal = animalOfTheDay(now)
+  const lang = useLang()
   return (
     <section className="hero card">
       <div className="hero-text">
@@ -71,7 +73,7 @@ function Hero({ left, total }: { left: number; total: number }) {
       <div className="hero-animal" title={animal.fact}>
         <Emoji name={`animal-${animal.id}`} size={92} />
         <small>{t.home.animalOfDay}</small>
-        <b>{animal.name}</b>
+        <b>{animalName(animal.id, lang)}</b>
       </div>
       <div className="hero-track">
         <StarTrack have={weekStars(progress, now)} goal={settings.rewards.weeklyGoal} reward={settings.rewards.weeklyReward} />
