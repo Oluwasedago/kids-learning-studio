@@ -6,6 +6,9 @@ import type { Lang } from '@/i18n'
 import { LADDERS } from './ladder'
 import { type Choice, type Question, seeded, type Visual } from './question'
 import { LESSON_EN, lessonText } from './text'
+import { ANIMAL_HOMES } from '@/library/animals'
+import CREDITS from '@/library/photo-credits.json'
+import { PLACE_COUNTRIES, PLACES } from '@/library/places'
 
 // The content check: every lesson question must have exactly one right answer, and that answer must be true.
 // Each step's questions are made thousands of times and checked against an answer key written here, apart
@@ -17,6 +20,8 @@ const right = (q: Question) => q.choices[q.answer]
 const wrongs = (q: Question) => q.choices.filter((_, i) => i !== q.answer)
 const emojiOf = (v: Visual | undefined) => (v?.kind === 'emoji' ? v.name : '')
 const animalByEmoji = (name: string) => ANIMALS.find((a) => `animal-${a.id}` === name)
+/** The id in a photo address ("photos/places/taj-mahal.jpg" → "taj-mahal"). */
+const photoId = (v: Visual | undefined) => (v?.kind === 'photo' ? (v.src.match(/([\w-]+)\.jpg$/)?.[1] ?? '') : '')
 const textOf = (q: Question) => (q.visual?.kind === 'text' ? q.visual.text : '')
 
 /**
@@ -82,7 +87,7 @@ function check(step: string, q: Question, lang: Lang): string | null {
     case 'count-10':
       return q.visual?.kind === 'emoji' && Number(label(r)) === q.visual.count ? null : 'wrong count'
     case 'which-animal': {
-      const a = animalByEmoji(emojiOf(q.visual))
+      const a = ANIMALS.find((x) => x.id === photoId(q.visual))
       const name = a && T.animals[a.id].name
       return name && label(r) === name && !w.some((c) => label(c) === name) ? null : 'name does not match the picture'
     }
@@ -113,6 +118,17 @@ function check(step: string, q: Question, lang: Lang): string | null {
     case 'capitals': {
       const c = COUNTRIES.find((x) => q.prompt === T.capitalOf(T.countries[x.id].name))
       return c && label(r) === T.countries[c.id].capital ? null : 'wrong capital'
+    }
+    case 'places-where': {
+      const place = PLACES.find((x) => x.id === photoId(q.visual))
+      if (!place || place.countries.length !== 1) return 'a place in one country only'
+      const name = PLACE_COUNTRIES[place.countries[0]][lang]
+      return label(r) === name && !w.some((c) => label(c) === name) ? null : 'wrong country for the place'
+    }
+    case 'places-name': {
+      const place = PLACES.find((x) => x.id === photoId(q.visual))
+      const name = place?.text[lang].name
+      return name && label(r) === name && !w.some((c) => label(c) === name) ? null : 'name does not match the photo'
     }
     case 'first-letter': {
       const word = q.prompt.match(/"(\w+)"/)![1]
@@ -239,6 +255,26 @@ describe('lesson content is right', () => {
       const T = lessonText(lang)
       const giveaways = Object.values(T.animals).filter((a) => a.fact.toLowerCase().includes(a.name.toLowerCase()))
       expect(giveaways.map((a) => `${lang}: ${a.fact}`)).toEqual([])
+    }
+  })
+
+  it('every photo exists, has a free licence and a credit; every place and animal has its texts', () => {
+    const files = new Set(Object.keys(import.meta.glob('/public/photos/**/*.jpg')).map((f) => f.replace('/public/', '')))
+    const credits = CREDITS as Record<string, { author: string; licence: string; source: string }>
+    for (const id of [...PLACES.map((x) => x.id), ...ANIMALS.map((a) => a.id)]) {
+      expect(credits[id]?.source, id).toMatch(/^https:\/\/commons\.wikimedia\.org\//)
+      expect(credits[id].licence, id).toMatch(/^(public domain|cc0|cc by(-sa)? \d)/i)
+    }
+    for (const x of PLACES) expect(files.has(`photos/places/${x.id}.jpg`), x.id).toBe(true)
+    for (const a of ANIMALS) expect(files.has(`photos/animals/${a.id}.jpg`), a.id).toBe(true)
+    for (const lang of LANGS) {
+      for (const x of PLACES) {
+        expect(x.text[lang].name.length > 1 && x.text[lang].about.length > 20, `${lang} ${x.id}`).toBe(true)
+        for (const c of x.countries) expect(PLACE_COUNTRIES[c][lang], c).toBeTruthy()
+      }
+      for (const a of ANIMALS) expect(ANIMAL_HOMES[a.id][lang].length > 3, `${lang} ${a.id}`).toBe(true)
+      const names = PLACES.map((x) => x.text[lang].name)
+      expect(new Set(names).size, lang).toBe(names.length)
     }
   })
 

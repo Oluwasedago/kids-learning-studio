@@ -106,6 +106,7 @@ function describe(c: Choice, lang: Lang): string {
   const v = c.visual
   if (!v) return '?'
   if (v.kind === 'text') return v.text
+  if (v.kind === 'photo') return `📷 ${v.alt}`
   if (v.kind === 'flag') return `flag of ${COUNTRIES.find((x) => x.id === v.id)?.name ?? v.id}`
   if (v.kind === 'emoji') return `🖼 ${v.name.startsWith('animal-') ? animalName(v.name.slice(7), lang) : (WORDS.find((w) => w.emoji === v.name)?.word ?? v.name.replace(/^fruit-/, '').replace(/-/g, ' '))}`
   return '?'
@@ -189,6 +190,7 @@ function ChoiceView({ choice }: { choice: Choice }) {
 function VisualView({ visual, big = false }: { visual: Visual; big?: boolean }) {
   if (visual.kind === 'text') return <span className={big ? 'quiz-sum' : 'quiz-label'}>{visual.text}</span>
   if (visual.kind === 'flag') return <CountryFlag id={visual.id} width={big ? 220 : 140} />
+  if (visual.kind === 'photo') return <img className={big ? 'quiz-photo big' : 'quiz-photo'} src={`${import.meta.env.BASE_URL}${visual.src}`} alt={visual.alt} />
   if (visual.kind === 'pattern') {
     return (
       <span className="quiz-pattern">

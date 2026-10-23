@@ -4,7 +4,9 @@ import { useStudio } from '@/app/studio'
 import { useLang, useT } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
 import { skillName } from '@/lessons/text'
+import { LibraryScreen, type Shelf } from '@/library/LibraryScreen'
 import { MissionScreen } from '@/missions/MissionScreen'
+import { ItemTile } from '@/rewards/ItemTile'
 import { levelOf } from '@/progress/progress'
 import { Emoji } from '@/shared/Emoji'
 import './Games.css'
@@ -18,6 +20,7 @@ export function LearnScreen() {
   const { accessOf, progress, stage } = useStudio()
   const lang = useLang()
   const [subject, setSubject] = useState<Subject | null>(null)
+  const [shelf, setShelf] = useState<Shelf | null>(null)
   const subjects = SUBJECTS.filter((s) => accessOf(s) !== 'hidden')
 
   return (
@@ -39,7 +42,13 @@ export function LearnScreen() {
           </button>
         )
       })}
+      {(['animals', 'places'] as const).map((id) => (
+        <ItemTile key={id} id={id} className="game-card library-tile" onOpen={() => setShelf(id)}>
+          <span className="game-learn">{t.itemLearn[id]}</span>
+        </ItemTile>
+      ))}
       {subject && <MissionScreen subject={subject} onClose={() => setSubject(null)} />}
+      {shelf && <LibraryScreen shelf={shelf} onClose={() => setShelf(null)} />}
     </div>
   )
 }

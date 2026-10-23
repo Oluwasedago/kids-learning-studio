@@ -36,6 +36,9 @@ Developed by Oluwasedago.
 - **Games:** memory, word builder, picture puzzle, snake.
 - **Media:** children's radio, classic stories read aloud (public domain), and only the YouTube videos a parent
   adds. **Family calls:** one tap to call someone the parent added.
+- **Library: animals and places of the world.** Real photos of 40 animals (where they live, a true fact) and 40
+  famous places by country (from the Eiffel Tower to the National Theatre in Lagos), read aloud; World missions ask
+  about them with photos.
 - **Did you know?** A random fact about space, science, nature, the world or history.
 - **Reports for parents:** day, week or month; skills that need help and recent wrong answers; sent by email from
   the parent's own mail app.
@@ -53,7 +56,7 @@ Reports leave the device only when a parent sends them from their own mail app.
 ## Credits and licences
 
 - Code: [MIT](LICENSE).
-- Pictures: [Microsoft Fluent Emoji](public/emoji/CREDITS.md) (MIT). Fonts: Andika and Fredoka (SIL Open Font
+- Pictures: [Microsoft Fluent Emoji](public/emoji/CREDITS.md) (MIT). Photos: [Wikimedia Commons](public/photos/CREDITS.md), free licences, credited in the app. Fonts: Andika and Fredoka (SIL Open Font
   License). Logo: [brand/](brand/README.md) (MIT, with the code).
 - Stories: LibriVox recordings (public domain), hosted by the Internet Archive. Radio: Die Maus (WDR), Fun Kids, Mon Petit France Inter (Radio France).
   Details and the status of each source: [docs/CONTENT.md](docs/CONTENT.md).

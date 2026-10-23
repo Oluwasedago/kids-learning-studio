@@ -6,6 +6,8 @@ export type Visual =
   | { kind: 'flag'; id: string }
   | { kind: 'pattern'; items: string[] }
   | { kind: 'text'; text: string }
+  /** A real photo (public/photos/…), with its subject for reports and screen readers. */
+  | { kind: 'photo'; src: string; alt: string }
 
 export interface Choice {
   label?: string

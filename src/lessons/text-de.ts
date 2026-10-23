@@ -27,6 +27,8 @@ export const LESSON_DE: LessonText = {
   whichFlag: (c) => `Welche Flagge gehört zu diesem Land: ${c}?`,
   whichContinent: (c) => `${c}: Auf welchem Kontinent liegt dieses Land?`,
   capitalOf: (c) => `${c}: Wie heißt die Hauptstadt?`,
+  whereIsPlace: 'In welchem Land ist dieser Ort?',
+  whatIsPlace: 'Wie heißt dieser Ort?',
   animals: {
     fox: { name: 'Fuchs', fact: 'Dieses Tier hört so gut, dass es eine Maus unter dem Schnee hören kann.' },
     owl: { name: 'Eule', fact: 'Dieses Tier kann seinen Kopf sehr weit herumdrehen.' },
@@ -136,6 +138,8 @@ export const LESSON_DE: LessonText = {
     'animal-facts': 'Wissen über Tiere',
     continents: 'Länder und Kontinente',
     capitals: 'Hauptstädte',
+    'places-where': 'Berühmte Orte: in welchem Land?',
+    'places-name': 'Berühmte Orte erkennen',
     ab: 'Bildermuster: AB',
     'aab-abb': 'Bildermuster: AAB und ABB',
     'abc-aabb': 'Bildermuster: ABC und AABB',

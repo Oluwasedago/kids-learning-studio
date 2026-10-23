@@ -1,0 +1,107 @@
+/* The library: a grid of photo cards; a detail view with a big photo, the text and the photo credit. */
+.library-body {
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  padding-bottom: 0.6rem;
+}
+.library-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.library-filter button {
+  min-height: 2.6rem;
+  padding: 0 0.9rem;
+  font-size: 0.95rem;
+}
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+  gap: 0.8rem;
+}
+.library-card {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.5rem 0.5rem 0.7rem;
+  text-align: center;
+  color: var(--ink);
+}
+.library-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-s);
+  background: var(--sunken);
+}
+.library-card b {
+  font-family: var(--display);
+  font-size: 1.1rem;
+}
+.library-card small {
+  color: var(--muted);
+}
+.library-detail {
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: start;
+  align-content: start;
+}
+.library-detail figure {
+  margin: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+.library-detail img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+.library-detail figcaption {
+  font-size: 0.75rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.library-text {
+  display: grid;
+  gap: 0.8rem;
+}
+.library-text h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+}
+.library-text h2 button {
+  width: var(--tap);
+  padding: 0;
+  border-radius: 50%;
+  flex: none;
+}
+.library-text p {
+  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.library-nav {
+  display: flex;
+  gap: 0.6rem;
+}
+.library-nav button {
+  flex: 1;
+}
+@media (max-width: 760px) {
+  .library-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .library-detail img {
+    max-height: 40vh;
+  }
+}

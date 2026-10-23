@@ -77,6 +77,19 @@
   place-items: center;
   min-height: 0;
 }
+/* Real photos (animals, places): big, rounded, never wider than the screen. */
+.quiz-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius);
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+.quiz-photo.big {
+  width: min(32rem, 100%);
+  height: min(22rem, 38vh);
+}
 .quiz-sum {
   font-family: var(--display);
   font-size: 5rem;

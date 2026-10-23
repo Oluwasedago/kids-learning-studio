@@ -33,6 +33,8 @@ export interface LessonText {
   whichFlag: (country: string) => string
   whichContinent: (country: string) => string
   capitalOf: (country: string) => string
+  whereIsPlace: string
+  whatIsPlace: string
   /** Animal names and facts by animal id. A fact never names the animal. */
   animals: Record<string, { name: string; fact: string }>
   countries: Record<string, { name: string; capital: string }>
@@ -65,6 +67,8 @@ export const LESSON_EN: LessonText = {
   whichFlag: (c) => `Which flag belongs to ${c}?`,
   whichContinent: (c) => `Which continent is ${c} in?`,
   capitalOf: (c) => `What is the capital city of ${c}?`,
+  whereIsPlace: 'Which country is this place in?',
+  whatIsPlace: 'What is this place called?',
   animals: Object.fromEntries(ANIMALS.map((a) => [a.id, { name: a.name, fact: a.fact }])),
   countries: Object.fromEntries(COUNTRIES.map((c) => [c.id, { name: c.name, capital: c.capital }])),
   continents: { Europe: 'Europe', Africa: 'Africa', Asia: 'Asia', 'South America': 'South America' },
