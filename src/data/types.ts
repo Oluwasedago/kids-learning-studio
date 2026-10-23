@@ -75,6 +75,8 @@ export interface Settings {
     period: 'day' | 'week' | 'month'
   }
   birthdays: FamilyBirthday[]
+  /** Reading speed of the stories (1 = as recorded; 0.75 and 0.9 slower). Live radio always plays at 1. */
+  storyRate: number
   /** Extra radio stations a parent added (any HTTPS audio stream). */
   stations: { id: string; name: string; url: string }[]
   /** YouTube videos or playlists a parent picked (the only videos the child can play). */
@@ -151,6 +153,7 @@ export const DEFAULT_SETTINGS: Settings = {
   rewards: { missionsPerDay: 3, questionsPerMission: 10, minutesPerStar: 10, maxMinutesPerDay: 45, weeklyGoal: 12, weeklyReward: '' },
   report: { email: '', period: 'week' },
   birthdays: [],
+  storyRate: 1,
   stations: [],
   videos: [],
   contacts: [],

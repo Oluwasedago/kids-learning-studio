@@ -132,3 +132,21 @@
   flex-wrap: wrap;
   gap: 0.6rem;
 }
+
+/* Story speed: slow (snail), a bit slower (turtle), as recorded (rabbit). */
+.story-speed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.story-speed span {
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--muted);
+}
+.story-speed button {
+  min-height: 2.8rem;
+  gap: 0.35rem;
+  padding: 0 0.9rem;
+}

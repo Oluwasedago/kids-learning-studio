@@ -307,6 +307,8 @@ export const en = {
     },
   },
   listen: {
+    speed: 'Speed',
+    speeds: { slow: 'Slow', slower: 'A bit slower', normal: 'Normal' },
     play: 'Play',
     pause: 'Pause',
     stop: 'Stop',

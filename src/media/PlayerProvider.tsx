@@ -6,7 +6,8 @@ import { type Player, PlayerContext, type Playing } from './player'
 
 /** Keeps the one <audio> element; see player.ts. */
 export function PlayerProvider({ children }: { children: ReactNode }) {
-  const { accessOf } = useStudio()
+  const { accessOf, settings, updateSettings } = useStudio()
+  const rate = settings.storyRate
   const audio = useRef<HTMLAudioElement | null>(null)
   const [playing, setPlaying] = useState<Playing | null>(null)
   const [state, setState] = useState<Player['state']>('stopped')
@@ -61,6 +62,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setDuration(0)
       setState('loading')
       a.src = p.url
+      // Slower stories keep their natural pitch (browsers keep the pitch by default when the speed changes).
+      a.defaultPlaybackRate = p.live ? 1 : rate
+      a.playbackRate = p.live ? 1 : rate
       a.play().catch(() => setState('error'))
     },
     toggle: () => {
@@ -74,6 +78,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       } else a.pause()
     },
     stop,
+    rate,
+    setRate: (r) => {
+      updateSettings((s) => ({ ...s, storyRate: r }))
+      const a = audio.current
+      if (a && playing && !playing.live) a.playbackRate = r
+    },
   }
   return <PlayerContext.Provider value={player}>{children}</PlayerContext.Provider>
 }

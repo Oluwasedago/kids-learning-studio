@@ -23,7 +23,13 @@ export interface Player {
   play: (p: Playing) => void
   toggle: () => void
   stop: () => void
+  /** Reading speed of stories (never of live radio). */
+  rate: number
+  setRate: (rate: number) => void
 }
+
+/** The story speeds a child can choose: slow, a bit slower, as recorded. */
+export const STORY_RATES = [0.75, 0.9, 1] as const
 
 export const PlayerContext = createContext<Player>({
   playing: null,
@@ -33,6 +39,8 @@ export const PlayerContext = createContext<Player>({
   play: () => {},
   toggle: () => {},
   stop: () => {},
+  rate: 1,
+  setRate: () => {},
 })
 
 export const usePlayer = () => useContext(PlayerContext)

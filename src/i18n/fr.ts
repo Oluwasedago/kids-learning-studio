@@ -306,6 +306,8 @@ export const fr: Strings = {
     },
   },
   listen: {
+    speed: 'Vitesse',
+    speeds: { slow: 'Lent', slower: 'Un peu plus lent', normal: 'Normal' },
     play: 'Écouter',
     pause: 'Pause',
     stop: 'Arrêter',

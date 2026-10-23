@@ -9,7 +9,7 @@ import { useArea } from '@/progress/usage'
 import { ItemTile } from '@/rewards/ItemTile'
 import { clock } from '@/shared/clock'
 import { Emoji } from '@/shared/Emoji'
-import { usePlayer } from './player'
+import { STORY_RATES, usePlayer } from './player'
 import { COLLECTIONS, type Collection, embedUrl, stationsFor, thumbnail } from './sources'
 import '@/games/Games.css'
 import './Media.css'
@@ -127,6 +127,14 @@ function CollectionView({ collection, onBack }: { collection: Collection; onBack
         </button>
         <Emoji name={collection.emoji} size={40} /> {collection.title}
       </h3>
+      <div className="story-speed" role="radiogroup" aria-label={t.listen.speed}>
+        <span>{t.listen.speed}</span>
+        {STORY_RATES.map((r) => (
+          <button key={r} role="radio" aria-checked={p.rate === r} className={p.rate === r ? '' : 'secondary'} onClick={() => p.setRate(r)}>
+            <Emoji name={r === 0.75 ? 'animal-snail' : r === 0.9 ? 'animal-turtle' : 'animal-rabbit'} size={28} /> {t.listen.speeds[r === 0.75 ? 'slow' : r === 0.9 ? 'slower' : 'normal']}
+          </button>
+        ))}
+      </div>
       <ol>
         {collection.tracks.map((tr) => {
           const on = p.playing?.id === tr.id
