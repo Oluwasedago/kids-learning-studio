@@ -349,6 +349,13 @@ export const de: Strings = {
     'funkids-junior': 'Lieder und Geschichten für Jüngere (auf Englisch, mit kurzer Werbung)',
     monpetitfranceinter: 'Kinderradio von Radio France, 6–12 Jahre (auf Französisch, ohne Werbung)',
   },
+  videos: {
+    fromParents: 'Von deinen Eltern',
+    shelves: { made: 'Wie Dinge gemacht werden', works: 'Wie Dinge funktionieren', cams: 'Live-Tierkameras' },
+    camsNote: 'Live aus Zoos, Aquarien und Naturparks: Wenn dort, wo die Tiere leben, Nacht ist, kann das Bild dunkel sein.',
+    library: 'Video-Bibliothek',
+    libraryNote: 'Etwa 40 Videos von offiziellen Kanälen (Die Maus, Sesamstraße, SciShow Kids, C’est pas sorcier …) und Live-Tierkameras. Sie laufen in der App ohne YouTube-Suche und nur, wenn Videos offen sind.',
+  },
   media: {
     title: 'Videos, Radio und Anrufe',
     video: 'Video',

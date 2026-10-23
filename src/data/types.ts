@@ -79,7 +79,9 @@ export interface Settings {
   storyRate: number
   /** Extra radio stations a parent added (any HTTPS audio stream). */
   stations: { id: string; name: string; url: string }[]
-  /** YouTube videos or playlists a parent picked (the only videos the child can play). */
+  /** Show the built-in video library (how things are made and work, live animal cams: media/library.ts). */
+  videoLibrary: boolean
+  /** YouTube videos or playlists a parent picked. */
   videos: { id: string; kind: 'video' | 'playlist'; title: string }[]
   /** One-tap calls: a name and a link (tel:, a WhatsApp or FaceTime link). */
   contacts: { id: string; name: string; link: string }[]
@@ -154,6 +156,7 @@ export const DEFAULT_SETTINGS: Settings = {
   report: { email: '', period: 'week' },
   birthdays: [],
   storyRate: 1,
+  videoLibrary: true,
   stations: [],
   videos: [],
   contacts: [],

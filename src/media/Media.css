@@ -150,3 +150,36 @@
   gap: 0.35rem;
   padding: 0 0.9rem;
 }
+
+/* Video shelves: the parents' videos, then the library (made, works, live cams). */
+.video-shelves {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  gap: 1.2rem;
+  align-content: start;
+  padding-bottom: 0.8rem;
+}
+.video-shelves section {
+  display: grid;
+  gap: 0.5rem;
+}
+.video-shelves .listen-grid {
+  overflow: visible;
+  padding-bottom: 0;
+}
+.shelf-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+}
+.video-card {
+  position: relative;
+}
+.video-live {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+}

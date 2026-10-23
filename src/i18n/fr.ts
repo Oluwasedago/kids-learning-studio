@@ -349,6 +349,13 @@ export const fr: Strings = {
     'funkids-junior': 'Chansons et histoires pour les plus petits (en anglais, avec de courtes publicités)',
     monpetitfranceinter: 'La radio des enfants de Radio France, pour les 6–12 ans (sans publicité)',
   },
+  videos: {
+    fromParents: 'De tes parents',
+    shelves: { made: 'Comment les choses sont fabriquées', works: 'Comment les choses fonctionnent', cams: 'Caméras d’animaux en direct' },
+    camsNote: 'En direct de zoos, d’aquariums et de parcs naturels : quand il fait nuit là où vivent les animaux, l’image peut être sombre.',
+    library: 'Vidéothèque',
+    libraryNote: 'Environ 40 vidéos de chaînes officielles (C’est pas sorcier, Sesame Street, SciShow Kids, Die Maus …) et des caméras d’animaux en direct. Elles se lisent dans l’application sans la recherche YouTube, et seulement quand les vidéos sont ouvertes.',
+  },
   media: {
     title: 'Vidéos, radio et appels',
     video: 'vidéo',

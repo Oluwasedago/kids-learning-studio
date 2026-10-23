@@ -350,6 +350,13 @@ export const en = {
     'funkids-junior': 'Songs and stories for younger children (in English, with short adverts)',
     monpetitfranceinter: 'French children’s radio from Radio France, ages 6–12 (in French, no adverts)',
   },
+  videos: {
+    fromParents: 'From your parents',
+    shelves: { made: 'How things are made', works: 'How things work', cams: 'Live animal cams' },
+    camsNote: 'Live from zoos, aquariums and nature parks: at night where the animals live, the picture can be dark.',
+    library: 'Video library',
+    libraryNote: 'About 40 videos from official channels (Sesame Street, SciShow Kids, Die Maus, C’est pas sorcier …) and live animal cams. They play inside the app without YouTube’s search, and only when Videos are open.',
+  },
   media: {
     title: 'Videos, radio and calls',
     video: 'video',

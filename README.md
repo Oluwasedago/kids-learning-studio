@@ -35,8 +35,9 @@ Developed by Oluwasedago.
   *open* or *earned* (locked until missions are done). A parent can also unlock an item for today with the PIN.
 - **Games:** memory, word builder, picture puzzle, snake, and code breaker (decode secret messages with a picture or
   number code, in the app language).
-- **Media:** children's radio, classic stories read aloud (public domain), and only the YouTube videos a parent
-  adds. **Family calls:** one tap to call someone the parent added.
+- **Media:** children's radio, classic stories read aloud (public domain), a video library (how things are made and how
+  things work, from official channels such as Sesame Street, SciShow Kids, Die Maus and C'est pas sorcier, plus live
+  animal cams from aquariums and nature parks) and YouTube videos a parent adds. **Family calls:** one tap to call someone the parent added.
 - **Library: animals and places of the world.** Real photos of 40 animals (where they live, a true fact) and 40
   famous places by country (from the Eiffel Tower to the National Theatre in Lagos), read aloud; World missions ask
   about them with photos.

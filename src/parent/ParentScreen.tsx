@@ -372,6 +372,19 @@ function MediaEditor() {
     <div className="media-editor">
       <div>
         <span className="field-label">
+          <Emoji name="factory" size={26} /> {t.videos.library}
+        </span>
+        <small className="muted">{t.videos.libraryNote}</small>
+        <div className="segmented">
+          {([true, false] as const).map((on) => (
+            <button key={String(on)} className={settings.videoLibrary === on ? '' : 'secondary'} onClick={() => updateSettings((s) => ({ ...s, videoLibrary: on }))}>
+              {on ? t.common.on : t.common.off}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <span className="field-label">
           <Emoji name="tv" size={26} /> {t.items.videos}
         </span>
         <small className="muted">{t.media.videosNote}</small>

@@ -10,6 +10,7 @@ import { ItemTile } from '@/rewards/ItemTile'
 import { clock } from '@/shared/clock'
 import { Emoji } from '@/shared/Emoji'
 import { STORY_RATES, usePlayer } from './player'
+import { shelfVideos, VIDEO_SHELVES } from './library'
 import { COLLECTIONS, type Collection, embedUrl, stationsFor, thumbnail } from './sources'
 import '@/games/Games.css'
 import './Media.css'
@@ -161,30 +162,49 @@ function CollectionView({ collection, onBack }: { collection: Collection; onBack
   )
 }
 
+/** Videos: the parents' own first, then the library shelves (how things are made and work, live animal cams). */
 function VideosTab() {
   const t = useT()
+  const lang = useLang()
   const { settings, accessOf } = useStudio()
   const p = usePlayer()
-  const [playing, setPlaying] = useState<(typeof settings.videos)[number] | null>(null)
-  if (settings.videos.length === 0) return <p className="card muted">{t.listen.noVideos}</p>
+  const [playing, setPlaying] = useState<{ kind: 'video' | 'playlist'; id: string; title: string } | null>(null)
+  const watch = (v: { kind: 'video' | 'playlist'; id: string; title: string }) => {
+    p.stop()
+    setPlaying(v)
+  }
+  const card = (v: { kind: 'video' | 'playlist'; id: string; title: string }, sub?: string, live?: boolean) => {
+    const thumb = thumbnail(v)
+    return (
+      <button key={v.id} className="card video-card" onClick={() => watch(v)}>
+        {thumb ? <img src={thumb} alt="" loading="lazy" /> : <Emoji name="tv" size={72} />}
+        {live && <span className="pill live video-live">{t.listen.live}</span>}
+        <b>{v.title}</b>
+        {sub && <small className="muted">{sub}</small>}
+      </button>
+    )
+  }
+  if (settings.videos.length === 0 && !settings.videoLibrary) return <p className="card muted">{t.listen.noVideos}</p>
   return (
-    <div className="listen-grid">
-      {settings.videos.map((v) => {
-        const thumb = thumbnail(v)
-        return (
-          <button
-            key={v.id}
-            className="card video-card"
-            onClick={() => {
-              p.stop()
-              setPlaying(v)
-            }}
-          >
-            {thumb ? <img src={thumb} alt="" loading="lazy" /> : <Emoji name="tv" size={72} />}
-            <b>{v.title}</b>
-          </button>
-        )
-      })}
+    <div className="video-shelves">
+      {settings.videos.length > 0 && (
+        <section>
+          <h3 className="shelf-title">
+            <Emoji name="heart" size={30} /> {t.videos.fromParents}
+          </h3>
+          <div className="listen-grid">{settings.videos.map((v) => card(v))}</div>
+        </section>
+      )}
+      {settings.videoLibrary &&
+        VIDEO_SHELVES.map((shelf) => (
+          <section key={shelf}>
+            <h3 className="shelf-title">
+              <Emoji name={shelf === 'made' ? 'factory' : shelf === 'works' ? 'gear' : 'paws'} size={30} /> {t.videos.shelves[shelf]}
+            </h3>
+            {shelf === 'cams' && <small className="muted">{t.videos.camsNote}</small>}
+            <div className="listen-grid">{shelfVideos(shelf, lang).map((v) => card({ kind: 'video', id: v.id, title: v.title }, v.channel, v.live))}</div>
+          </section>
+        ))}
       {playing && <VideoPlayer video={playing} earned={accessOf('videos') === 'earned'} onClose={() => setPlaying(null)} />}
     </div>
   )
