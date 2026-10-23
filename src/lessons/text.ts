@@ -35,6 +35,11 @@ export interface LessonText {
   capitalOf: (country: string) => string
   whereIsPlace: string
   whatIsPlace: string
+  minutesIn: (hours: number) => string
+  secondsIn: (minutes: number) => string
+  digitWorth: (digit: number, n: number) => string
+  roundTo: (n: number, to: 10 | 100) => string
+  percentOf: (percent: number, n: number) => string
   /** Animal names and facts by animal id. A fact never names the animal. */
   animals: Record<string, { name: string; fact: string }>
   countries: Record<string, { name: string; capital: string }>
@@ -69,6 +74,11 @@ export const LESSON_EN: LessonText = {
   capitalOf: (c) => `What is the capital city of ${c}?`,
   whereIsPlace: 'Which country is this place in?',
   whatIsPlace: 'What is this place called?',
+  minutesIn: (h) => `How many minutes are in ${plural(h, 'hour', 'hours')}?`,
+  secondsIn: (m) => `How many seconds are in ${plural(m, 'minute', 'minutes')}?`,
+  digitWorth: (d, n) => `What is the digit ${d} worth in ${n}?`,
+  roundTo: (n, to) => `Round ${n} to the nearest ${to === 10 ? 'ten' : 'hundred'}.`,
+  percentOf: (p, n) => `What is ${p}% of ${n}?`,
   animals: Object.fromEntries(ANIMALS.map((a) => [a.id, { name: a.name, fact: a.fact }])),
   countries: Object.fromEntries(COUNTRIES.map((c) => [c.id, { name: c.name, capital: c.capital }])),
   continents: { Europe: 'Europe', Africa: 'Africa', Asia: 'Asia', 'South America': 'South America' },

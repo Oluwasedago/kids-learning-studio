@@ -39,6 +39,21 @@ function doubling(r: Random, prompt: string): Question {
   return numberQuestion(r, prompt, first * 16, { kind: 'text', text: `${items.join(', ')}, ?` }, [first, -first, first * 8, 2])
 }
 
+/** Growing steps: the step itself grows by the same amount each time (1, 3, 6, 10 … or square numbers). */
+function growing(r: Random, prompt: string): Question {
+  if (r() < 0.3) {
+    const k = int(r, 1, 3)
+    const items = [k, k + 1, k + 2, k + 3].map((x) => x * x)
+    return numberQuestion(r, prompt, (k + 4) * (k + 4), { kind: 'text', text: `${items.join(', ')}, ?` }, [2, -2, 1, -1, 9])
+  }
+  const start = int(r, 1, 10)
+  const step = int(r, 1, 4)
+  const grow = int(r, 1, 2)
+  const items = [start]
+  for (let i = 0; i < 3; i++) items.push(items[i] + step + i * grow)
+  return numberQuestion(r, prompt, items[3] + step + 3 * grow, { kind: 'text', text: `${items.join(', ')}, ?` }, [grow, -grow, 1, -1, step])
+}
+
 export const PATTERNS: Step[] = [
   { id: 'ab', stage: 0, skill: 'Picture patterns: AB', make: (r, l) => picturePattern(r, lessonText(l).nextPicture, ['AB']) },
   { id: 'aab-abb', stage: 1, skill: 'Picture patterns: AAB and ABB', make: (r, l) => picturePattern(r, lessonText(l).nextPicture, ['AAB', 'ABB']) },
@@ -48,4 +63,5 @@ export const PATTERNS: Step[] = [
   { id: 'count-back', stage: 3, skill: 'Counting back in 1s, 2s and 10s', make: (r, l) => sequence(r, lessonText(l).nextNumber, [-1, -2, -10], [1, 20]) },
   { id: 'steps-3-4', stage: 4, skill: 'Sequences in 3s, 4s and 25s', make: (r, l) => sequence(r, lessonText(l).nextNumber, [3, 4, 25], [0, 10]) },
   { id: 'any-step', stage: 5, skill: 'Finding the rule: any step, or doubling', make: (r, l) => (r() < 0.3 ? doubling(r, lessonText(l).nextNumber) : sequence(r, lessonText(l).nextNumber, [6, 7, 8, 9, -3, -4, -5], [1, 30])) },
+  { id: 'growing', stage: 6, skill: 'Growing sequences (the step grows)', make: (r, l) => growing(r, lessonText(l).nextNumber) },
 ]

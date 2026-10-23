@@ -1,5 +1,6 @@
 import { A_AN, COMMON_WORDS, OPPOSITES, PAST_TENSES, PLURALS, WORDS } from './data'
 import { others, pick, type Question, type Random, shuffled, shuffleIn } from './question'
+import { ENGLISH_MORE } from './english-more'
 import type { Step } from './step'
 
 // English ladder: letters and sounds → reading words → spelling → grammar (a/an, plurals, past tense) → vocabulary.
@@ -144,4 +145,10 @@ export const ENGLISH: Step[] = [
   { id: 'past-tense', stage: 3, skill: 'The past tense', make: pastTense },
   { id: 'alphabet', stage: 3, skill: 'Alphabetical order', make: alphabetical },
   { id: 'opposites', stage: 4, skill: 'Opposites', make: opposite },
+  { id: 'contractions', stage: 4, skill: "Short forms (don't, isn't)", make: ENGLISH_MORE.contraction },
+  { id: 'comparatives', stage: 4, skill: 'Comparing: fast, faster, fastest', make: ENGLISH_MORE.comparison },
+  { id: 'synonyms', stage: 5, skill: 'Words that mean almost the same', make: ENGLISH_MORE.synonym },
+  { id: 'homophones', stage: 5, skill: 'Words that sound the same (hear, here)', make: ENGLISH_MORE.homophone },
+  { id: 'word-classes', stage: 6, skill: 'Nouns, verbs and adjectives', make: ENGLISH_MORE.wordClass },
+  { id: 'prefixes', stage: 6, skill: 'Prefixes: un-, dis-, im-', make: ENGLISH_MORE.prefix },
 ]

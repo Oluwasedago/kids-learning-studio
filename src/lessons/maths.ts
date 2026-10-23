@@ -1,5 +1,5 @@
 import { FRUITS } from './data'
-import { int, numberQuestion, pick, type Random } from './question'
+import { int, numberQuestion, pick, type Random, shuffleIn } from './question'
 import type { Step } from './step'
 import { type LessonText, lessonText } from './text'
 
@@ -29,6 +29,20 @@ function times(r: Random, T: LessonText, tables: number[], upTo = 10) {
   const t = pick(r, tables)
   const n = int(r, 1, upTo)
   return numberQuestion(r, T.sum(n, '×', t), n * t, { kind: 'text', text: `${n} × ${t}` }, [t, -t, 1, -1, 2])
+}
+
+/** Round a number (never already round) to the nearest 10 or 100; halves round up. */
+function rounding(r: Random, T: LessonText, to: 10 | 100) {
+  let n = 0
+  while (n % to === 0) n = to === 10 ? int(r, 11, 99) : int(r, 101, 999)
+  const down = Math.floor(n / to) * to
+  const right = n - down >= to / 2 ? down + to : down
+  const wrong = right === down ? [down + to, Math.max(0, down - to) === down ? down + 2 * to : down - to] : [down, right + to]
+  return {
+    prompt: T.roundTo(n, to),
+    visual: { kind: 'text' as const, text: `${n} ≈ ?` },
+    ...shuffleIn(r, { label: String(right) }, wrong.map((v) => ({ label: String(v) }))),
+  }
 }
 
 export const MATHS: Step[] = [
@@ -103,6 +117,41 @@ export const MATHS: Step[] = [
         : numberQuestion(r, T.half(2 * n), n, { kind: 'text', text: `${2 * n} ÷ 2` })
     },
   },
+  {
+    id: 'time-units',
+    stage: 3,
+    skill: 'Time: hours, minutes and seconds',
+    make: (r, l) => {
+      const T = lessonText(l)
+      const n = int(r, 1, 5)
+      return r() < 0.5
+        ? numberQuestion(r, T.minutesIn(n), 60 * n, { kind: 'text', text: `${n} h = ? min` }, [60, -60, 10, -10, 30])
+        : numberQuestion(r, T.secondsIn(n), 60 * n, { kind: 'text', text: `${n} min = ? s` }, [60, -60, 10, -10, 30])
+    },
+  },
+  {
+    id: 'place-value-1000',
+    stage: 3,
+    skill: 'Place value to 1000',
+    make: (r, l) => {
+      // Three different digits, none 0, so the digit asked about appears once and has one value.
+      const digits: number[] = []
+      while (digits.length < 3) {
+        const d = int(r, 1, 9)
+        if (!digits.includes(d)) digits.push(d)
+      }
+      const n = digits[0] * 100 + digits[1] * 10 + digits[2]
+      const place = int(r, 0, 2)
+      const d = digits[place]
+      const right = d * [100, 10, 1][place]
+      return {
+        prompt: lessonText(l).digitWorth(d, n),
+        visual: { kind: 'text', text: String(n) },
+        ...shuffleIn(r, { label: String(right) }, [100, 10, 1].map((v) => d * v).filter((v) => v !== right).map((v) => ({ label: String(v) }))),
+      }
+    },
+  },
+  { id: 'round-10', stage: 3, skill: 'Rounding to the nearest 10', make: (r, l) => rounding(r, lessonText(l), 10) },
   { id: 'times-all', stage: 4, skill: 'All times tables to 10 × 10', make: (r, l) => times(r, lessonText(l), [2, 3, 4, 5, 6, 7, 8, 9, 10]) },
   {
     id: 'add-sub-1000',
@@ -117,6 +166,7 @@ export const MATHS: Step[] = [
         : numberQuestion(r, T.sum(a, '−', b), a - b, { kind: 'text', text: `${a} − ${b}` }, [10, -10, 1, -1, 100])
     },
   },
+  { id: 'round-100', stage: 4, skill: 'Rounding to the nearest 100', make: (r, l) => rounding(r, lessonText(l), 100) },
   {
     id: 'divide',
     stage: 5,
@@ -145,6 +195,16 @@ export const MATHS: Step[] = [
       const d = pick(r, [2, 3, 4, 5] as const)
       const n = int(r, 2, 12) * d
       return numberQuestion(r, lessonText(l).fraction(d, n), n / d, { kind: 'text', text: `1/${d} × ${n}` })
+    },
+  },
+  {
+    id: 'percent',
+    stage: 6,
+    skill: 'Percentages of amounts',
+    make: (r, l) => {
+      const p = pick(r, [10, 20, 25, 50] as const)
+      const n = int(r, 1, 20) * 20
+      return numberQuestion(r, lessonText(l).percentOf(p, n), (n * p) / 100, { kind: 'text', text: `${p}% × ${n}` })
     },
   },
 ]

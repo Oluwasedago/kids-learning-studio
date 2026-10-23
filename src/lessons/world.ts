@@ -2,6 +2,7 @@ import { ANIMALS, CONTINENTS, COUNTRIES, type Country } from './data'
 import { others, pick, type Question, type Random, shuffleIn } from './question'
 import type { Lang } from '@/i18n'
 import type { Step } from './step'
+import { fixedQuestion, SPACE, WORLD_RECORDS } from './world-more'
 import { type LessonText, lessonText } from './text'
 import { animalPhoto } from '@/library/animals'
 import { PLACE_COUNTRIES, PLACES, placePhoto } from '@/library/places'
@@ -111,4 +112,6 @@ export const WORLD: Step[] = [
   { id: 'continents', stage: 3, skill: 'Countries and continents', make: (r, l) => continent(r, lessonText(l)) },
   { id: 'places-name', stage: 3, skill: 'Naming famous places', make: placeName },
   { id: 'capitals', stage: 4, skill: 'Capital cities', make: (r, l) => capital(r, lessonText(l)) },
+  { id: 'world-records', stage: 4, skill: 'Records of the Earth', make: (r, l) => fixedQuestion(r, WORLD_RECORDS, l) },
+  { id: 'space', stage: 5, skill: 'Space', make: (r, l) => fixedQuestion(r, SPACE, l) },
 ]

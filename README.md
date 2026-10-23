@@ -28,6 +28,9 @@ Developed by Oluwasedago.
   parent: Cambridge, England, US, Germany or Nigeria) on a skills ladder aligned to
   Cambridge Primary stages (with approximate US grade and Berlin Klasse equivalents) and adapt: two strong
   rounds move a step up, a weak round a step down.
+- **Skills from Stage 1 to Stage 6.** About 50 skills: in maths up to percentages, rounding and place value; in English
+  up to contractions, synonyms, homophones, word classes and prefixes; in the world up to world records and space;
+  growing number patterns. Every question type is checked by a test for exactly one true answer, in every language.
 - **Learning streak.** Days in a row with a passed mission, like Duolingo: every 7 days earn a streak freeze
   that saves a missed day, and milestones (3, 7, 14, 30 … days) are celebrated.
 - **Stars earn time.** Each star unlocks minutes for games and videos, up to a daily limit the parent sets.

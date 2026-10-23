@@ -6,6 +6,7 @@ import type { Lang } from '@/i18n'
 import { LADDERS } from './ladder'
 import { type Choice, type Question, seeded, type Visual } from './question'
 import { LESSON_EN, lessonText } from './text'
+import { SPACE, WORLD_RECORDS } from './world-more'
 import { ANIMAL_HOMES } from '@/library/animals'
 import CREDITS from '@/library/photo-credits.json'
 import { PLACE_COUNTRIES, PLACES } from '@/library/places'
@@ -43,6 +44,60 @@ const ALSO_FITS: Record<string, string[]> = {
   mouse: ['chipmunk'], // small and squeaks
 }
 
+
+// ---- Answer keys for the Stage 4–6 English and world questions (written apart from english-more.ts) ----
+const CONTRACTION_KEY: Record<string, string> = {
+  'do not': "don't", 'is not': "isn't", 'I am': "I'm", 'you are': "you're", 'are not': "aren't", 'did not': "didn't",
+  'was not': "wasn't", 'have not': "haven't", 'we have': "we've", 'has not': "hasn't", 'would not': "wouldn't",
+  'they are': "they're", 'she is': "she's", 'does not': "doesn't", 'could not': "couldn't",
+}
+/** Real words a wrong short form must never be. */
+const NOT_ALLOWED = new Set(['cant', 'ill', 'lets', 'well', 'wont', 'shell', 'were', 'its', 'hell', 'id', 'wed'])
+const SUPERLATIVE_KEY: Record<string, string> = {
+  tall: 'tallest', big: 'biggest', small: 'smallest', fast: 'fastest', happy: 'happiest', good: 'best', bad: 'worst',
+  hot: 'hottest', funny: 'funniest', old: 'oldest', long: 'longest', sad: 'saddest', nice: 'nicest', busy: 'busiest', thin: 'thinnest',
+}
+/** Groups of words with (almost) the same meaning. */
+const SAME_MEANING = [
+  ['big', 'large', 'huge', 'enormous'], ['little', 'small', 'tiny'], ['glad', 'happy'], ['quick', 'fast'], ['begin', 'start'],
+  ['finish', 'end'], ['shout', 'yell'], ['clever', 'smart'], ['afraid', 'scared'], ['sleepy', 'tired'], ['silent', 'quiet'],
+  ['beautiful', 'pretty'], ['below', 'under'], ['gift', 'present'], ['rich', 'wealthy'],
+]
+const HOMOPHONE_KEY: Record<string, string> = {
+  'I can ___ the birds singing.': 'hear', 'Come over ___ and sit down.': 'here', 'The children hung up ___ coats.': 'their',
+  'Look over ___, by the tree!': 'there', '___ going to the park today.': "They're", 'I have ___ hands.': 'two',
+  'We walked ___ school.': 'to', 'This soup is ___ hot to eat.': 'too', 'The ___ is shining in the sky.': 'sun',
+  'Please ___ your name on the page.': 'write', 'Turn ___ at the corner.': 'right', 'Do you ___ the answer?': 'know',
+  'We swam in the ___.': 'sea', 'I can ___ a rainbow!': 'see', 'There are seven days in a ___.': 'week',
+  'Yesterday I ___ a big sandwich.': 'ate', 'A spider has ___ legs.': 'eight', 'The owl hoots at ___.': 'night',
+  'The wind ___ the leaves away.': 'blew', 'The sky is ___ today.': 'blue',
+}
+const WORD_CLASS_KEY: Record<string, 'noun' | 'verb' | 'adjective'> = Object.fromEntries([
+  ...'banana river teacher apple city window library mountain kitchen elephant'.split(' ').map((w) => [w, 'noun']),
+  ...'write decide borrow eat explain forget choose bring sing arrive'.split(' ').map((w) => [w, 'verb']),
+  ...'happy tall soft noisy heavy careful hungry beautiful tiny friendly'.split(' ').map((w) => [w, 'adjective']),
+])
+const NOT_KEY: Record<string, string> = {
+  happy: 'unhappy', kind: 'unkind', tidy: 'untidy', possible: 'impossible', polite: 'impolite', correct: 'incorrect',
+  visible: 'invisible', agree: 'disagree', honest: 'dishonest', legal: 'illegal', regular: 'irregular', safe: 'unsafe',
+  patient: 'impatient', obey: 'disobey', complete: 'incomplete',
+}
+/** The right answer of every world record and space question (English), as the key for all three languages. */
+const FIXED_KEY: Record<string, string> = {
+  'Which is the biggest ocean?': 'The Pacific', 'Which is the biggest continent?': 'Asia', 'Which is the coldest continent?': 'Antarctica',
+  'Which is the highest mountain in the world?': 'Mount Everest', 'Which is the biggest hot desert in the world?': 'The Sahara',
+  'Which country is the biggest in the world?': 'Russia', 'Which is the longest river in Africa?': 'The Nile',
+  'Which ocean lies between Europe and North America?': 'The Atlantic', 'Which country has the most people?': 'India',
+  'Which is the biggest island in the world?': 'Greenland', 'Which country is shaped like a boot?': 'Italy',
+  'Where is the biggest rainforest in the world?': 'The Amazon', 'Which planet is the biggest?': 'Jupiter',
+  'Which planet is closest to the Sun?': 'Mercury', 'Which planet is called the Red Planet?': 'Mars',
+  'Which planet is famous for its big, bright rings?': 'Saturn', 'What is the Sun?': 'A star',
+  'How long does the Earth take to go once around the Sun?': 'One year', 'Why do we have day and night?': 'The Earth turns around',
+  'Who was the first person to walk on the Moon?': 'Neil Armstrong', 'Which planet is farthest from the Sun?': 'Neptune',
+  'Which star is closest to the Earth?': 'The Sun', 'What do we call a group of stars that makes a pattern in the sky?': 'A constellation',
+  'Who was the first person to travel into space?': 'Yuri Gagarin',
+}
+
 /** Works out a sum written as "a + b", "a − b", "a × b", "a ÷ b", "double n", "half of n", "1/d of n". */
 function solve(text: string): number {
   let m = text.match(/^(\d+) ([+−×÷]) (\d+)$/)
@@ -57,6 +112,9 @@ function solve(text: string): number {
   // Tens and ones in any language: "3 tens + 4 ones", "3 Zehner + 4 Einer", "3 dizaines + 4 unités".
   if ((m = text.match(/^(\d) \D+ \+ (\d) \D+$/))) return 10 * Number(m[1]) + Number(m[2])
   if ((m = text.match(/^(\d+), \?$/))) return Number(m[1]) + 1
+  if ((m = text.match(/^(\d+) h = \? min$/))) return 60 * Number(m[1])
+  if ((m = text.match(/^(\d+) min = \? s$/))) return 60 * Number(m[1])
+  if ((m = text.match(/^(\d+)% × (\d+)$/))) return (Number(m[1]) * Number(m[2])) / 100
   if ((m = text.match(/^\?, (\d+)$/))) return Number(m[1]) - 1
   throw new Error(`cannot solve "${text}"`)
 }
@@ -67,6 +125,9 @@ function nextInSequence(text: string): number {
   const step = n[1] - n[0]
   if (n.every((x, i) => i === 0 || x - n[i - 1] === step)) return n[n.length - 1] + step
   if (n.every((x, i) => i === 0 || x === n[i - 1] * 2)) return n[n.length - 1] * 2
+  const d = n.slice(1).map((x, i) => x - n[i])
+  const dd = d[1] - d[0]
+  if (d.every((x, i) => i === 0 || x - d[i - 1] === dd)) return n[n.length - 1] + d[d.length - 1] + dd
   throw new Error(`no rule in "${text}"`)
 }
 
@@ -174,6 +235,61 @@ function check(step: string, q: Question, lang: Lang): string | null {
     case 'aab-abb':
     case 'abc-aabb':
       return q.visual?.kind === 'pattern' && emojiOf(r.visual) === nextInPattern(q.visual.items) ? null : 'pattern next is wrong'
+    case 'place-value-1000': {
+      const nums = (q.prompt.match(/\d+/g) ?? []).map(Number)
+      const d = nums.find((x) => x < 10)!
+      const n = nums.find((x) => x >= 100)!
+      const digits = String(n)
+      if (digits.split('').filter((c) => c === String(d)).length !== 1) return 'the digit is not there exactly once'
+      const worth = d * 10 ** (2 - digits.indexOf(String(d)))
+      return Number(label(r)) === worth && !w.some((c) => Number(label(c)) === worth) ? null : `${d} in ${n} is not worth ${label(r)}`
+    }
+    case 'round-10':
+    case 'round-100': {
+      const to = step === 'round-10' ? 10 : 100
+      const n = Number(textOf(q).split(' ')[0])
+      const expected = n % to >= to / 2 ? n - (n % to) + to : n - (n % to)
+      return n % to !== 0 && Number(label(r)) === expected && !w.some((c) => Number(label(c)) === expected) ? null : `${n} rounds to ${expected}, not ${label(r)}`
+    }
+    case 'contractions': {
+      const long = q.prompt.match(/"(.+)"/)![1]
+      if (label(r) !== CONTRACTION_KEY[long]) return `short form of ${long} is not ${label(r)}`
+      return w.some((c) => NOT_ALLOWED.has(label(c).toLowerCase()) || label(c) === label(r)) ? 'a wrong short form is a real word' : null
+    }
+    case 'comparatives': {
+      const word = q.prompt.split(',')[0]
+      return label(r) === SUPERLATIVE_KEY[word] && !w.some((c) => label(c) === SUPERLATIVE_KEY[word]) ? null : `wrong superlative of ${word}`
+    }
+    case 'synonyms': {
+      const word = q.prompt.match(/"(\w+)"/)![1]
+      const group = SAME_MEANING.find((g) => g.includes(word))!
+      if (!group.includes(label(r)) || label(r) === word) return `${label(r)} does not mean ${word}`
+      const also = w.find((c) => group.includes(label(c)))
+      return also ? `"${label(also)}" also means ${word}` : null
+    }
+    case 'homophones':
+      return label(r) === HOMOPHONE_KEY[q.prompt] && !w.some((c) => label(c) === label(r)) ? null : `wrong word for "${q.prompt}"`
+    case 'word-classes': {
+      const kind = q.prompt.match(/(noun|verb|adjective)/)![1]
+      if (WORD_CLASS_KEY[label(r)] !== kind) return `${label(r)} is not a ${kind}`
+      return w.some((c) => WORD_CLASS_KEY[label(c)] === kind || !WORD_CLASS_KEY[label(c)]) ? 'a wrong word is also a ' + kind : null
+    }
+    case 'prefixes': {
+      const word = q.prompt.match(/"not (\w+)"/)![1]
+      return label(r) === NOT_KEY[word] && !w.some((c) => label(c) === NOT_KEY[word] || c.label === word) ? null : `not ${word} is ${NOT_KEY[word]}`
+    }
+    case 'world-records':
+    case 'space': {
+      // The same question in all three languages: find it by its place in the bank, check the English key.
+      const bank = step === 'space' ? SPACE : WORLD_RECORDS
+      const item = bank.find((x) => x[lang][0] === q.prompt)
+      if (!item) return 'unknown question'
+      if (FIXED_KEY[item.en[0]] !== item.en[1]) return `key and bank differ: ${item.en[0]}`
+      const [, right_, ...wrong_] = item[lang]
+      if (new Set([right_, ...wrong_]).size !== 3) return 'two answers are the same'
+      return label(r) === right_ && w.every((c) => wrong_.includes(label(c))) ? null : `wrong answer for ${q.prompt}`
+    }
+    case 'growing':
     case 'count-on':
     case 'count-5-10':
     case 'count-back':
