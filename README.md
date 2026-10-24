@@ -52,6 +52,9 @@ Developed by Oluwasedago.
   the parent's own mail app.
 - **English, Deutsch, Français.** The app follows the device language; parents can change it. Maths, the world,
   patterns and the facts are in the chosen language; the English lessons and the word games stay in English.
+- **Reading aloud with a mute button.** A round speaker button in the top bar on every screen mutes all reading
+  (radio and stories keep playing). Only one thing is read at a time; tapping a speaker button again stops it;
+  leaving a screen stops it.
 - **Backup and restore** in one file, with a reminder; data is kept on the device (persistent storage).
 
 ## Privacy

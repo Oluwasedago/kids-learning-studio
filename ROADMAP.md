@@ -21,7 +21,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Games: memory, word builder, puzzle, snake, code breaker | done |
 | Library: 40 animals and 40 places of the world with real photos (Wikimedia Commons, credited), photo questions in World | done; facts to verify again like all facts |
 | World map: tap a country (flag, capital, people, size, languages, money, neighbours), quiz for continents / countries, works offline once opened | done; zoom per continent with 64 px targets for small countries; population World Bank 2024; flags fetched in the background for offline use; facts to verify like all facts; to test on Fire, Android, iPad |
-| "Read aloud by itself" (parents) | done; on by default |
+| Reading aloud: round mute button on every screen (and on the parent page), one voice at a time, tap again to stop, stops on leaving | done; to test with the voices on Fire, Android, iPad |
 | Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter, Babyradio in Spanish) | to verify: each station's terms for other players (none published); whether Babyradio has adverts |
 | Media: story speed (slow, a bit slower, normal) | done |
 | Media: video library (how things are made / work, live animal cams; official channels) | done; run `node scripts/check-videos.mjs` before each release (live ids can change) |
