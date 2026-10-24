@@ -90,6 +90,9 @@ export async function flagUrl(iso: string): Promise<string | null> {
   return load ? load() : null
 }
 
+/** The card's lines as one text to read aloud, a pause after each ("Capital: Abuja. People: …"). Pure (tested). */
+export const spoken = (lines: string[]) => lines.map((l) => (/[.!?]$/.test(l) ? l : `${l}.`)).join(' ')
+
 /** The card's sentences, which are also what is read aloud: name, continent, capital, people, size, languages,
  * money. Pure (tested). */
 export function countryLines(region: Region, lang: Lang, t: Strings): string[] {

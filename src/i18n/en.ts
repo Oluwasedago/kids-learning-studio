@@ -151,6 +151,7 @@ export const en = {
     landlocked: 'This country has no sea.',
     neighbours: 'Neighbours:',
     hear: 'Hear it',
+    needsOnline: 'The world map downloads the first time it is opened. Connect to the internet once, then it works offline too.',
     source: 'Map: Natural Earth (public domain). Facts: © mledoze/countries contributors (ODbL). Flags: flag-icons (MIT).',
   },
   library: {

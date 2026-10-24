@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { stringsFor } from '@/i18n'
-import { COUNTRY_FACTS, countryLines, currencyNames, factsOf, languageNames, peopleWords, sizeVsGermany } from './countries'
+import { COUNTRY_FACTS, countryLines, currencyNames, factsOf, languageNames, peopleWords, sizeVsGermany, spoken } from './countries'
 import world from './data/world.json'
 
 type Topo = { objects: Record<string, { geometries: { properties: Record<string, string> }[] }> }
@@ -52,6 +52,12 @@ describe('number words', () => {
     expect(sizeVsGermany(923_768)).toEqual({ kind: 'bigger', times: 3 })
     expect(sizeVsGermany(312_000)).toEqual({ kind: 'same', times: 1 })
     expect(sizeVsGermany(41_000)).toEqual({ kind: 'smaller', times: 9 })
+  })
+})
+
+describe('reading the card aloud', () => {
+  it('pauses after each line, never twice', () => {
+    expect(spoken(['Nigeria', 'Capital: Abuja', 'About 3 times as big as Germany.'])).toBe('Nigeria. Capital: Abuja. About 3 times as big as Germany.')
   })
 })
 

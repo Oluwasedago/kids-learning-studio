@@ -9,6 +9,7 @@ import { animalOfTheDay } from '@/lessons/data'
 import { animalName } from '@/lessons/text'
 import { starsFor } from '@/lessons/ladder'
 import { LibraryScreen, type Shelf } from '@/library/LibraryScreen'
+import { WorldMap } from '@/maps/WorldMap'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, weekStars } from '@/progress/progress'
 import { StreakCard } from '@/progress/StreakCard'
@@ -31,6 +32,7 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
   const [mission, setMission] = useState<Subject | null>(null)
   /** The library opens straight from the home screen (places of the world were hard to find on Learn). */
   const [shelf, setShelf] = useState<Shelf | null>(null)
+  const [map, setMap] = useState(false)
   const tiles = [...itemsIn('games'), ...itemsIn('media')].filter((id) => ITEMS[id].ready)
 
   return (
@@ -45,6 +47,7 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
           <BirthdaysCard />
         </div>
         <section className="play-row">
+          <ItemTile id="worldmap" onOpen={() => setMap(true)} />
           {(['places', 'animals'] as const).map((id) => (
             <ItemTile key={id} id={id} onOpen={() => setShelf(id)} />
           ))}
@@ -54,6 +57,7 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
         </section>
         {mission && <MissionScreen subject={mission} onClose={() => setMission(null)} />}
         {shelf && <LibraryScreen shelf={shelf} onClose={() => setShelf(null)} />}
+        {map && <WorldMap onClose={() => setMap(false)} />}
       </div>
       <DidYouKnow />
     </div>

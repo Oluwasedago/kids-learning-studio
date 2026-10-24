@@ -5,6 +5,7 @@ import { useLang, useT } from '@/i18n'
 import { LADDERS, stageTags } from '@/lessons/ladder'
 import { skillName } from '@/lessons/text'
 import { LibraryScreen, type Shelf } from '@/library/LibraryScreen'
+import { WorldMap } from '@/maps/WorldMap'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { ItemTile } from '@/rewards/ItemTile'
 import { levelOf } from '@/progress/progress'
@@ -21,11 +22,15 @@ export function LearnScreen() {
   const lang = useLang()
   const [subject, setSubject] = useState<Subject | null>(null)
   const [shelf, setShelf] = useState<Shelf | null>(null)
+  const [map, setMap] = useState(false)
   const subjects = SUBJECTS.filter((s) => accessOf(s) !== 'hidden')
 
   return (
     <div className="games-screen">
-      {/* The library first: places and animals of the world. */}
+      {/* The world map and the library first: places and animals of the world. */}
+      <ItemTile id="worldmap" className="game-card library-tile" onOpen={() => setMap(true)}>
+        <span className="game-learn">{t.itemLearn.worldmap}</span>
+      </ItemTile>
       {(['places', 'animals'] as const).map((id) => (
         <ItemTile key={id} id={id} className="game-card library-tile" onOpen={() => setShelf(id)}>
           <span className="game-learn">{t.itemLearn[id]}</span>
@@ -50,6 +55,7 @@ export function LearnScreen() {
       })}
       {subject && <MissionScreen subject={subject} onClose={() => setSubject(null)} />}
       {shelf && <LibraryScreen shelf={shelf} onClose={() => setShelf(null)} />}
+      {map && <WorldMap onClose={() => setMap(false)} />}
     </div>
   )
 }

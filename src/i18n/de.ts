@@ -149,6 +149,7 @@ export const de: Strings = {
     landlocked: 'Dieses Land hat kein Meer.',
     neighbours: 'Nachbarländer:',
     hear: 'Anhören',
+    needsOnline: 'Die Weltkarte wird beim ersten Öffnen geladen. Einmal mit dem Internet verbinden, danach geht sie auch offline.',
     source: 'Karte: Natural Earth (gemeinfrei). Daten: © mledoze/countries contributors (ODbL). Flaggen: flag-icons (MIT).',
   },
   library: {

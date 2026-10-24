@@ -149,6 +149,7 @@ export const fr: Strings = {
     landlocked: 'Ce pays n’a pas de mer.',
     neighbours: 'Pays voisins :',
     hear: 'Écouter',
+    needsOnline: 'La carte du monde se télécharge à la première ouverture. Connecte-toi une fois à Internet, ensuite elle marche aussi hors ligne.',
     source: 'Carte : Natural Earth (domaine public). Données : © mledoze/countries contributors (ODbL). Drapeaux : flag-icons (MIT).',
   },
   library: {
