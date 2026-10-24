@@ -6,7 +6,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 
 | Area | Status |
 |---|---|
-| App shell, offline start, GitHub Pages deploy, brand icons | done |
+| App shell, offline start, GitHub Pages deploy, brand icons | done; offline start fixed 24 Oct 2026 (the service worker saved almost nothing before); daily update check and "Update now" for parents |
 | Setup wizard (birth month + year, school class, language), demo, restore on first start | done |
 | Two-layer access control (on/off → earn/open, unlock for today with PIN) | done |
 | Forgotten PIN: recovery code, or a reset after 24 hours | done |
@@ -20,6 +20,8 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Animal facts, "Did you know?" facts, capitals, flag colours | second check done 23 Oct 2026 (pictures matched to facts, ambiguous questions fixed); `src/lessons/content.test.ts` checks every question type for exactly one true answer |
 | Games: memory, word builder, puzzle, snake, code breaker | done |
 | Library: 40 animals and 40 places of the world with real photos (Wikimedia Commons, credited), photo questions in World | done; facts to verify again like all facts |
+| World map: tap a country (flag, capital, people, size, languages, money, neighbours), quiz for continents / countries, works offline once opened | done; 2019 population estimates; facts to verify like all facts; small countries are hard to tap (left out of the quiz) |
+| "Read aloud by itself" (parents) | done; on by default |
 | Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter, Babyradio in Spanish) | to verify: each station's terms for other players (none published); whether Babyradio has adverts |
 | Media: story speed (slow, a bit slower, normal) | done |
 | Media: video library (how things are made / work, live animal cams; official channels) | done; run `node scripts/check-videos.mjs` before each release (live ids can change) |

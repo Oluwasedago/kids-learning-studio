@@ -44,6 +44,9 @@ Developed by Oluwasedago.
 - **Library: animals and places of the world.** Real photos of 40 animals (where they live, a true fact) and 40
   famous places by country (from the Eiffel Tower to the National Theatre in Lagos), read aloud; World missions ask
   about them with photos.
+- **World map.** Tap any country: its flag, capital, how many people live there, its size compared with Germany,
+  languages, money and neighbours (tap one to go there), read aloud. A quiz asks "Where is …?": continents for
+  younger children, countries later. Works offline once opened.
 - **Did you know?** A random fact about space, science, nature, the world or history.
 - **Reports for parents:** day, week or month; skills that need help and recent wrong answers; sent by email from
   the parent's own mail app.
@@ -65,6 +68,10 @@ Reports leave the device only when a parent sends them from their own mail app.
   License). Logo: [brand/](brand/README.md) (MIT, with the code).
 - Stories: LibriVox recordings (public domain), hosted by the Internet Archive. Radio: Die Maus (WDR), Fun Kids, Mon Petit France Inter (Radio France), Babyradio (Spain).
   Details and the status of each source: [docs/CONTENT.md](docs/CONTENT.md).
+- World map: [Natural Earth](https://www.naturalearthdata.com/) (public domain); country facts:
+  [mledoze/countries](https://github.com/mledoze/countries) (ODbL, "© mledoze/countries contributors"); flags:
+  [flag-icons](https://github.com/lipis/flag-icons) (MIT); drawn with d3-geo and topojson-client (ISC). Details and
+  corrections: [src/maps/data/SOURCES.md](src/maps/data/SOURCES.md).
 - QR codes on the install page: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) (MIT).
 
 ## For contributors
