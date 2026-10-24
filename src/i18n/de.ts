@@ -457,6 +457,10 @@ export const de: Strings = {
     privacy: 'Keine Konten, kein Tracking, kein Server. Alles bleibt auf diesem Gerät.',
     licence: 'Kostenlos und quelloffen (MIT-Lizenz).',
     credits: 'Bilder: Microsoft Fluent Emoji (MIT). Schriften: Andika und Fredoka (SIL Open Font License).',
+    update: 'Jetzt aktualisieren',
+    updating: 'Suche nach einer neuen Version …',
+    upToDate: 'Das ist schon die neueste Version.',
+    updateOffline: 'Keine Verbindung. Bitte noch einmal versuchen, wenn das Gerät online ist.',
   },
   language: {
     label: 'Sprache',

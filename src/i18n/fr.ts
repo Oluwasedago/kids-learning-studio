@@ -457,6 +457,10 @@ export const fr: Strings = {
     privacy: 'Pas de compte, pas de pistage, pas de serveur. Tout reste sur cet appareil.',
     licence: 'Gratuit et open source (licence MIT).',
     credits: 'Images : Microsoft Fluent Emoji (MIT). Polices : Andika et Fredoka (SIL Open Font License).',
+    update: 'Mettre à jour',
+    updating: 'Recherche d’une nouvelle version…',
+    upToDate: 'C’est déjà la version la plus récente.',
+    updateOffline: 'Pas de connexion. Réessayez quand l’appareil est en ligne.',
   },
   language: {
     label: 'Langue',

@@ -445,6 +445,10 @@ export const en = {
     privacy: 'No accounts, no tracking, no server. Everything stays on this device.',
     licence: 'Free and open source (MIT licence).',
     credits: 'Pictures: Microsoft Fluent Emoji (MIT). Fonts: Andika and Fredoka (SIL Open Font License).',
+    update: 'Update now',
+    updating: 'Looking for a new version…',
+    upToDate: 'This is already the newest version.',
+    updateOffline: 'No connection. Try again when the device is online.',
   },
   language: {
     label: 'Language',

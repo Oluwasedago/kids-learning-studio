@@ -4,9 +4,11 @@
 //
 // - Page loads: network first, so new versions arrive; the saved page only when offline.
 // - App files (assets, emoji, fonts): cache first (built file names change with every version, so never stale).
+// - The app's update check (src/shared/autoUpdate.ts, cache: 'no-store'): always the network, never the saved
+//   page. Answered from here it would always name the running version, so no update would ever be seen.
 // Paths are relative to where this file lives, so it works under /kids-learning-studio/ on GitHub Pages.
 
-const CACHE = 'kls-v3' // bump to make installed apps fetch changed files with fixed names (icons, pages)
+const CACHE = 'kls-v4' // bump to make installed apps fetch changed files with fixed names (icons, emoji, photos)
 const INDEX = new URL('./', self.registration.scope).href
 
 self.addEventListener('install', () => self.skipWaiting())
@@ -22,8 +24,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request
   const url = new URL(req.url)
-  // Only this site's own files. Radio streams, videos etc. go straight to the network.
+  // Only this site's own files. Radio streams, videos etc. go straight to the network, and so does the update check.
   if (req.method !== 'GET' || url.origin !== location.origin || !url.href.startsWith(self.registration.scope)) return
+  if (req.cache === 'no-store') return
 
   if (req.mode === 'navigate') {
     // Each page (the app, the install page) is kept under its own address, without "?…" (e.g. ?demo).

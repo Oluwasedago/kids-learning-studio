@@ -9,6 +9,7 @@ import type { FamilyBirthday } from '@/data/types'
 import { LOCALES, useLang, useT } from '@/i18n'
 import { callLinkOk, parseYouTube } from '@/media/sources'
 import { buildReport, mailtoUrl, reportText } from '@/reports/report'
+import { updateNow } from '@/shared/autoUpdate'
 import { Emoji } from '@/shared/Emoji'
 import { AccessEditor, ChildEditor } from './editors'
 import { ParentGate, RecoveryCode } from './ParentGate'
@@ -56,8 +57,29 @@ export function ParentScreen() {
         <p>{t.about.privacy}</p>
         <p className="muted">{t.about.licence}</p>
         <p className="muted">{t.about.credits}</p>
+        <UpdateButton />
       </Card>
     </div>
+  )
+}
+
+/** Takes the newest version now (the app also looks by itself once a day: shared/autoUpdate.ts). */
+function UpdateButton() {
+  const t = useT()
+  const [state, setState] = useState<'idle' | 'looking' | 'newest' | 'offline'>('idle')
+  const update = async () => {
+    setState('looking')
+    const found = await updateNow()
+    if (found !== 'reloading') setState(found)
+  }
+  return (
+    <>
+      <button className="secondary" onClick={update} disabled={state === 'looking'}>
+        {state === 'looking' ? t.about.updating : t.about.update}
+      </button>
+      {state === 'newest' && <p className="muted">{t.about.upToDate}</p>}
+      {state === 'offline' && <p className="muted">{t.about.updateOffline}</p>}
+    </>
   )
 }
 

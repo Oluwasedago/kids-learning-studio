@@ -5,6 +5,7 @@ import { GamesScreen } from '@/games/GamesScreen'
 import { LearnScreen } from '@/games/LearnScreen'
 import { deviceLang, LangContext, useT } from '@/i18n'
 import { MediaScreen } from '@/media/MediaScreen'
+import { usePlayer } from '@/media/player'
 import { PlayerProvider } from '@/media/PlayerProvider'
 import { ParentGate } from '@/parent/ParentGate'
 import { ParentScreen } from '@/parent/ParentScreen'
@@ -73,7 +74,9 @@ function Screens() {
   const [startGame, setStartGame] = useState<ItemId | null>(null)
   const [startListen, setStartListen] = useState<ItemId | null>(null)
   const idle = useIdle(IDLE_MS)
-  useAutoUpdate(idle)
+  const player = usePlayer()
+  // A story or the radio plays without a touch: a new version waits until it stops.
+  useAutoUpdate(idle && player.state !== 'playing' && player.state !== 'loading')
   useWakeLock(true)
   useUsageClock(screen, idle)
 
