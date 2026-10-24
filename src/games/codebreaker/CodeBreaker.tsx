@@ -1,5 +1,6 @@
 import { Volume2 } from 'lucide-react'
 import { useState } from 'react'
+import { useStudio } from '@/app/studio'
 import { sayText, useCanSpeak } from '@/audio/say'
 import { useLang, useT } from '@/i18n'
 import { Emoji } from '@/shared/Emoji'
@@ -11,6 +12,7 @@ export function CodeBreaker() {
   const t = useT()
   const lang = useLang()
   const speaks = useCanSpeak(lang)
+  const { settings } = useStudio()
   const [mode, setMode] = useState<CodeMode>('pictures')
   const [order, setOrder] = useState(() => messageOrder(lang))
   const [n, setN] = useState(0)
@@ -47,7 +49,7 @@ export function CodeBreaker() {
     setSolved(after)
     if (nextCell(puzzle, after) === -1) {
       setCracked((c) => c + 1)
-      if (speaks) sayText(puzzle.message.toLowerCase(), lang)
+      if (speaks && settings.readAloud) sayText(puzzle.message.toLowerCase(), lang)
     }
   }
   const code = (c: string, size: number) => (mode === 'numbers' ? <span className="code-number">{c}</span> : <Emoji name={c} size={size} />)

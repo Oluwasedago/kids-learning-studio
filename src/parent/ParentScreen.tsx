@@ -484,6 +484,17 @@ function VoiceCard() {
       </label>
       {chosen && !chosen.localService && <small className="backup-due">{t.voice.onlineNote}</small>}
       <Stepper label={t.voice.speed} value={Math.round(v.rate * 10)} min={6} max={12} onChange={(n) => set({ rate: n / 10 })} />
+      <div>
+        <span className="field-label">{t.voice.readAloud}</span>
+        <small className="muted">{t.voice.readAloudNote}</small>
+        <div className="segmented">
+          {([true, false] as const).map((on) => (
+            <button key={String(on)} className={settings.readAloud === on ? '' : 'secondary'} onClick={() => updateSettings((s) => ({ ...s, readAloud: on }))}>
+              {on ? t.common.on : t.common.off}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="settings-buttons">
         <button className="secondary" onClick={test}>
           <Emoji name="speech" size={24} /> {t.voice.test}

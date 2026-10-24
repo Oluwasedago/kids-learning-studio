@@ -49,6 +49,9 @@ export interface Settings {
   lang: Lang | null
   /** Reading aloud: the chosen voice (null = best available on the device) and speed. */
   voice: { name: string | null; rate: number }
+  /** Read things out as they appear (a tapped country, a quiz question, a solved code). Off: only the speaker
+   * buttons read aloud. */
+  readAloud: boolean
   /** The parent PIN, stored only as a salted PBKDF2 hash (see parent/pin.ts). null until the wizard sets it. */
   pin: { salt: string; hash: string; iterations: number } | null
   /** The recovery code for a forgotten PIN, stored only as a hash like the PIN. null on devices set up before it. */
@@ -147,6 +150,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
   lang: null,
   voice: { name: null, rate: 0.9 },
+  readAloud: true,
   pin: null,
   recovery: null,
   pinReset: null,
