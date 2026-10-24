@@ -90,6 +90,28 @@ export async function flagUrl(iso: string): Promise<string | null> {
   return load ? load() : null
 }
 
+/**
+ * Fetches every flag once, one after another in quiet moments, so the service worker keeps them and flags show
+ * offline too. Only online and when the device does not ask to save data; about 0.4 MB in all (compressed). Stops when `signal`
+ * aborts (the map was closed).
+ */
+export async function keepFlags(isos: string[], signal: AbortSignal) {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+  if (!navigator.onLine || connection?.saveData) return
+  const quiet = () => new Promise((resolve) => ('requestIdleCallback' in window ? requestIdleCallback(resolve, { timeout: 2000 }) : setTimeout(resolve, 200)))
+  for (const iso of isos) {
+    if (signal.aborted || !navigator.onLine) return
+    await quiet()
+    try {
+      const url = await flagUrl(iso)
+      // Small flags are inside their script (a data: address); bigger ones are their own file.
+      if (url && !url.startsWith('data:')) await fetch(url, { signal })
+    } catch {
+      // Offline now, or closed: the rest another time.
+    }
+  }
+}
+
 /** The card's lines as one text to read aloud, a pause after each ("Capital: Abuja. People: …"). Pure (tested). */
 export const spoken = (lines: string[]) => lines.map((l) => (/[.!?]$/.test(l) ? l : `${l}.`)).join(' ')
 

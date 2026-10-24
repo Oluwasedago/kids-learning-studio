@@ -20,7 +20,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Animal facts, "Did you know?" facts, capitals, flag colours | second check done 23 Oct 2026 (pictures matched to facts, ambiguous questions fixed); `src/lessons/content.test.ts` checks every question type for exactly one true answer |
 | Games: memory, word builder, puzzle, snake, code breaker | done |
 | Library: 40 animals and 40 places of the world with real photos (Wikimedia Commons, credited), photo questions in World | done; facts to verify again like all facts |
-| World map: tap a country (flag, capital, people, size, languages, money, neighbours), quiz for continents / countries, works offline once opened | done; 2019 population estimates; facts to verify like all facts; small countries are hard to tap (left out of the quiz) |
+| World map: tap a country (flag, capital, people, size, languages, money, neighbours), quiz for continents / countries, works offline once opened | done; zoom per continent with 64 px targets for small countries; population World Bank 2024; flags fetched in the background for offline use; facts to verify like all facts; to test on Fire, Android, iPad |
 | "Read aloud by itself" (parents) | done; on by default |
 | Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter, Babyradio in Spanish) | to verify: each station's terms for other players (none published); whether Babyradio has adverts |
 | Media: story speed (slow, a bit slower, normal) | done |

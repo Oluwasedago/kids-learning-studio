@@ -44,6 +44,52 @@ export function countryName(region: Region, lang: Lang): string {
   return region.names[lang] || region.names.en
 }
 
+// ---- Zoom ----
+
+export type Zoom = 'world' | keyof typeof ZOOM_AREAS
+/** What a continent button shows (west, south, east, north in degrees). Boxes, not the continents' own outlines:
+ * Natural Earth counts all of Russia as Europe, which would leave Europe as small as on the world map. */
+export const ZOOM_AREAS = {
+  Europe: [-25, 34, 45, 71],
+  Africa: [-19, -36, 52, 38],
+  Asia: [25, -11, 150, 56],
+  'North America': [-168, 7, -15, 78],
+  'South America': [-82, -56, -34, 13],
+  Oceania: [110, -48, 180, 0],
+} as const satisfies Record<string, readonly [number, number, number, number]>
+export const ZOOMS: Zoom[] = ['world', ...(Object.keys(ZOOM_AREAS) as (keyof typeof ZOOM_AREAS)[])]
+
+/** Points around a box in degrees (corners and edges), to project and measure. */
+export function boxPoints([w, s, e, n]: readonly [number, number, number, number], steps = 8): [number, number][] {
+  const out: [number, number][] = []
+  for (let i = 0; i <= steps; i++) {
+    const lon = w + ((e - w) * i) / steps
+    const lat = s + ((n - s) * i) / steps
+    out.push([lon, s], [lon, n], [w, lat], [e, lat])
+  }
+  return out
+}
+
+export interface ViewBox {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+/** A view box around `bounds` (SVG units) with some margin, widened or heightened to the map's own shape so the
+ * map fills its frame. Pure (tested). */
+export function fitBox([[x0, y0], [x1, y1]]: [[number, number], [number, number]], aspect: number, margin = 0.04): ViewBox {
+  let w = (x1 - x0) * (1 + 2 * margin)
+  let h = (y1 - y0) * (1 + 2 * margin)
+  if (w / h < aspect) w = h * aspect
+  else h = w / aspect
+  return { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h }
+}
+
+/** Is a country smaller than a fingertip (the 64 px tap size) at this scale (screen px per SVG unit)? */
+export const tooSmallToTap = ([[x0, y0], [x1, y1]]: [[number, number], [number, number]], scale: number, tap = 64) => Math.max(x1 - x0, y1 - y0) * scale < tap
+
 // ---- Quiz ----
 
 export interface Quiz {

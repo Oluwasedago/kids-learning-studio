@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { COUNTRIES } from '@/lessons/data'
 import world from './data/world.json'
-import { answer, CONTINENTS, CONTINENT_COLORS, countryName, nextTarget, quizCountries, quizKind } from './maps'
+import { answer, boxPoints, CONTINENTS, CONTINENT_COLORS, countryName, fitBox, nextTarget, quizCountries, quizKind, tooSmallToTap, ZOOM_AREAS } from './maps'
 
 type Topo = { objects: Record<string, { geometries: { properties: Record<string, string> }[] }> }
 const onMap = Object.values((world as unknown as Topo).objects)[0].geometries.map((g) => g.properties)
@@ -28,6 +28,33 @@ describe('world map data', () => {
     expect(countryName(china, 'en')).toBe('China')
     expect(countryName(china, 'de')).toBe('China')
     expect(countryName({ id: 'XX', names: { de: 'Irgendwo', en: 'Somewhere', fr: '' }, continent: 'Asia' }, 'fr')).toBe('Somewhere')
+  })
+})
+
+describe('zoom', () => {
+  it('fits a box to the map frame, keeping the map in shape', () => {
+    // Wide area into a 2:1 frame: the height grows.
+    expect(fitBox([[0, 0], [100, 20]], 2, 0)).toEqual({ x: 0, y: -15, w: 100, h: 50 })
+    // Tall area: the width grows; the middle stays where it was.
+    expect(fitBox([[10, 10], [30, 50]], 2, 0)).toEqual({ x: -20, y: 10, w: 80, h: 40 })
+    const withMargin = fitBox([[0, 0], [100, 50]], 2)
+    expect(withMargin.w).toBeCloseTo(108)
+    expect(withMargin.h).toBeCloseTo(54)
+  })
+
+  it('a country smaller than a fingertip gets its own tap target', () => {
+    expect(tooSmallToTap([[0, 0], [10, 5]], 2)).toBe(true) // 20 px
+    expect(tooSmallToTap([[0, 0], [10, 40]], 2)).toBe(false) // 80 px tall
+    expect(tooSmallToTap([[0, 0], [32, 1]], 2)).toBe(false) // exactly 64 px wide
+  })
+
+  it('every zoom area is a real box, and the points around it cover its corners', () => {
+    for (const [w, s, e, n] of Object.values(ZOOM_AREAS)) {
+      expect(w).toBeLessThan(e)
+      expect(s).toBeLessThan(n)
+    }
+    const points = boxPoints([0, 0, 10, 20], 2)
+    for (const corner of [[0, 0], [10, 0], [0, 20], [10, 20]]) expect(points).toContainEqual(corner)
   })
 })
 

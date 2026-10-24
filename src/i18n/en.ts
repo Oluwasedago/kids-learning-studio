@@ -141,6 +141,8 @@ export const en = {
     hereItIs: 'Here it is: in green.',
     next: 'Next question',
     tapHint: 'Tap a country on the map.',
+    world: 'World',
+    zoomHint: 'Small countries: tap a continent above the map to zoom in.',
     capital: (city: string) => `Capital: ${city}`,
     inContinent: (continent: string) => `Continent: ${continent}`,
     people: (n: string) => `People: about ${n}`,

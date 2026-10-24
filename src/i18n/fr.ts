@@ -139,6 +139,8 @@ export const fr: Strings = {
     hereItIs: 'C’est ici : en vert.',
     next: 'Question suivante',
     tapHint: 'Touche un pays sur la carte.',
+    world: 'Monde',
+    zoomHint: 'Petits pays : touche un continent au-dessus de la carte pour zoomer.',
     capital: (city: string) => `Capitale : ${city}`,
     inContinent: (continent: string) => `Continent : ${continent}`,
     people: (n: string) => `Habitants : environ ${n}`,
