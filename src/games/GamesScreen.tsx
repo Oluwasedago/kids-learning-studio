@@ -1,5 +1,6 @@
 import { ArrowLeft, Clock } from 'lucide-react'
 import { type ComponentType, useEffect, useState } from 'react'
+import { useStopSpeechOnLeave } from '@/audio/useSpeaking'
 import { isOpen } from '@/access/access'
 import { ITEMS, itemsIn, type ItemId } from '@/access/catalogue'
 import { StatusBar } from '@/app/Shell'
@@ -23,6 +24,8 @@ export function GamesScreen({ start, onStarted }: { start?: ItemId | null; onSta
   const t = useT()
   const { accessOf } = useStudio()
   const [playing, setPlaying] = useState<ItemId | null>(null)
+  // Starting or leaving a game stops what was being read.
+  useStopSpeechOnLeave(playing)
   useEffect(() => {
     if (start && GAMES[start] && isOpen(accessOf(start))) setPlaying(start)
     if (start) onStarted?.()

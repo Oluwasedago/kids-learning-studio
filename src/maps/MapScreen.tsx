@@ -1,12 +1,14 @@
 import { geoCentroid, geoNaturalEarth1, geoPath } from 'd3-geo'
 import type { Feature, FeatureCollection, Geometry } from 'geojson'
-import { ArrowLeft, Volume2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { feature } from 'topojson-client'
 import type { GeometryCollection, Topology } from 'topojson-specification'
 import { StatusBar } from '@/app/Shell'
 import { useStudio } from '@/app/studio'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, sayText, useCanSpeak } from '@/audio/say'
+import { useStopSpeechOnLeave } from '@/audio/useSpeaking'
 import { useLang, useT } from '@/i18n'
 import { COUNTRIES } from '@/lessons/data'
 import { useArea } from '@/progress/usage'
@@ -81,6 +83,8 @@ export default function MapScreen({ onClose }: { onClose: () => void }) {
   const t = useT()
   const [mode, setMode] = useState<'explore' | 'quiz'>('explore')
   useArea('library:worldmap')
+  // Explore ↔ quiz, or closing the map, stops what was being read.
+  useStopSpeechOnLeave(mode)
   // Flags for offline use, fetched quietly a few seconds after the map opens.
   useEffect(() => {
     const stop = new AbortController()
@@ -120,12 +124,11 @@ export default function MapScreen({ onClose }: { onClose: () => void }) {
 function Explore() {
   const t = useT()
   const lang = useLang()
-  const { settings } = useStudio()
   const [selected, setSelected] = useState<Region | null>(null)
   const [zoom, setZoom] = useState<Zoom>('world')
   const pick = (r: Region) => {
     setSelected(r)
-    if (settings.readAloud) sayText(spoken(countryLines(r, lang, t)), lang)
+    sayText(spoken(countryLines(r, lang, t)), lang)
   }
   return (
     <div className="maps-body">
@@ -155,7 +158,7 @@ function Explore() {
 function QuizView() {
   const t = useT()
   const lang = useLang()
-  const { settings, stage } = useStudio()
+  const { stage } = useStudio()
   const speaks = useCanSpeak(lang)
   const kind = quizKind(stage)
   // Every lesson country on the map: zoomed in, even the smallest gets a fingertip-sized target.
@@ -177,7 +180,7 @@ function QuizView() {
 
   const nameOf = (id: string) => (kind === 'continents' ? CONTINENTS[id][lang] : countryName(REGIONS.find((r) => r.id === id)!, lang))
   const question = (id: string) => t.maps.whereIs(nameOf(id))
-  const say = (text: string) => settings.readAloud && sayText(text, lang)
+  const say = (text: string) => sayText(text, lang)
 
   // The first question is read out when the quiz opens.
   useEffect(() => {
@@ -233,8 +236,8 @@ function QuizView() {
         {feedback?.result === 'shown' && <p className="maps-shown">{t.maps.hereItIs}</p>}
         <div className="maps-buttons">
           {speaks && (
-            <button className="secondary" onClick={() => sayText(question(quiz.target), lang)} aria-label={t.mission.hear}>
-              <Volume2 />
+            <button className="secondary" onClick={() => readOut(question(quiz.target), lang)} aria-label={t.mission.hear}>
+              <ReadIcon text={question(quiz.target)} />
             </button>
           )}
           {finished && <button onClick={nextQuestion}>{t.maps.next}</button>}

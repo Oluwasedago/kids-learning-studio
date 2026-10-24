@@ -1,6 +1,7 @@
-import { ArrowRight, Volume2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, useCanSpeak } from '@/audio/say'
 import { useT } from '@/i18n'
 import { WORDS } from '@/lessons/data'
 import { Emoji } from '@/shared/Emoji'
@@ -52,8 +53,8 @@ export function WordBuilder() {
         <div className="builder-picture">
           <Emoji name={round.word.emoji} size={150} />
           {speaks && (
-            <button className="secondary builder-hear" onClick={() => sayText(round.word.word)} aria-label={t.mission.hear}>
-              <Volume2 />
+            <button className="secondary builder-hear" onClick={() => readOut(round.word.word)} aria-label={t.mission.hear}>
+              <ReadIcon text={round.word.word} />
             </button>
           )}
         </div>

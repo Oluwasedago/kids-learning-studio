@@ -13,6 +13,7 @@ import { addUsage, currentArea, TICK_SECONDS } from '@/progress/usage'
 import { DEMO_PIN, startDemo } from '@/setup/demo'
 import { SetupWizard } from '@/setup/SetupWizard'
 import { setMuted, setVoicePreference } from '@/audio/say'
+import { useStopSpeechOnLeave } from '@/audio/useSpeaking'
 import { useAutoUpdate } from '@/shared/autoUpdate'
 import { Emoji } from '@/shared/Emoji'
 import { isDark, useSystemDark } from '@/shared/theme'
@@ -75,6 +76,8 @@ function Screens() {
   const [askPin, setAskPin] = useState(false)
   const [startGame, setStartGame] = useState<ItemId | null>(null)
   const [startListen, setStartListen] = useState<ItemId | null>(null)
+  // Another screen (Home, Learn, Games, Media, Parents) stops what was being read; radio and stories keep playing.
+  useStopSpeechOnLeave(screen)
   const idle = useIdle(IDLE_MS)
   const player = usePlayer()
   // A story or the radio plays without a touch: a new version waits until it stops.

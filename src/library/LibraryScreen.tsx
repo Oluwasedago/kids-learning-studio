@@ -1,7 +1,9 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, Volume2 } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import { StatusBar } from '@/app/Shell'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, useCanSpeak } from '@/audio/say'
+import { useStopSpeechOnLeave } from '@/audio/useSpeaking'
 import { type Lang, useLang, useT } from '@/i18n'
 import { ANIMALS } from '@/lessons/data'
 import { lessonText } from '@/lessons/text'
@@ -52,6 +54,8 @@ export function LibraryScreen({ shelf, onClose }: { shelf: Shelf; onClose: () =>
   const [country, setCountry] = useState<string | null>(null)
   const [open, setOpen] = useState<number | null>(null)
   useArea(`library:${shelf}`)
+  // Another entry, back to the grid, or closing the library stops what was being read.
+  useStopSpeechOnLeave(open)
   const list = entries(shelf, lang, country, t)
   const countries = Object.keys(PLACE_COUNTRIES)
     .filter((c) => PLACES.some((p) => p.countries.includes(c)))
@@ -119,8 +123,8 @@ function Detail({ entry, onPrev, onNext }: { entry: Entry; onPrev: () => void; o
         <h2>
           {entry.name}
           {speaks && (
-            <button className="secondary" onClick={() => sayText(spoken, lang)} aria-label={t.mission.hear}>
-              <Volume2 />
+            <button className="secondary" onClick={() => readOut(spoken, lang)} aria-label={t.mission.hear}>
+              <ReadIcon text={spoken} />
             </button>
           )}
         </h2>

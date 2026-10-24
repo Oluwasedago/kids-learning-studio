@@ -1,7 +1,6 @@
-import { Volume2 } from 'lucide-react'
 import { useState } from 'react'
-import { useStudio } from '@/app/studio'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, sayText, useCanSpeak } from '@/audio/say'
 import { useLang, useT } from '@/i18n'
 import { Emoji } from '@/shared/Emoji'
 import { type CodeMode, makePuzzle, messageOrder, nextCell } from './code'
@@ -12,7 +11,6 @@ export function CodeBreaker() {
   const t = useT()
   const lang = useLang()
   const speaks = useCanSpeak(lang)
-  const { settings } = useStudio()
   const [mode, setMode] = useState<CodeMode>('pictures')
   const [order, setOrder] = useState(() => messageOrder(lang))
   const [n, setN] = useState(0)
@@ -49,7 +47,7 @@ export function CodeBreaker() {
     setSolved(after)
     if (nextCell(puzzle, after) === -1) {
       setCracked((c) => c + 1)
-      if (speaks && settings.readAloud) sayText(puzzle.message.toLowerCase(), lang)
+      if (speaks) sayText(puzzle.message.toLowerCase(), lang)
     }
   }
   const code = (c: string, size: number) => (mode === 'numbers' ? <span className="code-number">{c}</span> : <Emoji name={c} size={size} />)
@@ -99,8 +97,8 @@ export function CodeBreaker() {
           )
         })}
         {done && speaks && (
-          <button className="secondary code-say" onClick={() => sayText(puzzle.message.toLowerCase(), lang)} aria-label={t.mission.hear}>
-            <Volume2 />
+          <button className="secondary code-say" onClick={() => readOut(puzzle.message.toLowerCase(), lang)} aria-label={t.mission.hear}>
+            <ReadIcon text={puzzle.message.toLowerCase()} />
           </button>
         )}
       </div>

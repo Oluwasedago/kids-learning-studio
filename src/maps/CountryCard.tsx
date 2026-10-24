@@ -1,6 +1,6 @@
-import { Volume2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, useCanSpeak } from '@/audio/say'
 import { useLang, useT } from '@/i18n'
 import { countryLines, factsOf, flagUrl, spoken } from './countries'
 import { countryName, type Region } from './maps'
@@ -57,8 +57,8 @@ export function CountryCard({ region, regions, onPick }: { region: Region; regio
         </>
       )}
       {speaks && (
-        <button className="secondary maps-hear" onClick={() => sayText(spoken(lines), lang)}>
-          <Volume2 /> {t.maps.hear}
+        <button className="secondary maps-hear" onClick={() => readOut(spoken(lines), lang)}>
+          <ReadIcon text={spoken(lines)} /> {t.maps.hear}
         </button>
       )}
     </div>

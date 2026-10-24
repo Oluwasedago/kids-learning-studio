@@ -1,9 +1,11 @@
-import { ArrowLeft, Volume2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { ITEMS, type Subject } from '@/access/catalogue'
 import { StatusBar } from '@/app/Shell'
 import { useStudio } from '@/app/studio'
-import { sayText, useCanSpeak } from '@/audio/say'
+import { ReadIcon } from '@/audio/ReadIcon'
+import { readOut, useCanSpeak } from '@/audio/say'
+import { useStopSpeechOnLeave } from '@/audio/useSpeaking'
 import type { Score } from '@/data/types'
 import { type Lang, useLang, useT } from '@/i18n'
 import { COUNTRIES, WORDS } from '@/lessons/data'
@@ -122,6 +124,8 @@ function Quiz({ subject, level, count, onDone }: { subject: Subject; level: numb
   const [picked, setPicked] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Answer[]>([])
   const q = round[index]
+  // The next question, or leaving the mission, stops what was being read.
+  useStopSpeechOnLeave(index)
   const speaks = useCanSpeak(speech)
 
   const advance = (all: Answer[]) => {
@@ -157,8 +161,8 @@ function Quiz({ subject, level, count, onDone }: { subject: Subject; level: numb
       <div className="quiz-ask">
         <p>{q.prompt}</p>
         {speaks && (
-          <button className="secondary quiz-hear" onClick={() => sayText(q.spoken ?? q.prompt, speech)} aria-label={t.mission.hear}>
-            <Volume2 />
+          <button className="secondary quiz-hear" onClick={() => readOut(q.spoken ?? q.prompt, speech)} aria-label={t.mission.hear}>
+            <ReadIcon text={q.spoken ?? q.prompt} />
           </button>
         )}
       </div>
