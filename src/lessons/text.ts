@@ -40,6 +40,8 @@ export interface LessonText {
   digitWorth: (digit: number, n: number) => string
   roundTo: (n: number, to: 10 | 100) => string
   percentOf: (percent: number, n: number) => string
+  /** A calculation shown as it is written ("3 + 4 × 2", "7²"). */
+  calc: (expr: string) => string
   /** Animal names and facts by animal id. A fact never names the animal. */
   animals: Record<string, { name: string; fact: string }>
   countries: Record<string, { name: string; capital: string }>
@@ -79,6 +81,7 @@ export const LESSON_EN: LessonText = {
   digitWorth: (d, n) => `What is the digit ${d} worth in ${n}?`,
   roundTo: (n, to) => `Round ${n} to the nearest ${to === 10 ? 'ten' : 'hundred'}.`,
   percentOf: (p, n) => `What is ${p}% of ${n}?`,
+  calc: (e) => `What is ${e}?`,
   animals: Object.fromEntries(ANIMALS.map((a) => [a.id, { name: a.name, fact: a.fact }])),
   countries: Object.fromEntries(COUNTRIES.map((c) => [c.id, { name: c.name, capital: c.capital }])),
   continents: { Europe: 'Europe', Africa: 'Africa', Asia: 'Asia', 'South America': 'South America' },

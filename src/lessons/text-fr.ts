@@ -34,6 +34,7 @@ export const LESSON_FR: LessonText = {
   digitWorth: (d, n) => `Que vaut le chiffre ${d} dans ${n} ?`,
   roundTo: (n, to) => `Arrondis ${n} à la ${to === 10 ? 'dizaine' : 'centaine'} la plus proche.`,
   percentOf: (p, n) => `Combien font ${p} % de ${n} ?`,
+  calc: (e) => `Combien font ${e} ?`,
   animals: {
     fox: { name: 'renard', fact: 'Cet animal entend si bien qu’il peut entendre une souris sous la neige.' },
     owl: { name: 'chouette', fact: 'Cet animal peut tourner la tête très loin.' },
@@ -109,6 +110,11 @@ export const LESSON_FR: LessonText = {
   },
   continents: { Europe: 'Europe', Africa: 'Afrique', Asia: 'Asie', 'South America': 'Amérique du Sud' },
   skills: {
+    'order-ops': 'Priorités : × et ÷ avant + et −',
+    squares: 'Les carrés',
+    'times-2x2': 'Multiplier deux nombres à deux chiffres',
+    'divide-3digit': 'Diviser un nombre à trois chiffres',
+    'percent-hard': 'Pourcentages plus difficiles (5 %, 15 %, 75 %…)',
     'time-units': 'Le temps : heures, minutes, secondes',
     'place-value-1000': 'La valeur des chiffres jusqu’à 1000',
     'round-10': 'Arrondir à la dizaine',

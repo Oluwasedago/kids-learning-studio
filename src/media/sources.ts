@@ -4,7 +4,8 @@
 //   other players: TO VERIFY with each station before v1 (ROADMAP.md). Parents can add other stations themselves.
 //   - Die Maus (WDR, German public broadcaster): in German, no adverts. The address forwards to a fresh signed
 //     stream link each time (allowed for web players: Access-Control-Allow-Origin *).
-//   - Fun Kids and Fun Kids Junior (UK, funkidslive.com): in English, with short adverts.
+//   - Fun Kids (UK, funkidslive.com): in English, with short adverts.
+//   - Babyradio (Spain): in Spanish (adverts to verify).
 //   A US station (Kids Public Radio, ad-free) was checked but only streams over http://, which browsers block
 //   inside an https:// app.
 // Stories — LibriVox recordings of public-domain children's books, hosted by the Internet Archive.
@@ -18,7 +19,7 @@ export interface Station {
   name: string
   url: string
   /** The language it speaks: stations in the app language come first. Parents' own stations have none. */
-  lang?: 'en' | 'de' | 'fr'
+  lang?: 'en' | 'de' | 'fr' | 'es'
   emoji: string
   /** Built in (true) or added by a parent. */
   builtIn: boolean
@@ -27,10 +28,12 @@ export interface Station {
 export const STATIONS: Station[] = [
   { id: 'maus', name: 'Die Maus', url: 'https://wdr-diemaus-live.icecastssl.wdr.de/wdr/diemaus/live/mp3/128/stream.mp3', lang: 'de', emoji: 'mouse', builtIn: true },
   { id: 'funkids', name: 'Fun Kids', url: 'https://listen-funkids.sharp-stream.com/funkids.mp3', lang: 'en', emoji: 'radio', builtIn: true },
-  { id: 'funkids-junior', name: 'Fun Kids Junior', url: 'https://listen-funkids.sharp-stream.com/funkidsjunior.mp3', lang: 'en', emoji: 'teddy', builtIn: true },
   // Radio France's children's station (public service, no adverts); the plain MP3 stream, not the HLS playlist,
   // so every browser can play it.
   { id: 'monpetitfranceinter', name: 'Mon Petit France Inter', url: 'https://icecast.radiofrance.fr/monpetitfranceinter-midfi.mp3', lang: 'fr', emoji: 'music', builtIn: true },
+  // Babyradio España (Cádiz, children's radio since 2011), in Spanish. StreamTheWorld's address forwards to a live
+  // server each time (checked 24 Oct 2026: MP3, 128 kbit/s). Adverts: TO VERIFY by listening.
+  { id: 'babyradio', name: 'Babyradio', url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/SAM04AAC34_SC', lang: 'es', emoji: 'teddy', builtIn: true },
 ]
 
 /** The built-in stations with the ones in the app language first (otherwise in the order above). */

@@ -14,7 +14,7 @@ import './Games.css'
 /** A pastel card colour per subject (CSS tokens, so dark mode works). */
 const COLORS: Record<Subject, string> = { maths: 'var(--sky-soft)', english: 'var(--accent-soft)', world: 'var(--peach-soft)', patterns: 'var(--lilac-soft)' }
 
-/** Learn: every enabled subject with the skill being practised now; any of them can be practised at any time. */
+/** Learn: the library (places and animals) first, then every enabled subject with the skill being practised now. */
 export function LearnScreen() {
   const t = useT()
   const { accessOf, progress, stage } = useStudio()
@@ -25,6 +25,12 @@ export function LearnScreen() {
 
   return (
     <div className="games-screen">
+      {/* The library first: places and animals of the world. */}
+      {(['places', 'animals'] as const).map((id) => (
+        <ItemTile key={id} id={id} className="game-card library-tile" onOpen={() => setShelf(id)}>
+          <span className="game-learn">{t.itemLearn[id]}</span>
+        </ItemTile>
+      ))}
       {subjects.map((s) => {
         const steps = LADDERS[s]
         const level = Math.min(levelOf(progress, s, stage), steps.length - 1)
@@ -42,11 +48,6 @@ export function LearnScreen() {
           </button>
         )
       })}
-      {(['animals', 'places'] as const).map((id) => (
-        <ItemTile key={id} id={id} className="game-card library-tile" onOpen={() => setShelf(id)}>
-          <span className="game-learn">{t.itemLearn[id]}</span>
-        </ItemTile>
-      ))}
       {subject && <MissionScreen subject={subject} onClose={() => setSubject(null)} />}
       {shelf && <LibraryScreen shelf={shelf} onClose={() => setShelf(null)} />}
     </div>

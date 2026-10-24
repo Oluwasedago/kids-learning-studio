@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SUBJECTS } from '@/access/catalogue'
 import { A_AN, ANIMALS, COMMON_WORDS, COUNTRIES, FRUITS, OPPOSITES, PAST_TENSES, PLURALS, WORDS } from './data'
+import { UNCLEAR_EN } from './english'
 import { FACTS } from './facts'
 import type { Lang } from '@/i18n'
 import { LADDERS } from './ladder'
@@ -100,6 +101,10 @@ const FIXED_KEY: Record<string, string> = {
 
 /** Works out a sum written as "a + b", "a − b", "a × b", "a ÷ b", "double n", "half of n", "1/d of n". */
 function solve(text: string): number {
+  // Order of operations and squares: worked out by JavaScript's own rules (× before +, brackets first).
+  if (/^[\d ()+−×²]+$/.test(text) && /[+−].*×|×.*[+−]|²|\(/.test(text)) {
+    return Function(`return ${text.replace(/×/g, '*').replace(/−/g, '-').replace(/(\d+)²/g, '($1**2)')}`)() as number
+  }
   let m = text.match(/^(\d+) ([+−×÷]) (\d+)$/)
   if (m) {
     const [a, b] = [Number(m[1]), Number(m[3])]
@@ -192,8 +197,10 @@ function check(step: string, q: Question, lang: Lang): string | null {
       return name && label(r) === name && !w.some((c) => label(c) === name) ? null : 'name does not match the photo'
     }
     case 'first-letter': {
-      const word = q.prompt.match(/"(\w+)"/)![1]
-      return label(r) === word[0] && WORDS.some((x) => x.word === word && x.emoji === emojiOf(q.visual)) ? null : 'wrong first letter'
+      const w = WORDS.find((x) => x.emoji === emojiOf(q.visual))
+      if (!w || UNCLEAR_EN.has(w.word)) return 'a picture with more than one name'
+      if (q.prompt.includes(w.word)) return 'the prompt gives the word away'
+      return label(r) === w.word[0] ? null : 'wrong first letter'
     }
     case 'match-word':
     case 'spell-short':

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { SUBJECTS } from '@/access/catalogue'
 import { misspellings } from './english'
 import { classLabel, classesOf } from './classes'
-import { adapt, LADDERS, levelRange, makeRound, passMark, stageTags, starsFor, startLevel } from './ladder'
+import { adapt, clampLevel, LADDERS, levelRange, makeRound, passMark, stageTags, starsFor, startLevel } from './ladder'
 import { seeded } from './question'
 
 describe('skills ladder', () => {
@@ -60,13 +60,20 @@ describe('skills ladder', () => {
     for (const sys of ['cambridge', 'england', 'us', 'germany', 'nigeria'] as const) expect(classesOf(sys).map((c) => c.stage)).toEqual([0, 1, 2, 3, 4, 5, 6])
   })
 
-  it('adapts: up after two strong rounds, down after a weak one', () => {
-    expect(adapt(3, [], 1, 10)).toEqual({ level: 3, recent: [1] })
-    expect(adapt(3, [1], 0.875, 10)).toEqual({ level: 4, recent: [] })
-    expect(adapt(3, [1], 0.75, 10)).toEqual({ level: 3, recent: [1, 0.75] })
-    expect(adapt(3, [1], 0.5, 10)).toEqual({ level: 2, recent: [] })
+  it('adapts: up after one very strong or two strong rounds, down after a weak one', () => {
+    expect(adapt(3, [], 1, 10)).toEqual({ level: 4, recent: [] })
+    expect(adapt(3, [], 0.8, 10)).toEqual({ level: 3, recent: [0.8] })
+    expect(adapt(3, [0.8], 0.85, 10)).toEqual({ level: 4, recent: [] })
+    expect(adapt(3, [0.8], 0.7, 10)).toEqual({ level: 3, recent: [0.8, 0.7] })
+    expect(adapt(3, [1], 0.4, 10)).toEqual({ level: 2, recent: [] })
     expect(adapt(0, [], 0.25, 10)).toEqual({ level: 0, recent: [0.25] })
     expect(adapt(10, [1], 1, 10)).toEqual({ level: 10, recent: [1, 1] })
+  })
+
+  it('a new class moves a saved level into its range at once (Stage 6 never asks "before 7")', () => {
+    const low = 2 // "numbers to 20: before and after", saved when the class was lower
+    expect(LADDERS.maths[clampLevel('maths', 6, low)].stage).toBeGreaterThanOrEqual(6)
+    expect(clampLevel('maths', 3, 0)).toBe(levelRange('maths', 3).min)
   })
 
   it('a round has 10 different questions (shuffled buttons do not make a question new)', () => {

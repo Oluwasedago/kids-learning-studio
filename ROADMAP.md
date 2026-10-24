@@ -20,7 +20,7 @@ Legend: **done** · **to verify** (built, needs checking on a device or with a s
 | Animal facts, "Did you know?" facts, capitals, flag colours | second check done 23 Oct 2026 (pictures matched to facts, ambiguous questions fixed); `src/lessons/content.test.ts` checks every question type for exactly one true answer |
 | Games: memory, word builder, puzzle, snake, code breaker | done |
 | Library: 40 animals and 40 places of the world with real photos (Wikimedia Commons, credited), photo questions in World | done; facts to verify again like all facts |
-| Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter) | to verify: each station's terms for other players (none published) |
+| Media: radio (Die Maus / WDR, Fun Kids, Mon Petit France Inter, Babyradio in Spanish) | to verify: each station's terms for other players (none published); whether Babyradio has adverts |
 | Media: story speed (slow, a bit slower, normal) | done |
 | Media: video library (how things are made / work, live animal cams; official channels) | done; run `node scripts/check-videos.mjs` before each release (live ids can change) |
 | Phone layout (320–390 px, larger text) | done; checked automatically for overflow on every screen |

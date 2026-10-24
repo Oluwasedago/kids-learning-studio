@@ -347,7 +347,7 @@ export const de: Strings = {
   stations: {
     maus: 'Kinderradio vom WDR (auf Deutsch, ohne Werbung)',
     funkids: 'Kinderradio aus Großbritannien, 6–12 Jahre (auf Englisch, mit kurzer Werbung)',
-    'funkids-junior': 'Lieder und Geschichten für Jüngere (auf Englisch, mit kurzer Werbung)',
+    babyradio: 'Kinderradio aus Spanien: Lieder und Geschichten (auf Spanisch)',
     monpetitfranceinter: 'Kinderradio von Radio France, 6–12 Jahre (auf Französisch, ohne Werbung)',
   },
   videos: {

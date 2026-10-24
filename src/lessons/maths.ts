@@ -207,4 +207,59 @@ export const MATHS: Step[] = [
       return numberQuestion(r, lessonText(l).percentOf(p, n), (n * p) / 100, { kind: 'text', text: `${p}% × ${n}` })
     },
   },
+  // Harder steps for the oldest children (and the stretch above Stage 6).
+  {
+    id: 'order-ops',
+    stage: 6,
+    skill: 'Order of operations: × and ÷ before + and −',
+    make: (r, l) => {
+      const [a, b, c] = [int(r, 2, 12), int(r, 2, 9), int(r, 2, 9)]
+      const kind = int(r, 0, 2)
+      const expr = kind === 0 ? `${a} + ${b} × ${c}` : kind === 1 ? `${b * c + a} − ${b} × ${c}` : `(${a} + ${b}) × ${c}`
+      const value = kind === 0 ? a + b * c : kind === 1 ? a : (a + b) * c
+      // The usual mistake (working left to right) is one of the wrong answers.
+      const leftToRight = kind === 0 ? (a + b) * c : kind === 1 ? (b * c + a - b) * c : a + b * c
+      const spread = leftToRight !== value && leftToRight >= 0 ? [leftToRight - value, 1, -1, 2] : [1, -1, 2, -2, 10]
+      return numberQuestion(r, lessonText(l).calc(expr), value, { kind: 'text', text: expr }, spread)
+    },
+  },
+  {
+    id: 'squares',
+    stage: 6,
+    skill: 'Square numbers',
+    make: (r, l) => {
+      const n = int(r, 4, 15)
+      return numberQuestion(r, lessonText(l).calc(`${n}²`), n * n, { kind: 'text', text: `${n}²` }, [n, -n, 2 * n - 1, 1])
+    },
+  },
+  {
+    id: 'times-2x2',
+    stage: 7,
+    skill: 'Multiplying two 2-digit numbers',
+    make: (r, l) => {
+      const a = int(r, 12, 49)
+      const b = int(r, 11, 29)
+      return numberQuestion(r, lessonText(l).sum(a, '×', b), a * b, { kind: 'text', text: `${a} × ${b}` }, [10, -10, a, -a, b])
+    },
+  },
+  {
+    id: 'divide-3digit',
+    stage: 7,
+    skill: 'Dividing a 3-digit number',
+    make: (r, l) => {
+      const d = int(r, 3, 9)
+      const n = int(r, Math.ceil(100 / d), Math.floor(999 / d))
+      return numberQuestion(r, lessonText(l).sum(n * d, '÷', d), n, { kind: 'text', text: `${n * d} ÷ ${d}` }, [1, -1, 10, -10])
+    },
+  },
+  {
+    id: 'percent-hard',
+    stage: 7,
+    skill: 'Harder percentages (5 %, 15 %, 75 % …)',
+    make: (r, l) => {
+      const p = pick(r, [5, 15, 30, 40, 60, 75] as const)
+      const n = int(r, 1, 20) * 20
+      return numberQuestion(r, lessonText(l).percentOf(p, n), (n * p) / 100, { kind: 'text', text: `${p}% × ${n}` }, [5, -5, 10, -10, 1])
+    },
+  },
 ]

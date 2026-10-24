@@ -348,7 +348,7 @@ export const en = {
   stations: {
     maus: 'German children’s radio from WDR (in German, no adverts)',
     funkids: 'UK children’s radio, ages 6–12 (in English, with short adverts)',
-    'funkids-junior': 'Songs and stories for younger children (in English, with short adverts)',
+    babyradio: 'Children’s radio from Spain: songs and stories (in Spanish)',
     monpetitfranceinter: 'French children’s radio from Radio France, ages 6–12 (in French, no adverts)',
   },
   videos: {

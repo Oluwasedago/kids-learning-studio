@@ -47,7 +47,7 @@ export function MemoryGame() {
 
   return (
     <div className="memory">
-      <div className="memory-board" style={{ gridTemplateColumns: `repeat(${pairs === 6 ? 4 : 5}, 1fr)` }}>
+      <div className="memory-board" style={{ gridTemplateColumns: `repeat(${pairs === 6 ? 4 : 5}, minmax(0, 1fr))` }}>
         {board.map((card) => {
           const shown = open.includes(card.key) || found.has(card.pair)
           return (

@@ -44,11 +44,18 @@ export function misspellings(word: string, r: Random, count = 2): string[] {
   return out
 }
 
+/**
+ * Pictures with more than one everyday name (bunny or rabbit, ladybird or ladybug …): never in a question where the
+ * child has to name the picture.
+ */
+export const UNCLEAR_EN = new Set(['rabbit', 'ladybird', 'chipmunk', 'bee', 'hippo', 'whale', 'kiwi', 'blueberries', 'grapes', 'cherries'])
+
+/** Only the picture, never the word: the child names it and finds its first letter (that is how they learn). */
 function firstLetter(r: Random): Question {
-  const w = pick(r, wordsUpTo(9))
+  const w = pick(r, wordsUpTo(9).filter((x) => !UNCLEAR_EN.has(x.word)))
   const first = w.word[0]
   return {
-    prompt: `Which letter does "${w.word}" start with?`,
+    prompt: 'What is this? Which letter does it start with?',
     visual: { kind: 'emoji', name: w.emoji },
     ...shuffleIn(r, { label: first }, others(r, LETTERS, first).map((l) => ({ label: l }))),
   }

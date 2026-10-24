@@ -3,9 +3,8 @@ import { useState } from 'react'
 import { sayText, useCanSpeak } from '@/audio/say'
 import { useT } from '@/i18n'
 import { WORDS } from '@/lessons/data'
-import { shuffled } from '@/lessons/question'
 import { Emoji } from '@/shared/Emoji'
-import { newRound, nextIs, playable } from './builder'
+import { decoysFor, newRound, nextIs, nextLength, pickWord, playable, START_LENGTH } from './builder'
 import './Builder.css'
 
 /**
@@ -15,27 +14,36 @@ import './Builder.css'
 export function WordBuilder() {
   const t = useT()
   const speaks = useCanSpeak()
-  const [queue] = useState(() => shuffled(playable(WORDS)))
   const [count, setCount] = useState(0)
-  const [round, setRound] = useState(() => newRound(queue[0]))
+  // How long the words are: it grows when the child spells well and shrinks when it gets hard.
+  const [length, setLength] = useState(START_LENGTH)
+  const [cleanRun, setCleanRun] = useState(0)
+  const [mistakes, setMistakes] = useState(0)
+  const [round, setRound] = useState(() => newRound(pickWord(playable(WORDS), START_LENGTH)))
   const [used, setUsed] = useState<number[]>([])
   const [wrong, setWrong] = useState<number | null>(null)
   const built = used.map((i) => round.tiles[i]).join('')
   const done = built === round.target
 
   const next = () => {
-    const n = count + 1
-    setCount(n)
-    setRound(newRound(queue[n % queue.length]))
+    setCount(count + 1)
+    const moved = nextLength(length, cleanRun, mistakes)
+    setLength(moved.length)
+    setCleanRun(moved.cleanRun)
+    setRound(newRound(pickWord(playable(WORDS), moved.length, Math.random, round.word), Math.random, decoysFor(moved.length)))
     setUsed([])
     setWrong(null)
+    setMistakes(0)
   }
   const tap = (i: number) => {
     if (done || used.includes(i)) return
     if (nextIs(round, built, round.tiles[i])) {
       setUsed([...used, i])
       setWrong(null)
-    } else setWrong(i)
+    } else {
+      setWrong(i)
+      setMistakes(mistakes + 1)
+    }
   }
 
   return (

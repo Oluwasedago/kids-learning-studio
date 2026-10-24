@@ -34,6 +34,7 @@ export const LESSON_DE: LessonText = {
   digitWorth: (d, n) => `Wie viel ist die Ziffer ${d} in ${n} wert?`,
   roundTo: (n, to) => `Runde ${n} auf ${to === 10 ? 'Zehner' : 'Hunderter'}.`,
   percentOf: (p, n) => `Wie viel sind ${p} % von ${n}?`,
+  calc: (e) => `Wie viel ist ${e}?`,
   animals: {
     fox: { name: 'Fuchs', fact: 'Dieses Tier hört so gut, dass es eine Maus unter dem Schnee hören kann.' },
     owl: { name: 'Eule', fact: 'Dieses Tier kann seinen Kopf sehr weit herumdrehen.' },
@@ -109,6 +110,11 @@ export const LESSON_DE: LessonText = {
   },
   continents: { Europe: 'Europa', Africa: 'Afrika', Asia: 'Asien', 'South America': 'Südamerika' },
   skills: {
+    'order-ops': 'Punkt vor Strich',
+    squares: 'Quadratzahlen',
+    'times-2x2': 'Zwei zweistellige Zahlen malnehmen',
+    'divide-3digit': 'Dreistellige Zahlen teilen',
+    'percent-hard': 'Schwierigere Prozente (5 %, 15 %, 75 % …)',
     'time-units': 'Zeit: Stunden, Minuten, Sekunden',
     'place-value-1000': 'Stellenwert bis 1000',
     'round-10': 'Runden auf Zehner',

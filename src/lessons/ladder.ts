@@ -46,24 +46,34 @@ export function stageTags(stage: number): StageTags {
 /** The stage that matches an age (age 5 → Stage 1): only a first guess of the class; the parent sets the class. */
 export const stageForAge = (age: number) => Math.max(0, Math.min(6, age - 4))
 
-/** Where a child of a class (its stage) starts on a subject: the first step of that stage. Pure (tested). */
+/** Where a child of a class (its stage) starts on a subject: the middle step of that stage, not its easiest one. Pure (tested). */
 export function startLevel(subject: Subject, stage: number): number {
   const steps = LADDERS[subject]
-  const i = steps.findIndex((s) => s.stage >= stage)
-  return i === -1 ? steps.length - 1 : i
+  const first = steps.findIndex((s) => s.stage >= stage)
+  if (first === -1) return steps.length - 1
+  let last = first
+  while (last + 1 < steps.length && steps[last + 1].stage === steps[first].stage) last++
+  return Math.floor((first + last) / 2)
 }
 
 /**
- * The steps a child of a class works on: from one stage below (revision) to one stage above (a stretch).
- * The adaptive level stays inside; a parent changes the class to go further. Pure (tested).
+ * The steps a child of a class works on: from the first step of the class's stage (never below the class, so a new
+ * class moves the child up at once) to the end of the stage above (a stretch). The adaptive level stays inside; a
+ * parent changes the class to go further. Pure (tested).
  */
 export function levelRange(subject: Subject, stage: number): { min: number; max: number } {
   const steps = LADDERS[subject]
   const start = startLevel(subject, stage)
-  const first = steps.findIndex((s) => s.stage >= stage - 1)
+  const first = steps.findIndex((s) => s.stage >= stage)
   let max = start
   while (max + 1 < steps.length && steps[max + 1].stage <= stage + 1) max++
   return { min: Math.min(first === -1 ? start : first, start), max }
+}
+
+/** A saved level kept inside the range of the child's (maybe new) class. Pure (tested). */
+export const clampLevel = (subject: Subject, stage: number, level: number) => {
+  const { min, max } = levelRange(subject, stage)
+  return Math.max(min, Math.min(max, level))
 }
 
 /** A mission is passed (ticked off, stars) with at least 70 % right: 7 of 10, 18 of 25, 35 of 50. Pure (tested). */
@@ -72,18 +82,21 @@ export const passMark = (total: number) => Math.ceil(total * 0.7 - 1e-9)
 /** Stars for a passed mission: one per 10 questions, rounded (10 → 1, 25 → 3, 50 → 5). Pure (tested). */
 export const starsFor = (total: number) => Math.max(1, Math.round(total / 10))
 
-/** A round counts as strong at 85 % right or more, weak at half or less. */
-export const STRONG = 0.85
-export const WEAK = 0.5
+/** A round counts as strong at 80 % right or more, very strong at 90 %, weak at 40 % or less. */
+export const STRONG = 0.8
+export const VERY_STRONG = 0.9
+export const WEAK = 0.4
 
 /**
- * The adaptive step: after two strong rounds in a row, one step up; after a weak round, one step down.
+ * The adaptive step: after one very strong round or two strong rounds in a row, one step up; after a weak round,
+ * one step down.
  * `recent` holds the last results on the current step (0-1); it starts afresh after a change. Pure (tested).
  */
 export function adapt(level: number, recent: number[], result: number, maxLevel: number): { level: number; recent: number[] } {
   const history = [...recent, result].slice(-2)
   if (result <= WEAK && level > 0) return { level: level - 1, recent: [] }
-  if (history.length === 2 && history.every((x) => x >= STRONG) && level < maxLevel) return { level: level + 1, recent: [] }
+  const up = result >= VERY_STRONG || (history.length === 2 && history.every((x) => x >= STRONG))
+  if (up && level < maxLevel) return { level: level + 1, recent: [] }
   return { level, recent: history }
 }
 
@@ -92,7 +105,7 @@ export const MISSION_LENGTHS = [10, 25, 50] as const
 export const QUESTIONS_PER_MISSION = MISSION_LENGTHS[0]
 
 /**
- * A mission round: a fifth warm-up questions from the step below (revision), then questions from the current
+ * A mission round: a tenth warm-up questions from the step below (revision), then questions from the current
  * step, no question twice. When the current step has no new questions left (a long round on a small step,
  * like "a" or "an"), it goes on with revision from the steps below, and only then repeats a question, never
  * twice in a row. Pure with a seeded `r` (tested).
@@ -100,7 +113,7 @@ export const QUESTIONS_PER_MISSION = MISSION_LENGTHS[0]
 export function makeRound(subject: Subject, level: number, r: Random = Math.random, count: number = QUESTIONS_PER_MISSION, lang: Lang = 'en'): Question[] {
   const steps = LADDERS[subject]
   const at = Math.max(0, Math.min(level, steps.length - 1))
-  const warmUps = at > 0 ? Math.round(count / 5) : 0
+  const warmUps = at > 0 ? Math.round(count / 10) : 0
   const out: Question[] = []
   // The same question is the same prompt, picture and right answer, whatever the order of the buttons.
   const key = (q: Question) => JSON.stringify([q.prompt, q.visual, q.choices[q.answer]])

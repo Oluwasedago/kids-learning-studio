@@ -1,6 +1,6 @@
 import { type ItemId, SUBJECTS, type Subject } from '@/access/catalogue'
 import { type AccessRule, MAX_MISTAKES, type Mistake, type Progress, type Score } from '@/data/types'
-import { adapt, LADDERS, levelRange, passMark, starsFor, startLevel } from '@/lessons/ladder'
+import { adapt, clampLevel, LADDERS, levelRange, passMark, starsFor, startLevel } from '@/lessons/ladder'
 import { addDays, dayNumber, isoDate, mondayOf } from '@/shared/date'
 
 // Missions, stars and levels. Pure functions (tested in progress.test.ts).
@@ -28,8 +28,11 @@ export function weekStars(p: Progress, d: Date): number {
   return sum
 }
 
-/** The child's current step on a subject's ladder (the start step for their class when not set yet). */
-export const levelOf = (p: Progress, subject: Subject, stage: number) => p.levels[subject] ?? startLevel(subject, stage)
+/**
+ * The child's current step on a subject's ladder (the start step for their class when not set yet), always inside
+ * the range of the class: a parent's new class counts at once, not only after a round.
+ */
+export const levelOf = (p: Progress, subject: Subject, stage: number) => clampLevel(subject, stage, p.levels[subject] ?? startLevel(subject, stage))
 
 /** One answered question of a round. */
 export interface Answer {

@@ -8,6 +8,7 @@ import { CallsCard } from '@/media/CallsCard'
 import { animalOfTheDay } from '@/lessons/data'
 import { animalName } from '@/lessons/text'
 import { starsFor } from '@/lessons/ladder'
+import { LibraryScreen, type Shelf } from '@/library/LibraryScreen'
 import { MissionScreen } from '@/missions/MissionScreen'
 import { missionsFor, scoreOf, starsOn, weekStars } from '@/progress/progress'
 import { StreakCard } from '@/progress/StreakCard'
@@ -28,6 +29,8 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
   /** The missions card lights up when a locked tile is tapped. */
   const [nudge, setNudge] = useState(0)
   const [mission, setMission] = useState<Subject | null>(null)
+  /** The library opens straight from the home screen (places of the world were hard to find on Learn). */
+  const [shelf, setShelf] = useState<Shelf | null>(null)
   const tiles = [...itemsIn('games'), ...itemsIn('media')].filter((id) => ITEMS[id].ready)
 
   return (
@@ -42,11 +45,15 @@ export function Home({ onPlay }: { onPlay: (id: ItemId) => void }) {
           <BirthdaysCard />
         </div>
         <section className="play-row">
+          {(['places', 'animals'] as const).map((id) => (
+            <ItemTile key={id} id={id} onOpen={() => setShelf(id)} />
+          ))}
           {tiles.map((id) => (
             <ItemTile key={id} id={id} onOpen={() => onPlay(id)} onLocked={() => setNudge((n) => n + 1)} />
           ))}
         </section>
         {mission && <MissionScreen subject={mission} onClose={() => setMission(null)} />}
+        {shelf && <LibraryScreen shelf={shelf} onClose={() => setShelf(null)} />}
       </div>
       <DidYouKnow />
     </div>

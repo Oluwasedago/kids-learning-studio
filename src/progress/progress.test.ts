@@ -29,7 +29,7 @@ describe('progress', () => {
     expect(p.stars['2026-10-19']).toBe(1)
     p = completeMission(p, 'maths', answers(10), opts)
     expect(p.stars['2026-10-19']).toBe(1)
-    expect(levelOf(p, 'maths', 2)).toBe(levelOf(EMPTY_PROGRESS, 'maths', 2) + 1)
+    expect(levelOf(p, 'maths', 2)).toBe(levelOf(EMPTY_PROGRESS, 'maths', 2) + 2) // each perfect round moves one step up
     const practice = completeMission(EMPTY_PROGRESS, 'world', answers(10), { ...opts, counts: false })
     expect(practice.stars['2026-10-19']).toBeUndefined()
     expect(scoreOf(practice, 'world', day)).toBeNull()

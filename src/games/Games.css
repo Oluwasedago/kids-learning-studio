@@ -77,6 +77,8 @@
   inset: 0;
   z-index: 25;
   display: grid;
+  /* One column that never grows wider than the screen (wide content scrolls or shrinks instead of cutting off). */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr;
   gap: 0.8rem;
   padding: 1rem 1.2rem 0;
@@ -142,4 +144,36 @@
   background: var(--accent);
   color: #fff;
   font-size: 1.6rem;
+}
+
+/* Narrow screens (a phone held upright): every game stacks its side panel under the board, and nothing runs off the
+   right edge. */
+@media (max-width: 900px) {
+  .snake,
+  .memory,
+  .puzzle,
+  .builder {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(16rem, 1fr) auto;
+    overflow-y: auto;
+  }
+  .game-frame .statusbar {
+    flex-wrap: wrap;
+  }
+  .game-frame .statusbar-right .battery {
+    display: none;
+  }
+  /* The snake's start menu is taller than the (wide, short) board: show it over the whole screen. */
+  .snake-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border-radius: 0;
+    padding: 1rem;
+    background: rgb(30 14 36 / 80%);
+  }
+  .snake-options {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

@@ -75,7 +75,7 @@ export function PuzzleGame() {
 
   return (
     <div className="puzzle">
-      <div className="puzzle-board" style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}>
+      <div className="puzzle-board" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
         {order.map((tile, pos) => (
           <button
             key={pos}
