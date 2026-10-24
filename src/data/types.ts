@@ -49,8 +49,8 @@ export interface Settings {
   lang: Lang | null
   /** Reading aloud: the chosen voice (null = best available on the device) and speed. */
   voice: { name: string | null; rate: number }
-  /** Read things out as they appear (a tapped country, a quiz question, a solved code). Off: only the speaker
-   * buttons read aloud. */
+  /** Reading aloud on, or muted: nothing is read, not even by the speaker buttons (radio and stories keep
+   * playing). The round speaker button in the status bar and the parent page switch it. */
   readAloud: boolean
   /** The parent PIN, stored only as a salted PBKDF2 hash (see parent/pin.ts). null until the wizard sets it. */
   pin: { salt: string; hash: string; iterations: number } | null

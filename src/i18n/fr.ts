@@ -72,6 +72,8 @@ export const fr: Strings = {
     battery: (n: number) => `Batterie ${n} %`,
     charging: 'en charge',
     offline: 'Hors ligne',
+    readAloudOn: 'La lecture à voix haute est activée. Touche pour couper le son.',
+    readAloudOff: 'La lecture à voix haute est coupée. Touche pour la réactiver.',
     earnedLeft: (min: number) => `encore ${plural(min, 'minute', 'minutes')} de temps gagné`,
   },
   home: {
@@ -408,8 +410,8 @@ export const fr: Strings = {
     onlineNote: 'Voix en ligne : les mots lus sont envoyés au fournisseur de la voix (Google ou Microsoft). Rien d’autre n’est envoyé.',
     speed: 'Vitesse (10 = normale)',
     test: 'Tester la voix',
-    readAloud: 'Lire à voix haute tout seul',
-    readAloudNote: 'Activé : l’app lit dès que quelque chose apparaît (un pays touché, une question du quiz). Désactivé : seulement avec le bouton haut-parleur.',
+    readAloud: 'Lecture à voix haute (son)',
+    readAloudNote: 'Désactivée (muet) : rien n’est lu, même pas avec les boutons haut-parleur. La radio et les histoires continuent. Aussi avec le bouton haut-parleur rond dans la barre du haut.',
     sample: 'Bonjour ! Quel nombre vient après neuf ? Dix !',
     none: 'Cet appareil n’a pas de voix adaptée. Les questions sont seulement écrites.',
     howTo:

@@ -1,5 +1,7 @@
+import { Volume2, VolumeX } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { type ItemGroup, ITEMS, itemsIn } from '@/access/catalogue'
+import { setMuted } from '@/audio/say'
 import { LOCALES, useLang, useT } from '@/i18n'
 import { Emoji } from '@/shared/Emoji'
 import { useBattery } from '@/shared/useBattery'
@@ -7,6 +9,27 @@ import { clock } from '@/shared/clock'
 import { useOnline } from '@/shared/useOnline'
 import { type Screen, useStudio } from './studio'
 import './Shell.css'
+
+/**
+ * Reading aloud on or off, on every screen: a round 64 px button. On: a filled speaker with sound waves. Off
+ * (muted): an outlined speaker with a cross; nothing is read then, not even by the speaker buttons. A tap also
+ * stops what is being read. Saved in the settings (the same switch is on the parent page).
+ */
+function MuteButton() {
+  const t = useT()
+  const { settings, updateSettings } = useStudio()
+  const on = settings.readAloud
+  const toggle = () => {
+    // At once (muting stops the voice now); App.tsx keeps it in step with the settings afterwards.
+    setMuted(on)
+    updateSettings((s) => ({ ...s, readAloud: !on }))
+  }
+  return (
+    <button className={`status-chip voice ${on ? '' : 'off'}`} onClick={toggle} aria-label={on ? t.status.readAloudOn : t.status.readAloudOff} aria-pressed={!on}>
+      {on ? <Volume2 /> : <VolumeX />}
+    </button>
+  )
+}
 
 /** The menu. An entry shows when at least one of its items is switched on and ready (access layer 1). */
 const NAV: { id: Exclude<Screen, 'parents'>; emoji: string; group?: ItemGroup }[] = [
@@ -78,6 +101,7 @@ export function StatusBar({ title, left }: { title?: string; left?: ReactNode })
         </h1>
       )}
       <div className="statusbar-right">
+        <MuteButton />
         {!online && <span className="status-chip offline">{t.status.offline}</span>}
         {earnedLeft > 0 && (
           <span className="status-chip earned" aria-label={t.status.earnedLeft(Math.ceil(earnedLeft / 60))}>

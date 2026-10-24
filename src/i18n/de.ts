@@ -72,6 +72,8 @@ export const de: Strings = {
     battery: (n: number) => `Akku ${n} %`,
     charging: 'lädt',
     offline: 'Offline',
+    readAloudOn: 'Vorlesen ist an. Tippen zum Stummschalten.',
+    readAloudOff: 'Vorlesen ist stumm. Tippen zum Einschalten.',
     earnedLeft: (min: number) => `noch ${plural(min, 'Minute', 'Minuten')} verdiente Zeit`,
   },
   home: {
@@ -408,8 +410,8 @@ export const de: Strings = {
     onlineNote: 'Online-Stimme: Die vorgelesenen Wörter werden an den Anbieter der Stimme gesendet (Google oder Microsoft). Sonst wird nichts gesendet.',
     speed: 'Tempo (10 = normal)',
     test: 'Stimme testen',
-    readAloud: 'Von selbst vorlesen',
-    readAloudNote: 'An: Die App liest vor, sobald etwas erscheint (ein angetipptes Land, eine Quizfrage). Aus: nur mit der Lautsprecher-Taste.',
+    readAloud: 'Vorlesen (Ton)',
+    readAloudNote: 'Aus (stumm): Es wird nichts vorgelesen, auch nicht mit den Lautsprecher-Tasten. Radio und Geschichten laufen weiter. Auch mit der runden Lautsprecher-Taste oben in der Leiste.',
     sample: 'Hallo! Welche Zahl kommt nach neun? Zehn!',
     none: 'Dieses Gerät hat keine passende Stimme. Fragen erscheinen nur als Text.',
     howTo:

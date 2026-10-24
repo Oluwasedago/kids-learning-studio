@@ -157,6 +157,33 @@
   color: var(--red);
 }
 
+/* Reading aloud on/off: a round 64 px speaker button. On: filled, a speaker with sound waves. Off (muted):
+   outlined, a speaker with a cross. */
+.status-chip.voice,
+.status-chip.voice:active {
+  width: var(--tap);
+  height: var(--tap);
+  min-height: var(--tap);
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--card);
+  border: 3px solid var(--ink);
+}
+.status-chip.voice.off {
+  background: var(--card);
+  color: var(--ink);
+}
+.status-chip.voice svg {
+  width: 32px;
+  height: 32px;
+}
+/* The speaker body filled; the waves and the cross stay lines. */
+.status-chip.voice svg > :first-child {
+  fill: currentcolor;
+}
+
 /* Phones and narrow portrait screens: the menu becomes a bar along the bottom, where thumbs reach it. */
 @media (max-width: 760px) {
   .shell {
@@ -207,7 +234,7 @@
   .status-chip.battery {
     display: none;
   }
-  .status-chip {
+  .status-chip:not(.voice) {
     min-height: 2.4rem;
     padding: 0.2rem 0.7rem;
   }

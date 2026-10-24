@@ -12,7 +12,7 @@ import { ParentScreen } from '@/parent/ParentScreen'
 import { addUsage, currentArea, TICK_SECONDS } from '@/progress/usage'
 import { DEMO_PIN, startDemo } from '@/setup/demo'
 import { SetupWizard } from '@/setup/SetupWizard'
-import { setVoicePreference } from '@/audio/say'
+import { setMuted, setVoicePreference } from '@/audio/say'
 import { useAutoUpdate } from '@/shared/autoUpdate'
 import { Emoji } from '@/shared/Emoji'
 import { isDark, useSystemDark } from '@/shared/theme'
@@ -37,6 +37,8 @@ export default function App() {
 function Root() {
   const { ready, settings } = useStudio()
   setVoicePreference(settings.voice)
+  // Reading aloud on or muted (the round speaker in the status bar, the parent page).
+  useEffect(() => setMuted(!settings.readAloud), [settings.readAloud])
   const dark = isDark(settings.theme, useSystemDark())
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light'
