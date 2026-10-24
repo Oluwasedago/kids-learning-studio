@@ -19,6 +19,7 @@ Kept properties in `world.json`: `iso` (ISO 3166-1 alpha-2), `cont` (continent),
   Cyprus and Somalia, as most school atlases do.
 - Capitals corrected: Tanzania → Dodoma (not Dar es Salaam), Benin → Porto-Novo (not Cotonou), Kazakhstan →
   Astana (renamed back in 2022), Sri Lanka → Sri Jayawardenepura Kotte (not Colombo).
+- Sri Lanka has no neighbours by land (the source listed India, only one way).
 
 ## Rebuilding `world.json`
 

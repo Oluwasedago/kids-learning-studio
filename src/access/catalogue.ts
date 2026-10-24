@@ -14,6 +14,8 @@ export const ITEM_IDS = [
   // The library: animals and places of the world with real photos.
   'animals',
   'places',
+  // The world map: tap a country to learn about it; a quiz to find countries and continents.
+  'worldmap',
   // Our own games.
   'memory',
   'builder',
@@ -53,6 +55,7 @@ export const ITEMS: Record<ItemId, Item> = {
   facts: { id: 'facts', group: 'learning', emoji: 'light', ready: true, minAge: 4, starter: 'unlocked' },
   animals: { id: 'animals', group: 'learning', emoji: 'paws', ready: true, minAge: 4, starter: 'unlocked' },
   places: { id: 'places', group: 'learning', emoji: 'map', ready: true, minAge: 5, starter: 'unlocked' },
+  worldmap: { id: 'worldmap', group: 'learning', emoji: 'globe', ready: true, minAge: 5, starter: 'unlocked' },
   memory: { id: 'memory', group: 'games', emoji: 'joystick', ready: true, minAge: 4, starter: 'locked' },
   builder: { id: 'builder', group: 'games', emoji: 'memo', ready: true, minAge: 5, starter: 'locked' },
   puzzle: { id: 'puzzle', group: 'games', emoji: 'framed', ready: true, minAge: 4, starter: 'locked' },
