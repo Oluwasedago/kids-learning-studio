@@ -28,13 +28,20 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET' || url.origin !== location.origin || !url.href.startsWith(self.registration.scope)) return
   if (req.cache === 'no-store') return
 
+  // Keeps a copy. The copy is made at once: made later, the page may already be reading the response, and the
+  // copy would fail (then nothing was saved and the app could not start offline). waitUntil lets it finish.
+  const keep = (key, res) => {
+    const copy = res.clone()
+    event.waitUntil(caches.open(CACHE).then((c) => c.put(key, copy)))
+  }
+
   if (req.mode === 'navigate') {
     // Each page (the app, the install page) is kept under its own address, without "?…" (e.g. ?demo).
     const page = url.origin + url.pathname
     event.respondWith(
       fetch(req)
         .then((res) => {
-          if (res.ok && !res.redirected) caches.open(CACHE).then((c) => c.put(page, res.clone()))
+          if (res.ok && !res.redirected) keep(page, res)
           return res
         })
         .catch(() =>
@@ -52,7 +59,7 @@ self.addEventListener('fetch', (event) => {
       (hit) =>
         hit ??
         fetch(req).then((res) => {
-          if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()))
+          if (res.ok) keep(req, res)
           return res
         }),
     ),
