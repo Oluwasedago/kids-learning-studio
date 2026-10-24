@@ -5,7 +5,7 @@ Bundled with the app (no map server, nothing fetched at runtime). Built 24 Oct 2
 | File | Source | Licence |
 |---|---|---|
 | `world.json` | [Natural Earth](https://www.naturalearthdata.com/) 1:110m Admin 0 Countries (`ne_110m_admin_0_countries.geojson` from github.com/nvkelso/natural-earth-vector), TopoJSON simplified with [mapshaper](https://github.com/mbloch/mapshaper); Antarctica and open-ocean territories left out | Public domain |
-| `countries.json` | Facts per country on the map. Capitals: Natural Earth 1:10m populated places (German and French names). Population: Natural Earth admin-0 `POP_EST` (estimates for 2019, see `popYear`). Area, languages (ISO 639-3), currencies (ISO 4217), neighbours, landlocked: [mledoze/countries](https://github.com/mledoze/countries) | Public domain; mledoze/countries: ODbL 1.0, "© mledoze/countries contributors" |
+| `countries.json` | Facts per country on the map. Capitals: Natural Earth 1:10m populated places (German and French names). Population: [World Bank](https://data.worldbank.org/indicator/SP.POP.TOTL) `SP.POP.TOTL` for 2024 (CC BY 4.0), fetched 24 Oct 2026; Western Sahara, the Falkland Islands and Taiwan are not in it and keep Natural Earth's `POP_EST` (2016–2020); `popYear` says which year. Area, languages (ISO 639-3), currencies (ISO 4217), neighbours, landlocked: [mledoze/countries](https://github.com/mledoze/countries) | Public domain; World Bank: CC BY 4.0; mledoze/countries: ODbL 1.0, "© mledoze/countries contributors" |
 | Flags | [flag-icons](https://github.com/lipis/flag-icons) npm package (4×3 SVGs), loaded per country when it is tapped | MIT |
 
 Language and money names are not stored: the browser gives them in the app's language (`Intl.DisplayNames`).

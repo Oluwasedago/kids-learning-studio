@@ -152,7 +152,7 @@ export const en = {
     neighbours: 'Neighbours:',
     hear: 'Hear it',
     needsOnline: 'The world map downloads the first time it is opened. Connect to the internet once, then it works offline too.',
-    source: 'Map: Natural Earth (public domain). Facts: © mledoze/countries contributors (ODbL). Flags: flag-icons (MIT).',
+    source: 'Map: Natural Earth (public domain). Facts: © mledoze/countries contributors (ODbL). People: World Bank (CC BY 4.0). Flags: flag-icons (MIT).',
   },
   library: {
     title: 'Library',
@@ -472,7 +472,7 @@ export const en = {
   about: {
     privacy: 'No accounts, no tracking, no server. Everything stays on this device.',
     licence: 'Free and open source (MIT licence).',
-    credits: 'Pictures: Microsoft Fluent Emoji (MIT). Fonts: Andika and Fredoka (SIL Open Font License). World map: Natural Earth (public domain). Country facts: © mledoze/countries contributors (ODbL). Flags: flag-icons (MIT).',
+    credits: 'Pictures: Microsoft Fluent Emoji (MIT). Fonts: Andika and Fredoka (SIL Open Font License). World map: Natural Earth (public domain). Country facts: © mledoze/countries contributors (ODbL), population: World Bank (CC BY 4.0). Flags: flag-icons (MIT).',
     update: 'Update now',
     updating: 'Looking for a new version…',
     upToDate: 'This is already the newest version.',

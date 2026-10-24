@@ -150,7 +150,7 @@ export const de: Strings = {
     neighbours: 'Nachbarländer:',
     hear: 'Anhören',
     needsOnline: 'Die Weltkarte wird beim ersten Öffnen geladen. Einmal mit dem Internet verbinden, danach geht sie auch offline.',
-    source: 'Karte: Natural Earth (gemeinfrei). Daten: © mledoze/countries contributors (ODbL). Flaggen: flag-icons (MIT).',
+    source: 'Karte: Natural Earth (gemeinfrei). Daten: © mledoze/countries contributors (ODbL). Einwohner: Weltbank (CC BY 4.0). Flaggen: flag-icons (MIT).',
   },
   library: {
     title: 'Bibliothek',
@@ -484,7 +484,7 @@ export const de: Strings = {
   about: {
     privacy: 'Keine Konten, kein Tracking, kein Server. Alles bleibt auf diesem Gerät.',
     licence: 'Kostenlos und quelloffen (MIT-Lizenz).',
-    credits: 'Bilder: Microsoft Fluent Emoji (MIT). Schriften: Andika und Fredoka (SIL Open Font License). Weltkarte: Natural Earth (gemeinfrei). Länderdaten: © mledoze/countries contributors (ODbL). Flaggen: flag-icons (MIT).',
+    credits: 'Bilder: Microsoft Fluent Emoji (MIT). Schriften: Andika und Fredoka (SIL Open Font License). Weltkarte: Natural Earth (gemeinfrei). Länderdaten: © mledoze/countries contributors (ODbL), Einwohner: Weltbank (CC BY 4.0). Flaggen: flag-icons (MIT).',
     update: 'Jetzt aktualisieren',
     updating: 'Suche nach einer neuen Version …',
     upToDate: 'Das ist schon die neueste Version.',

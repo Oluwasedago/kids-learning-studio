@@ -9,7 +9,7 @@ import data from './data/countries.json'
 
 export interface CountryFacts {
   capital: Record<Lang, string> | null
-  /** Population estimate (Natural Earth) for popYear. */
+  /** Population in popYear (World Bank 2024; Natural Earth for the few it lacks). */
   pop: number
   popYear: number
   /** km². */

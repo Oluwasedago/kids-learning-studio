@@ -150,7 +150,7 @@ export const fr: Strings = {
     neighbours: 'Pays voisins :',
     hear: 'Écouter',
     needsOnline: 'La carte du monde se télécharge à la première ouverture. Connecte-toi une fois à Internet, ensuite elle marche aussi hors ligne.',
-    source: 'Carte : Natural Earth (domaine public). Données : © mledoze/countries contributors (ODbL). Drapeaux : flag-icons (MIT).',
+    source: 'Carte : Natural Earth (domaine public). Données : © mledoze/countries contributors (ODbL). Habitants : Banque mondiale (CC BY 4.0). Drapeaux : flag-icons (MIT).',
   },
   library: {
     title: 'Bibliothèque',
@@ -484,7 +484,7 @@ export const fr: Strings = {
   about: {
     privacy: 'Pas de compte, pas de pistage, pas de serveur. Tout reste sur cet appareil.',
     licence: 'Gratuit et open source (licence MIT).',
-    credits: 'Images : Microsoft Fluent Emoji (MIT). Polices : Andika et Fredoka (SIL Open Font License). Carte du monde : Natural Earth (domaine public). Données des pays : © mledoze/countries contributors (ODbL). Drapeaux : flag-icons (MIT).',
+    credits: 'Images : Microsoft Fluent Emoji (MIT). Polices : Andika et Fredoka (SIL Open Font License). Carte du monde : Natural Earth (domaine public). Données des pays : © mledoze/countries contributors (ODbL), population : Banque mondiale (CC BY 4.0). Drapeaux : flag-icons (MIT).',
     update: 'Mettre à jour',
     updating: 'Recherche d’une nouvelle version…',
     upToDate: 'C’est déjà la version la plus récente.',

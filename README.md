@@ -68,7 +68,7 @@ Reports leave the device only when a parent sends them from their own mail app.
   License). Logo: [brand/](brand/README.md) (MIT, with the code).
 - Stories: LibriVox recordings (public domain), hosted by the Internet Archive. Radio: Die Maus (WDR), Fun Kids, Mon Petit France Inter (Radio France), Babyradio (Spain).
   Details and the status of each source: [docs/CONTENT.md](docs/CONTENT.md).
-- World map: [Natural Earth](https://www.naturalearthdata.com/) (public domain); country facts:
+- World map: [Natural Earth](https://www.naturalearthdata.com/) (public domain); population: [World Bank](https://data.worldbank.org/) (CC BY 4.0); country facts:
   [mledoze/countries](https://github.com/mledoze/countries) (ODbL, "© mledoze/countries contributors"); flags:
   [flag-icons](https://github.com/lipis/flag-icons) (MIT); drawn with d3-geo and topojson-client (ISC). Details and
   corrections: [src/maps/data/SOURCES.md](src/maps/data/SOURCES.md).

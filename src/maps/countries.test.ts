@@ -75,7 +75,7 @@ describe('names from the browser', () => {
       'Nigeria',
       'Continent: Africa',
       'Capital: Abuja',
-      'People: about 201 million',
+      'People: about 233 million',
       'About 3 times as big as Germany.',
       'Languages: English',
       'Money: Nigerian Naira',
